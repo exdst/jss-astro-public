@@ -1,6 +1,7 @@
 {
   "name": "@astro-sitecore-jss/astro-sitecore-jss",
   "version": "0.4.0",
+  "description": "Sitecore JavaScript Rendering SDK for Astro",
   "type": "module",
   "exports": {
     ".": "./index.ts"
@@ -18,5 +19,14 @@
     "@sitecore-jss/sitecore-jss": "^21.2.4",
     "nanostores": "^0.9.3"
   },
-  "repository": "git@github.com:exdst/jss-astro-public.git"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/exdst/jss-astro-public.git",
+    "directory": "astro-sitecore-jss/packages/astro-sitecore-jss"
+  },
+  "bugs": {
+    "url": "https://github.com/exdst/jss-astro-public/issues"
+  },
+  "author": "Anton Tishchenko",
+  "license": "Apache-2.0"
 }

@@ -18,9 +18,8 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/exdst/jss-astro-public.git",
-    "directory": "apps/create-astro-sitecore-jss"
+    "directory": "astro-sitecore-jss/packages/create-astro-sitecore-jss"
   },
-  "homepage": "https://jss.sitecore.com",
   "author": "Anton Tishchenko",
   "license": "Apache-2.0",
   "bugs": {
