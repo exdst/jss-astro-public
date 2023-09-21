@@ -1,15 +1,11 @@
 # Sitecore JavaScript Software Development Kit for Astro
 
-This project is an implementation of Sitecore JavaScript Services Software Development Kit(SDK) for Astro. It contains Astro components and integration for JSS.
-It is fully featured SDK. You can use it to build your website with Astro and Sitecore.
-
-## Build status
 ![Library](https://github.com/exdst/jss-astro-public/actions/workflows/publish-astro-sitecore-jss.yml/badge.svg)
 ![Astro projct initializer](https://github.com/exdst/jss-astro-public/actions/workflows/publish-astro-sitecore-jss.yml/badge.svg)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-## NPM packages
-[Library](https://www.npmjs.com/package/@astro-sitecore-jss/astro-sitecore-jss)
-[Astro project initializer](https://www.npmjs.com/package/@astro-sitecore-jss/create-astro-sitecore-jss)
+This project is an implementation of Sitecore JavaScript Services Software Development Kit(SDK) for Astro. It contains Astro components and integration for JSS.
+It is fully featured SDK. You can use it to build your website with Astro and Sitecore.
 
 ## Project structure
 
@@ -63,6 +59,11 @@ Some examples:
 Currently, project supports only Sitecore first approach. You are not able to push items to Sitecore from code.
 Please, follow instruction under [Sitecore](./sitecore/README.md) folder to setup Sitecore instance.
 It is Docker based, so you can easily run it locally with a few commands.
+
+## NPM packages
+
+* [Sitecore JSS Astro SDK](https://www.npmjs.com/package/@astro-sitecore-jss/astro-sitecore-jss)
+* [Astro project initializer](https://www.npmjs.com/package/@astro-sitecore-jss/create-astro-sitecore-jss)
 
 ## Contacts
 
