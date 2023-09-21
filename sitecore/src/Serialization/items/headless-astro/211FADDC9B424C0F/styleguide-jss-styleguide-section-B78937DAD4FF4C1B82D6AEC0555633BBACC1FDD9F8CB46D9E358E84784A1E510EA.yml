@@ -1,0 +1,45 @@
+﻿---
+ID: "43dcb57d-2deb-4c47-9d05-69525d943203"
+Parent: "0ecef391-5c8c-4229-bba7-95345976f841"
+Template: "d4780cb0-0c39-552b-8f61-17195f76b88e"
+Path: "/sitecore/content/Headless/Astro/home/styleguideExtended/Page Data/styleguide-jss-styleguide-section-B78937DAD4FF4C1B82D6AEC0555633BBACC1FDD9F8CB46D9E358E84784A1E510EA"
+SharedFields:
+- ID: "a4f985d9-98b3-4b52-aaaf-4344f6e747c6"
+  Hint: __Workflow
+  Value: "{6C59AE29-D0A1-4B77-9305-0ABAB21D5FE5}"
+Languages:
+- Language: en
+  Fields:
+  - ID: "b5e02ad9-d56f-4c41-a065-a133db87bdeb"
+    Hint: __Display name
+    Value: "Styleguide-FieldUsage-AstroImage-4"
+  Versions:
+  - Version: 1
+    Fields:
+    - ID: "0d4e10b4-9aad-5118-adb0-00dc33ddcfde"
+      Hint: heading
+      Value: Astro Image
+    - ID: "25bed78c-4957-4165-998a-ca1b52f67497"
+      Hint: __Created
+      Value: 20230414T131122Z
+    - ID: "3e431de1-525e-47a3-b6b0-1ccbec3a8c98"
+      Hint: __Workflow state
+      Value: "{FCFDBB96-946A-4D2F-BCCD-5573073FC176}"
+    - ID: "8cdc337e-a112-42fb-bbb4-4143751e123f"
+      Hint: __Revision
+      Value: "dc13d4fc-b02d-45b9-aa92-c3a002bc8b6a"
+    - ID: "a0a3572a-e9b5-5d4e-8b0c-4d4fc135b8ba"
+      Hint: sample2
+      Value: |
+        <image mediaid="{58525C8B-BF23-54CA-9739-988086941828}" alt="Sitecore JSS Logo" />
+    - ID: "a337b05e-c47a-5514-bc74-253c1aeffe69"
+      Hint: sample1
+      Value: |
+        <image mediaid="{C48E613D-3A70-5038-94F0-471C11A19C14}" alt="Sitecore Logo" />
+    - ID: "badd9cf9-53e0-4d0c-bcc0-2d784c282f6a"
+      Hint: __Updated by
+      Value: |
+        sitecore\Admin
+    - ID: "d9cf14b1-fa16-4ba6-9288-e8a174d4d522"
+      Hint: __Updated
+      Value: 20230502T145501Z

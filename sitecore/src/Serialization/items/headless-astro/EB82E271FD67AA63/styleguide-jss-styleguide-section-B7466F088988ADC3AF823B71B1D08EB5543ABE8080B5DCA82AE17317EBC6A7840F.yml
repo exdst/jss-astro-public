@@ -1,0 +1,43 @@
+﻿---
+ID: "fb0cff0e-3a20-5f24-a883-c733cca2b992"
+Parent: "f609d236-a829-55cb-a8bf-08135b8616d9"
+Template: "4dc273d7-2b10-5985-a648-1e90b628f7ef"
+Path: "/sitecore/content/Headless/Astro/home/styleguide/Page Data/styleguide-jss-styleguide-section-B7466F088988ADC3AF823B71B1D08EB5543ABE8080B5DCA82AE17317EBC6A7840F"
+SharedFields:
+- ID: "a4f985d9-98b3-4b52-aaaf-4344f6e747c6"
+  Hint: __Workflow
+  Value: "{6C59AE29-D0A1-4B77-9305-0ABAB21D5FE5}"
+Languages:
+- Language: en
+  Fields:
+  - ID: "b5e02ad9-d56f-4c41-a065-a133db87bdeb"
+    Hint: __Display name
+    Value: "Styleguide-FieldUsage-Number-6"
+  Versions:
+  - Version: 1
+    Fields:
+    - ID: "0d4e10b4-9aad-5118-adb0-00dc33ddcfde"
+      Hint: heading
+      Value: Number
+    - ID: "25bed78c-4957-4165-998a-ca1b52f67497"
+      Hint: __Created
+      Value: 20230414T131122Z
+    - ID: "3e431de1-525e-47a3-b6b0-1ccbec3a8c98"
+      Hint: __Workflow state
+      Value: "{FCFDBB96-946A-4D2F-BCCD-5573073FC176}"
+    - ID: "49c59fde-0136-525b-88fc-4644021fe1e9"
+      Hint: description
+      Value: <small>Number tells Sitecore to use a number entry for editing.</small>
+    - ID: "8460bef3-aea4-527e-8cb6-fd465ebab4c9"
+      Hint: sample
+      Value: 1.21
+    - ID: "8cdc337e-a112-42fb-bbb4-4143751e123f"
+      Hint: __Revision
+      Value: "511973cb-7be6-4f3c-9396-708771b479e7"
+    - ID: "badd9cf9-53e0-4d0c-bcc0-2d784c282f6a"
+      Hint: __Updated by
+      Value: |
+        sitecore\JssImport
+    - ID: "d9cf14b1-fa16-4ba6-9288-e8a174d4d522"
+      Hint: __Updated
+      Value: 20230414T131122Z

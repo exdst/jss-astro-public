@@ -1,0 +1,63 @@
+﻿---
+ID: "53de5f6e-09e4-52d8-9c99-45bf6d50797f"
+Parent: "fee78395-7d1a-4761-af55-43f7309d6bad"
+Template: "5c547d4e-7111-4995-95b0-6b561751bf2e"
+Path: "/sitecore/layout/Placeholder Settings/Project/Headless/Astro/jss-styleguide-section"
+SharedFields:
+- ID: "7256bdab-1fd2-49dd-b205-cb4873d2917c"
+  Hint: Placeholder Key
+  Value: "jss-styleguide-section"
+- ID: "9c6106ea-7a5a-48e2-8cad-f0f693b1e2d4"
+  Hint: __Read Only
+  Value: 
+- ID: "e391b526-d0c5-439d-803e-17512eae6222"
+  Hint: Allowed Controls
+  Value: |
+    {03DC374A-4608-578F-96CC-0FF570C08482}
+    {EBC1CA05-074F-5EBB-9D80-4CC74C892540}
+    {3DF1DF25-AE85-5A0B-9627-91959CD430AD}
+    {891E9F4B-51C4-51BD-883F-81231FAB5B73}
+    {7AD0F064-D18C-55E2-BCC8-5F29BED97F37}
+    {30A8A17A-F2A2-532E-B613-C594FB295F28}
+    {992A6C6A-A6C3-5983-89D0-B36B23A07C79}
+    {0C44AB20-D243-5271-A27B-73E37475542C}
+    {A0B17789-826E-5B2B-A556-7D3F4CBCFAB1}
+    {54D2A6BE-F68D-524C-99D1-CCD49F2DA09C}
+    {005DF06A-222B-5291-971C-65A704B12CD4}
+    {0129DC99-E8AD-5626-AF9A-D95302C0479E}
+    {71165A6D-0EC9-52C7-8766-76C8A78BBF02}
+    {3B190E22-1DFB-584A-8A57-21DD134E89C2}
+    {405583D5-86C8-553E-AEB1-C58E0BD18249}
+    {300B9EBF-DC05-5E34-A7E8-EDAABC29AD2D}
+    {FD01A274-D919-5390-B81D-B8C3A3C96DFA}
+    {2A34B6F4-EA60-5146-8F68-1E03A8F1858F}
+    {2088B1CD-5CE6-426E-A5EB-4E435C3D9A83}
+    {17AB5876-0DE1-4EA9-A526-B40C6A96CA67}
+    {CE2DD79E-6456-4BC1-BF4B-EE4DEBCF12A6}
+    {B0A891C4-34BA-4DDA-80E1-00518082705B}
+Languages:
+- Language: en
+  Versions:
+  - Version: 1
+    Fields:
+    - ID: "25bed78c-4957-4165-998a-ca1b52f67497"
+      Hint: __Created
+      Value: 20230414T124653Z
+    - ID: "52807595-0f8f-4b20-8d2a-cb71d28c6103"
+      Hint: __Owner
+      Value: |
+        sitecore\JssImport
+    - ID: "5dd74568-4d4b-44c1-b513-0af5f4cda34f"
+      Hint: __Created by
+      Value: |
+        sitecore\JssImport
+    - ID: "8cdc337e-a112-42fb-bbb4-4143751e123f"
+      Hint: __Revision
+      Value: "556576cc-52f9-4156-9881-4f02f63cd1a4"
+    - ID: "badd9cf9-53e0-4d0c-bcc0-2d784c282f6a"
+      Hint: __Updated by
+      Value: |
+        sitecore\Admin
+    - ID: "d9cf14b1-fa16-4ba6-9288-e8a174d4d522"
+      Hint: __Updated
+      Value: 20230606T170757Z

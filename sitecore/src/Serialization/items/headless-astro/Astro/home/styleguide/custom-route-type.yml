@@ -1,0 +1,58 @@
+﻿---
+ID: "769b3266-ce1d-5b9b-81b5-c26db8749497"
+Parent: "e7d35297-8079-5fc5-8ae1-83d972fa6bb7"
+Template: "82725e59-f88a-570c-9e80-89582ed0502d"
+Path: "/sitecore/content/Headless/Astro/home/styleguide/custom-route-type"
+SharedFields:
+- ID: "a4f985d9-98b3-4b52-aaaf-4344f6e747c6"
+  Hint: __Workflow
+  Value: "{6C59AE29-D0A1-4B77-9305-0ABAB21D5FE5}"
+- ID: "f1a1fe9e-a60c-4ddb-a3a0-bb5b29fe732e"
+  Hint: __Renderings
+  Value: |
+    <r xmlns:p="p" xmlns:s="s"
+      p:p="1">
+      <d
+        id="{FE5D7FDF-89C0-4D99-9AA3-B5FBD009C9F3}">
+        <r
+          uid="{621128A6-CC4D-5287-8ED6-E4A89A7DBBDB}"
+          p:after="*[1=2]"
+          s:rname="Styleguide-CustomRouteType"
+          s:id="{CAF1EDFD-0974-5DB1-9E3A-119240861ED1}"
+          s:par=""
+          s:ph="/jss-main" />
+      </d>
+    </r>
+Languages:
+- Language: en
+  Versions:
+  - Version: 1
+    Fields:
+    - ID: "0d6ba2ac-59b2-554b-88b8-13acf4b4576e"
+      Hint: content
+      Value: "<p>Custom route type fields are good for things like articles, where you may wish to have a filter UI on content fields, such as author or category. Route level fields are easy to query against, whereas component-level fields are not because it's possible to remove a component from a route. Note that route level fields <em>cannot be personalized</em> because you cannot conditionally swap out the route item for a different content item.</p>"
+    - ID: "25bed78c-4957-4165-998a-ca1b52f67497"
+      Hint: __Created
+      Value: 20230414T131124Z
+    - ID: "3e431de1-525e-47a3-b6b0-1ccbec3a8c98"
+      Hint: __Workflow state
+      Value: "{FCFDBB96-946A-4D2F-BCCD-5573073FC176}"
+    - ID: "8cdc337e-a112-42fb-bbb4-4143751e123f"
+      Hint: __Revision
+      Value: "cc3746ad-45fb-452a-8728-147d721ec587"
+    - ID: "badd9cf9-53e0-4d0c-bcc0-2d784c282f6a"
+      Hint: __Updated by
+      Value: |
+        sitecore\JssImport
+    - ID: "d343070a-c9cb-5b83-b3f5-f1ced90c4d5a"
+      Hint: headline
+      Value: "A Treatise on Route-Level Fields in JSS"
+    - ID: "d9cf14b1-fa16-4ba6-9288-e8a174d4d522"
+      Hint: __Updated
+      Value: 20230414T131124Z
+    - ID: "ddcc7d64-cbf8-539d-99e9-20f530dce037"
+      Hint: pageTitle
+      Value: Custom Route Type | Sitecore JSS
+    - ID: "f5f7f69b-c0d1-532e-8ff4-59be29c8ea8d"
+      Hint: author
+      Value: Myrtle

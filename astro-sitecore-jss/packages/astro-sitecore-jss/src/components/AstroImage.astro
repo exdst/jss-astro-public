@@ -1,0 +1,68 @@
+---
+import { Image as OptimizedImage } from "@astrojs/image/components";
+import type { TransformOptions } from "@astrojs/image/dist/loaders";
+import { prepareImageSource } from "../media/image-api";
+import { SitecoreContextMap } from '../context';
+import type { ImageField } from "./ImageField";
+import Image from "./Image.astro";
+
+const sitecoreContext = SitecoreContextMap.get()['scContext'];
+let fallback = false;
+if(sitecoreContext.pageState === 'edit' || sitecoreContext.pageState === 'preview') {
+  fallback = true;
+}
+
+export interface Props extends Omit<TransformOptions, "src" | "width" | "height"> {
+  [attributeName: string]: any;
+  field: ImageField;
+  editable?: boolean;
+  height?: number;
+  width?: number;
+  imageParams?: { [paramName: string]: string | number }
+}
+
+let render = true;
+const { 
+  alt,
+  field,
+  height,
+  width,
+  imageParams,
+  ...attrs } = Astro.props as Props;
+
+const resolveDimensionNumber = (propsDimention?: number, imageFieldDimention?: string): number | undefined => {
+  if(propsDimention) {
+    return propsDimention;
+  }
+
+  if(attrs.aspectRatio) {
+    return undefined;
+  }
+
+  return parseInt(imageFieldDimention ?? "0");
+}
+
+if(fallback || (!field.value || !field.value.src)) {
+  render = false;
+}
+
+let imageSource = prepareImageSource(field.value?.src, imageParams, field.mediaUrlPrefix);
+
+const altText = alt ? alt : field.value?.alt ?? "";
+const imageWidth = resolveDimensionNumber(width, field.value?.width);
+const imageHeight = resolveDimensionNumber(height, field.value?.height);
+
+const getAttributes = (): any => {
+  return {
+    ...attrs,
+    alt: altText,
+    src: imageSource,
+    height: imageHeight,
+    width: imageWidth    
+  }
+};
+
+--- 
+
+{ render && <OptimizedImage {...getAttributes() } /> }
+{ fallback && <Image {...Astro.props} /> }

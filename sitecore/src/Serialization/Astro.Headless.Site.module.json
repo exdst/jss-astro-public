@@ -1,0 +1,33 @@
+{
+    "namespace": "Astro.SXA.Site",
+    "references": ["HeadlessTenant"],
+    "items" : {
+        "includes": [
+            {
+                "name": "headless-astro",
+                "path": "/sitecore/content/Headless/Astro",
+                "scope": "ItemAndDescendants"
+            },
+            {
+                "name": "headless-astro-media-library",
+                "path": "/sitecore/media library/Project/Headless/Astro",
+                "scope": "ItemAndDescendants"
+            },
+            {
+                "name": "samples-astro-placeholder-settings",
+                "path": "/sitecore/layout/Placeholder Settings/Project/Headless/Astro",
+                "scope": "ItemAndDescendants"
+            },
+            {
+                "name": "samples-astro-renderings",
+                "path": "/sitecore/layout/Renderings/Project/Headless/Astro",
+                "scope": "ItemAndDescendants"
+            },
+            {
+                "name": "samples-astro-layouts",
+                "path": "/sitecore/layout/Layouts/Project/Headless/Astro",
+                "scope": "ItemAndDescendants"
+            }
+        ]
+    }
+}

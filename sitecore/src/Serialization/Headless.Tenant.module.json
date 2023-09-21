@@ -1,0 +1,42 @@
+{
+    "namespace": "HeadlessTenant",
+    "items": {
+        "includes": [
+            {
+                "name": "headless-sxa-tenant-templates",
+                "path": "/sitecore/templates/Project/Headless",
+                "scope": "ItemAndDescendants"
+            },
+            {
+                "name": "headless-sxa-tenant-media-library",
+                "path": "/sitecore/media library/Project/Headless",
+                "scope": "singleItem"
+            },
+            {
+                "name": "headless-sxa-tenant-shared-media-library",
+                "path": "/sitecore/media library/Project/Headless/shared",
+                "scope": "ItemAndDescendants"
+            },
+            {
+                "name": "headless-sxa-tenant-layouts",
+                "path": "/sitecore/layout/Layouts/Project/Headless",
+                "scope": "singleItem"
+            },
+            {
+                "name": "headless-sxa-tenant-renderings",
+                "path": "/sitecore/layout/Renderings/Project/Headless",
+                "scope": "singleItem"
+            },
+            {
+                "name": "headless-sxa-tenant-placeholder-settings",
+                "path": "/sitecore/layout/Placeholder Settings/Project/Headless",
+                "scope": "singleItem"
+            },
+            {
+                "name": "headless-sxa-tenant",
+                "path": "/sitecore/content/Headless",
+                "scope": "singleItem"
+            }
+        ]
+    }
+}

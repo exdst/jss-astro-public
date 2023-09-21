@@ -1,0 +1,50 @@
+﻿---
+ID: "123ca1bf-74bf-5e92-babf-44f9b60b17fd"
+Parent: "258db5a2-2644-5b07-bdb7-21b15367986f"
+Template: "a3a87cb0-f4b2-591e-8823-ea73bb367bcd"
+Path: "/sitecore/content/Headless/Astro/home/graphql/sample-2"
+SharedFields:
+- ID: "a4f985d9-98b3-4b52-aaaf-4344f6e747c6"
+  Hint: __Workflow
+  Value: "{6C59AE29-D0A1-4B77-9305-0ABAB21D5FE5}"
+- ID: "f1a1fe9e-a60c-4ddb-a3a0-bb5b29fe732e"
+  Hint: __Renderings
+  Value: |
+    <r xmlns:p="p" xmlns:s="s"
+      p:p="1">
+      <d
+        id="{FE5D7FDF-89C0-4D99-9AA3-B5FBD009C9F3}">
+        <r
+          uid="{5C424448-2B30-5910-ABE7-5021B762D542}"
+          p:after="*[1=2]"
+          s:rname="ContentBlock"
+          s:ds="{CE6A72C4-A7B2-5AE2-8AE7-FE5610E5250F}"
+          s:id="{3082D9D9-F8E2-5049-9B7F-7FD39C39CCD0}"
+          s:par=""
+          s:ph="/jss-main" />
+      </d>
+    </r>
+Languages:
+- Language: en
+  Versions:
+  - Version: 1
+    Fields:
+    - ID: "25bed78c-4957-4165-998a-ca1b52f67497"
+      Hint: __Created
+      Value: 20230414T131122Z
+    - ID: "3e431de1-525e-47a3-b6b0-1ccbec3a8c98"
+      Hint: __Workflow state
+      Value: "{FCFDBB96-946A-4D2F-BCCD-5573073FC176}"
+    - ID: "8cdc337e-a112-42fb-bbb4-4143751e123f"
+      Hint: __Revision
+      Value: "61eab892-d621-49fa-8929-6eb3c4664cb9"
+    - ID: "badd9cf9-53e0-4d0c-bcc0-2d784c282f6a"
+      Hint: __Updated by
+      Value: |
+        sitecore\JssImport
+    - ID: "d9cf14b1-fa16-4ba6-9288-e8a174d4d522"
+      Hint: __Updated
+      Value: 20230414T131122Z
+    - ID: "ddcc7d64-cbf8-539d-99e9-20f530dce037"
+      Hint: pageTitle
+      Value: Sample 2 Page Title

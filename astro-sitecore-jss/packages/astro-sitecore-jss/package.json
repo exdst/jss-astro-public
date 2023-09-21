@@ -1,0 +1,22 @@
+{
+  "name": "@astro-sitecore-jss/astro-sitecore-jss",
+  "version": "0.3.0",
+  "type": "module",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "files": [
+    "src",
+    "index.ts",
+    "readme.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@astrojs/image": "^0.17.3",
+    "@sitecore-jss/sitecore-jss": "^21.2.4",
+    "nanostores": "^0.9.3"
+  },
+  "repository": "git@github.com:exdst/jss-astro-public.git"
+}
