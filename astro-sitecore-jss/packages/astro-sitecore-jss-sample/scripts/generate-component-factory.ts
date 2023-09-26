@@ -6,14 +6,18 @@ import generateComponentFactory, {
 import { getItems } from './utils';
 
 const componentFactoryPath = path.resolve('src/temp/component-factory.astro');
+const tempFolderPath = path.resolve('src') + '/temp';
 const componentRootPath = 'src/components';
 
 writeComponentFactory();
 
-function writeComponentFactory() {  
+function writeComponentFactory() {
   const components = getComponentList(componentRootPath);
   const fileContent = generateComponentFactory(components);
   console.log(`Writing component factory to ${componentFactoryPath}`);
+  if (!fs.existsSync(tempFolderPath)) {
+    fs.mkdirSync(tempFolderPath);
+  }
   fs.writeFileSync(componentFactoryPath, fileContent, {
     encoding: 'utf8',
   });
