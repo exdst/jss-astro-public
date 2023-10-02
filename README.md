@@ -18,13 +18,14 @@ It is fully featured SDK. You can use it to build your website with Astro and Si
 
 1. Initialize and start Sitecore instance. Please, follow instruction under [Sitecore](./sitecore/README.md) folder to setup Sitecore instance.
 2. Open Sitecore Content Editor and check that there is a new SXA managed headless website under path `/sitecore/content/Headless/Astro`
-3. Change directory to the [Astro SDK project](./astro-sitecore-jss/packages/astro-sitecore-jss/) `cd ./astro-sitecore-jss/packages/astro-sitecore-jss/`
-4. Install npm packages with `npm install`
-5. Change directory to the [Astro sample project](./astro-sitecore-jss/packages/astro-sitecore-jss-sample/) `cd ./astro-sitecore-jss/packages/astro-sitecore-jss-sample/`
-6. Install npm packages with `npm install`
-7. Start the project with `npm run dev` command
-8. Open [http://localhost:3000](http://localhost:3000) in your browser (If port 3000 is busy, different port will be used)
-9. Open Sitecore Experience Editor for item `/sitecore/content/Headless/Astro/home/styleguide`
+3. Check your Node version using command `node -v`. If version is lower than 18, please, update it to LTS version 18+.
+4. Change directory to the [Astro SDK project](./astro-sitecore-jss/packages/astro-sitecore-jss/) `cd ./astro-sitecore-jss/packages/astro-sitecore-jss/`
+5. Install npm packages with `npm install`
+6. Change directory to the [Astro sample project](./astro-sitecore-jss/packages/astro-sitecore-jss-sample/) `cd ./astro-sitecore-jss/packages/astro-sitecore-jss-sample/`
+7. Install npm packages with `npm install`
+8. Start the project with `npm run dev` command
+9. Open [http://localhost:3000](http://localhost:3000) in your browser (If port 3000 is busy, different port will be used)
+10. Open Sitecore Experience Editor for item `/sitecore/content/Headless/Astro/home/styleguide`
 
 ## Production usage
 

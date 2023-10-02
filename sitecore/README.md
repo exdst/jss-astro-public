@@ -9,13 +9,14 @@
 
 ## Local development environment set up
 
- 1. **Initialize environment by running ./init.ps1**
+ 1. Install [Sitecore CLI](https://doc.sitecore.com/xp/en/developers/100/developer-tools/install-sitecore-command-line-interface.html)
+ 2. **Initialize environment by running ./init.ps1**
  ```ps1
 .\init.ps1 -InitEnv -LicenseXmlPath "<C:\path\to\license.xml>" -AdminPassword "desired password"
 ```
 Note: by default it initializes 
 environment configuration with **xm1** topology, but you can initialize it with **xp0** or **xp1** by using ```-Topology``` parameter.
- 2. **Run containers**
+ 3. **Run containers**
  ```ps1
  .\up.ps1
  ```
