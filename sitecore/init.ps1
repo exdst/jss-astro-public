@@ -133,58 +133,64 @@ if ($InitEnv) {
     Write-Host "Populating required .env file values..." -ForegroundColor Green
 
     # HOST_LICENSE_FOLDER
-    Set-EnvFileVariable "HOST_LICENSE_FOLDER" -Value $LicenseXmlPath
+    Set-EnvFileVariable "HOST_LICENSE_FOLDER" -Value "'${LicenseXmlPath}'"
 
     # CM_HOST
-    Set-EnvFileVariable "CM_HOST" -Value "cm.headless.localhost"
+    Set-EnvFileVariable "CM_HOST" -Value "'cm.headless.localhost'"
 
     if ($Topology -ne "xp0") {
       # CD_HOST
-      Set-EnvFileVariable "CD_HOST" -Value "cd.headless.localhost"
+      Set-EnvFileVariable "CD_HOST" -Value "'cd.headless.localhost'"
     }
 
     # ID_HOST
-    Set-EnvFileVariable "ID_HOST" -Value "id.headless.localhost"
+    Set-EnvFileVariable "ID_HOST" -Value "'id.headless.localhost'"
 
     # REPORTING_API_KEY = random 64-128 chars
-    Set-EnvFileVariable "REPORTING_API_KEY" -Value (Get-SitecoreRandomString 128 -DisallowSpecial)
+	$reportingApiKey = (Get-SitecoreRandomString 128 -DisallowSpecial)
+    Set-EnvFileVariable "REPORTING_API_KEY" -Value "'${reportingApiKey}'"
 
     # TELERIK_ENCRYPTION_KEY = random 64-128 chars
-    Set-EnvFileVariable "TELERIK_ENCRYPTION_KEY" -Value (Get-SitecoreRandomString 128)
+	$telerikEncryptionKey = (Get-SitecoreRandomString 128)
+    Set-EnvFileVariable "TELERIK_ENCRYPTION_KEY" -Value "'${telerikEncryptionKey}'"
 
     # MEDIA_REQUEST_PROTECTION_SHARED_SECRET
-    Set-EnvFileVariable "MEDIA_REQUEST_PROTECTION_SHARED_SECRET" -Value (Get-SitecoreRandomString 64)
+	$mediaRequestProtectionSharedSecret
+    Set-EnvFileVariable "MEDIA_REQUEST_PROTECTION_SHARED_SECRET" -Value "'${mediaRequestProtectionSharedSecret}'"
 
     # SITECORE_IDSECRET = random 64 chars
-    Set-EnvFileVariable "SITECORE_IDSECRET" -Value (Get-SitecoreRandomString 64 -DisallowSpecial)
+	$sitecoreIdSecret = (Get-SitecoreRandomString 64 -DisallowSpecial)
+    Set-EnvFileVariable "SITECORE_IDSECRET" -Value "'${sitecoreIdSecret}'"
 
     # SITECORE_ID_CERTIFICATE
     $idCertPassword = Get-SitecoreRandomString 12 -DisallowSpecial
-    Set-EnvFileVariable "SITECORE_ID_CERTIFICATE" -Value (Get-SitecoreCertificateAsBase64String -DnsName "localhost" -Password (ConvertTo-SecureString -String $idCertPassword -Force -AsPlainText) -KeyLength 2048)
+	$idCertificate = (Get-SitecoreCertificateAsBase64String -DnsName "localhost" -Password (ConvertTo-SecureString -String $idCertPassword -Force -AsPlainText) -KeyLength 2048)
+    Set-EnvFileVariable "SITECORE_ID_CERTIFICATE" -Value "'${idCertificate}'"
 
     # SITECORE_ID_CERTIFICATE_PASSWORD
     Set-EnvFileVariable "SITECORE_ID_CERTIFICATE_PASSWORD" -Value $idCertPassword
 
     # SQL_SA_PASSWORD
     # Need to ensure it meets SQL complexity requirements
-    Set-EnvFileVariable "SQL_SA_PASSWORD" -Value (Get-SitecoreRandomString 19 -DisallowSpecial -EnforceComplexity)
+	$sqlPassword = (Get-SitecoreRandomString 19 -DisallowSpecial -EnforceComplexity)
+    Set-EnvFileVariable "SQL_SA_PASSWORD" -Value "'${sqlPassword}'"
 
     # SQL_SERVER
-    Set-EnvFileVariable "SQL_SERVER" -Value "mssql"
+    Set-EnvFileVariable "SQL_SERVER" -Value "'mssql'"
 
     # SQL_SA_LOGIN
-    Set-EnvFileVariable "SQL_SA_LOGIN" -Value "sa"
+    Set-EnvFileVariable "SQL_SA_LOGIN" -Value "'sa'"
 
     # SITECORE_ADMIN_PASSWORD
-    Set-EnvFileVariable "SITECORE_ADMIN_PASSWORD" -Value $AdminPassword
+    Set-EnvFileVariable "SITECORE_ADMIN_PASSWORD" -Value "'${AdminPassword}'"
 
     # JSS_EDITING_SECRET
     # Populate it for the Next.js local environment as well
     $jssEditingSecret = Get-SitecoreRandomString 64 -DisallowSpecial
-    Set-EnvFileVariable "JSS_EDITING_SECRET" -Value $jssEditingSecret
+    Set-EnvFileVariable "JSS_EDITING_SECRET" -Value "'${jssEditingSecret}'"
 
     # Set the instance topology
-    Set-EnvFileVariable "TOPOLOGY" -Value $Topology
+	Set-EnvFileVariable "TOPOLOGY" -Value "'${Topology}'"
     Write-Host "The instance topology: $Topology" -ForegroundColor Green
 
     Pop-Location
