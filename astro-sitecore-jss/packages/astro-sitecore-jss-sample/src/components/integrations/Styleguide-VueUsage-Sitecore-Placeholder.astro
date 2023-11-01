@@ -1,6 +1,6 @@
 ---
 import StyleguideSpecimen from "../styleguide/Styleguide-Specimen.astro";
-import { Placeholder } from "@sitecore-jss/sitecore-jss-react";
+import Placeholder from '../system/Placeholder.astro';
 import ComponentFactory from "./vue/componentFactory";
 
 ---
@@ -9,7 +9,7 @@ import ComponentFactory from "./vue/componentFactory";
   e2eId="styleguide-fieldusage-text"
 >
   <Placeholder
-    name="react"
+    name="vue"
     rendering={Astro.props.route}
     componentFactory={ComponentFactory}
   />
