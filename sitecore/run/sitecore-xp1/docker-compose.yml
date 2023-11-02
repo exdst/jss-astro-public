@@ -16,10 +16,10 @@ services:
     healthcheck:
       test: ["CMD", "traefik", "healthcheck", "--ping"]
     volumes:
-      - source: \\.\pipe\docker_engine
-        target: \\.\pipe\docker_engine
+      - source: \\.\pipe\docker_engine\
+        target: \\.\pipe\docker_engine\
         type: npipe
-      - ./traefik:C:/etc/traefik
+      - .\traefik:C:\etc\traefik\
     depends_on:
       id:
         condition: service_healthy
@@ -95,7 +95,7 @@ services:
       Sitecore_Sitecore__IdentityServer__CertificateRawDataPassword: ${SITECORE_ID_CERTIFICATE_PASSWORD}
       Sitecore_License: ${SITECORE_LICENSE}
     healthcheck:
-      test: ["CMD", "pwsh", "-command", "C:/Healthchecks/Healthcheck.ps1"]
+      test: ["CMD", "pwsh", "-command", "C:\\Healthchecks\\Healthcheck.ps1"]
       timeout: 300s
     depends_on:
       mssql-init:
@@ -205,7 +205,7 @@ services:
       MEDIA_REQUEST_PROTECTION_SHARED_SECRET: ${MEDIA_REQUEST_PROTECTION_SHARED_SECRET}
       LOG_LEVEL_VALUE: ${LOG_LEVEL_VALUE}
     healthcheck:
-      test: ["CMD", "powershell", "-command", "C:/Healthchecks/Healthcheck.ps1"]
+      test: ["CMD", "powershell", "-command", "C:\\Healthchecks\\Healthcheck.ps1"]
       timeout: 300s
     labels:
       - "traefik.enable=true"
@@ -262,7 +262,7 @@ services:
       MEDIA_REQUEST_PROTECTION_SHARED_SECRET: ${MEDIA_REQUEST_PROTECTION_SHARED_SECRET}
       LOG_LEVEL_VALUE: ${LOG_LEVEL_VALUE}
     healthcheck:
-      test: ["CMD", "powershell", "-command", "C:/Healthchecks/Healthcheck.ps1"]
+      test: ["CMD", "powershell", "-command", "C:\\Healthchecks\\Healthcheck.ps1"]
       timeout: 300s
   xdbcollection:
     isolation: ${ISOLATION}
@@ -319,7 +319,7 @@ services:
       Sitecore_ConnectionStrings_XConnect.Search: http://xdbsearch
       Sitecore_License: ${SITECORE_LICENSE}
     healthcheck:
-      test: ["CMD", "powershell", "-command", "C:/Healthchecks/Healthcheck.ps1"]
+      test: ["CMD", "powershell", "-command", "C:\\Healthchecks\\Healthcheck.ps1"]
       timeout: 300s
   xdbautomationrpt:
     isolation: ${ISOLATION}
@@ -369,7 +369,7 @@ services:
       Sitecore_ConnectionStrings_Xdb.Referencedata: Data Source=${SQL_SERVER};Initial Catalog=${SQL_DATABASE_PREFIX}.Referencedata;User ID=${SQL_SA_LOGIN};Password=${SQL_SA_PASSWORD}
       Sitecore_License: ${SITECORE_LICENSE}
     healthcheck:
-      test: ["CMD", "powershell", "-command", "C:/Healthchecks/Healthcheck.ps1"]
+      test: ["CMD", "powershell", "-command", "C:\\Healthchecks\\Healthcheck.ps1"]
       timeout: 300s
   xdbsearchworker:
     isolation: ${ISOLATION}
@@ -405,7 +405,7 @@ services:
       Sitecore_ConnectionStrings_Messaging: Data Source=${SQL_SERVER};Initial Catalog=${SQL_DATABASE_PREFIX}.Messaging;User ID=${SQL_SA_LOGIN};Password=${SQL_SA_PASSWORD}
       Sitecore_License: ${SITECORE_LICENSE}
     healthcheck:
-      test: ["CMD", "powershell", "-command", "C:/Healthchecks/Healthcheck.ps1 -Port 8080"]
+      test: ["CMD", "powershell", "-command", "C:\\Healthchecks\\Healthcheck.ps1 -Port 8080"]
       timeout: 300s
   cortexprocessingworker:
     isolation: ${ISOLATION}
@@ -425,5 +425,5 @@ services:
       Sitecore_ConnectionStrings_Reporting: Data Source=${SQL_SERVER};Initial Catalog=${SQL_DATABASE_PREFIX}.Reporting;User ID=${SQL_SA_LOGIN};Password=${SQL_SA_PASSWORD}
       Sitecore_License: ${SITECORE_LICENSE}
     healthcheck:
-      test: ["CMD", "powershell", "-command", "C:/Healthchecks/Healthcheck.ps1 -Port 8080"]
+      test: ["CMD", "powershell", "-command", "C:\\Healthchecks\\Healthcheck.ps1 -Port 8080"]
       timeout: 300s
