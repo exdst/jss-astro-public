@@ -1,6 +1,6 @@
 <template>
   <sc-placeholder 
-    name="vueph" 
+    name="vue" 
     :rendering="rendering"
     :params="params"
     :componentFactory="componentFactory" />  
