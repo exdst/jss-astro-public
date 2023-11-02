@@ -6,6 +6,9 @@
  - . Net Framework 4.8 SDK
  -  Visual Studio 2019 or higher
  -  Docker for Windows, with Windows Containers enabled
+ -  Stop IIS
+ -  Ensure port 8984 is free for solr
+ -  Execute dotnet tool restore command before running up.ps1
 
 ## Local development environment set up
 
