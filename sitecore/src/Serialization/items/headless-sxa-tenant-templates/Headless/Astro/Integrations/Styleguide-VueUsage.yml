@@ -1,0 +1,44 @@
+﻿---
+ID: "5f2ba5e3-488e-4c9b-8a1a-fa96f5e38365"
+Parent: "90d360c9-4cae-432f-8e78-92609b5d708a"
+Template: "ab86861a-6030-46c5-b394-e8f99e8b87db"
+Path: "/sitecore/templates/Project/Headless/Astro/Integrations/Styleguide-VueUsage"
+SharedFields:
+- ID: "06d5295c-ed2f-4a54-9bf2-26228d113318"
+  Hint: __Icon
+  Value: Office/16x16/text.png
+- ID: "12c33f3f-86c5-43a5-aeb4-5598cec45116"
+  Hint: __Base template
+  Value: "{D10F8EC6-05AB-5B59-8CB5-248C0864320A}"
+- ID: "9c6106ea-7a5a-48e2-8cad-f0f693b1e2d4"
+  Hint: __Read Only
+  Value: 
+- ID: "f7d48a55-2158-4f02-9356-756654404f73"
+  Hint: __Standard values
+  Value: "{776A2C9C-8D7F-4CA6-9A6A-6D3C5A435BEF}"
+Languages:
+- Language: en
+  Versions:
+  - Version: 1
+    Fields:
+    - ID: "25bed78c-4957-4165-998a-ca1b52f67497"
+      Hint: __Created
+      Value: 20230414T124648Z
+    - ID: "52807595-0f8f-4b20-8d2a-cb71d28c6103"
+      Hint: __Owner
+      Value: |
+        sitecore\JssImport
+    - ID: "5dd74568-4d4b-44c1-b513-0af5f4cda34f"
+      Hint: __Created by
+      Value: |
+        sitecore\JssImport
+    - ID: "8cdc337e-a112-42fb-bbb4-4143751e123f"
+      Hint: __Revision
+      Value: "7b2c1bb2-3ae1-4cae-947a-cf2158376952"
+    - ID: "badd9cf9-53e0-4d0c-bcc0-2d784c282f6a"
+      Hint: __Updated by
+      Value: |
+        sitecore\Admin
+    - ID: "d9cf14b1-fa16-4ba6-9288-e8a174d4d522"
+      Hint: __Updated
+      Value: 20231031T225021Z

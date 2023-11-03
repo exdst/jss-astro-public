@@ -1,0 +1,11 @@
+---
+import StyleguideSpecimen from '../styleguide/Styleguide-Specimen.astro';
+import Counter from './vue/Counter.vue';
+---
+
+<StyleguideSpecimen
+  route={Astro.props.route}
+  e2eId="styleguide-integration-vue-simple"
+>
+  <Counter client:load />
+</StyleguideSpecimen>
