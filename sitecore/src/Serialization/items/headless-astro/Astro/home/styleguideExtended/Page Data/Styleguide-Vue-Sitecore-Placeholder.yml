@@ -1,0 +1,47 @@
+﻿---
+ID: "382606e6-8f04-499d-a870-1f49f4e649fd"
+Parent: "0ecef391-5c8c-4229-bba7-95345976f841"
+Template: "5f2ba5e3-488e-4c9b-8a1a-fa96f5e38365"
+Path: "/sitecore/content/Headless/Astro/home/styleguideExtended/Page Data/Styleguide-Vue-Sitecore-Placeholder"
+SharedFields:
+- ID: "a4f985d9-98b3-4b52-aaaf-4344f6e747c6"
+  Hint: __Workflow
+  Value: "{6C59AE29-D0A1-4B77-9305-0ABAB21D5FE5}"
+Languages:
+- Language: en
+  Versions:
+  - Version: 1
+    Fields:
+    - ID: "001dd393-96c5-490b-924a-b0f25cd9efd8"
+      Hint: __Lock
+      Value: <r />
+    - ID: "0d4e10b4-9aad-5118-adb0-00dc33ddcfde"
+      Hint: heading
+      Value: Vue Sitecore JSS Rendering in Vue Placeholder
+    - ID: "25bed78c-4957-4165-998a-ca1b52f67497"
+      Hint: __Created
+      Value: 20230606T170843Z
+    - ID: "3e431de1-525e-47a3-b6b0-1ccbec3a8c98"
+      Hint: __Workflow state
+      Value: "{AF32C98B-C828-42AF-A649-74C1DE3303FB}"
+    - ID: "49c59fde-0136-525b-88fc-4644021fe1e9"
+      Hint: description
+      Value: <p>Vue components can use Vue Placeholder inside. You can place one Vue component inside a placeholder.</p>
+    - ID: "52807595-0f8f-4b20-8d2a-cb71d28c6103"
+      Hint: __Owner
+      Value: |
+        sitecore\Admin
+    - ID: "5dd74568-4d4b-44c1-b513-0af5f4cda34f"
+      Hint: __Created by
+      Value: |
+        sitecore\Admin
+    - ID: "8cdc337e-a112-42fb-bbb4-4143751e123f"
+      Hint: __Revision
+      Value: "95a6adf7-b318-41a5-b8d6-8bbd07836343"
+    - ID: "badd9cf9-53e0-4d0c-bcc0-2d784c282f6a"
+      Hint: __Updated by
+      Value: |
+        sitecore\Admin
+    - ID: "d9cf14b1-fa16-4ba6-9288-e8a174d4d522"
+      Hint: __Updated
+      Value: 20231031T230223Z
