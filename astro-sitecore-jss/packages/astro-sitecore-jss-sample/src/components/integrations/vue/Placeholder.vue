@@ -1,9 +1,10 @@
 <template>
-  <sc-placeholder 
-    name="vue" 
+  <sc-placeholder
+    name="vue"
     :rendering="rendering"
     :params="params"
-    :componentFactory="componentFactory" />  
+    :componentFactory="componentFactory"
+  />
 </template>
 
 <script>
@@ -19,11 +20,11 @@ export default {
       type: Object,
     },
     componentFactory: {
-      type: Object
-    }
+      type: Object,
+    },
   },
   components: {
-    ScPlaceholder: Placeholder
+    ScPlaceholder: Placeholder,
   },
 };
 </script>
