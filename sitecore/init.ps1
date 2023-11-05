@@ -1,5 +1,6 @@
 [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingPlainTextForPassword', '', Justification='Value will be stored unencrypted in .env,
 # and used only for transient local development environments', Scope='Function')]
+#.\init.ps1 -InitEnv -LicenseXmlPath "C:\license\license.xml" -AdminPassword "b"
 
 [CmdletBinding(DefaultParameterSetName = "no-arguments")]
 Param (
@@ -128,7 +129,13 @@ Add-HostsEntry "angular.headless.localhost"
 ###############################
 
 if ($InitEnv) {
-    Push-Location $workinDirectoryPath
+    Push-Location $workinDirectoryPath	
+	
+	##################
+	# Firstly, create .env file from template for clean slate approach
+	##################
+	Write-Host "Creating .env file." -ForegroundColor Green
+	Copy-Item ".\.env.template" ".\.env" -Force
 
     Write-Host "Populating required .env file values..." -ForegroundColor Green
 
@@ -150,13 +157,16 @@ if ($InitEnv) {
     Set-EnvFileVariable "REPORTING_API_KEY" -Value (Get-SitecoreRandomString 128 -DisallowSpecial)
 
     # TELERIK_ENCRYPTION_KEY = random 64-128 chars
-    Set-EnvFileVariable "TELERIK_ENCRYPTION_KEY" -Value (Get-SitecoreRandomString 128)
+    Set-EnvFileVariable "TELERIK_ENCRYPTION_KEY" -Value (Get-SitecoreRandomString 128 -DisallowSpecial)
 
     # MEDIA_REQUEST_PROTECTION_SHARED_SECRET
-    Set-EnvFileVariable "MEDIA_REQUEST_PROTECTION_SHARED_SECRET" -Value (Get-SitecoreRandomString 64)
+    Set-EnvFileVariable "MEDIA_REQUEST_PROTECTION_SHARED_SECRET" -Value (Get-SitecoreRandomString 64 -DisallowSpecial)
 
     # SITECORE_IDSECRET = random 64 chars
     Set-EnvFileVariable "SITECORE_IDSECRET" -Value (Get-SitecoreRandomString 64 -DisallowSpecial)
+	
+	 # SITECORE GRAPHQL UPLOADMEDIAOPTIONS ENCRYPTIONKEY
+    Set-EnvFileVariable "SITECORE_GRAPHQL_UPLOADMEDIAOPTIONS_ENCRYPTIONKEY" -Value (Get-SitecoreRandomString 16 -DisallowSpecial)
 
     # SITECORE_ID_CERTIFICATE
     $idCertPassword = Get-SitecoreRandomString 12 -DisallowSpecial
@@ -182,7 +192,7 @@ if ($InitEnv) {
     # Populate it for the Next.js local environment as well
     $jssEditingSecret = Get-SitecoreRandomString 64 -DisallowSpecial
     Set-EnvFileVariable "JSS_EDITING_SECRET" -Value $jssEditingSecret
-
+	
     # Set the instance topology
     Set-EnvFileVariable "TOPOLOGY" -Value $Topology
     Write-Host "The instance topology: $Topology" -ForegroundColor Green
