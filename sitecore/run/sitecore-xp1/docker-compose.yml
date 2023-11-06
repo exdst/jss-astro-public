@@ -278,7 +278,7 @@ services:
       Sitecore_ConnectionStrings_Xdb.Referencedata: Data Source=${SQL_SERVER};Initial Catalog=${SQL_DATABASE_PREFIX}.Referencedata;User ID=${SQL_SA_LOGIN};Password=${SQL_SA_PASSWORD}
       Sitecore_License: ${SITECORE_LICENSE}
     healthcheck:
-      test: ["CMD", "powershell", "-command", "C:/Healthchecks/Healthcheck.ps1"]
+      test: ["CMD", "powershell", "-command", "C:\\Healthchecks\\Healthcheck.ps1"]
       timeout: 300s
   xdbsearch:
     isolation: ${ISOLATION}
@@ -332,7 +332,7 @@ services:
       Sitecore_ConnectionStrings_Xdb.Referencedata: Data Source=${SQL_SERVER};Initial Catalog=${SQL_DATABASE_PREFIX}.Referencedata;User ID=${SQL_SA_LOGIN};Password=${SQL_SA_PASSWORD}
       Sitecore_License: ${SITECORE_LICENSE}
     healthcheck:
-      test: ["CMD", "powershell", "-command", "C:/Healthchecks/Healthcheck.ps1"]
+      test: ["CMD", "powershell", "-command", "C:\\Healthchecks\\Healthcheck.ps1"]
       timeout: 300s
   cortexprocessing:
     isolation: ${ISOLATION}
