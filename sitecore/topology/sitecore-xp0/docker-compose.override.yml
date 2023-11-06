@@ -24,14 +24,14 @@ services:
   # Mount the Traefik configuration and certs.
   traefik:
     volumes:
-      - ../../docker/traefik:C:/etc/traefik
+      - ..\..\docker\traefik:C:\etc\traefik\
 
   # Mount our SQL data folder and use our custom image with the Headless Services (JSS)
   # module data added. See Dockerfile for details.
   mssql:
     volumes:
       - type: bind
-        source: ${LOCAL_DATA_PATH}\sql
+        source: ${LOCAL_DATA_PATH}\\sql
         target: c:\data
 
   # Mount our SQL data folder and use our custom image with the Headless Services (JSS)
@@ -50,7 +50,7 @@ services:
   solr:
     volumes:
       - type: bind
-        source: ${LOCAL_DATA_PATH}\solr
+        source: ${LOCAL_DATA_PATH}\\solr
         target: c:\data
 
   # Mount our Solr data folder and use our retagged Solr image.
@@ -74,7 +74,7 @@ services:
     volumes:
       - ${HOST_LICENSE_FOLDER}:c:\license
     environment:
-      SITECORE_LICENSE_LOCATION: c:\license\license.xml
+      SITECORE_LICENSE_LOCATION: c:\\license\\license.xml
 
   # Use our custom CM (XP0 Standalone) image with added modules and solution code.
   # Folders are mounted below for code deployment and log output. See Dockerfile for details.
