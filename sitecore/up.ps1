@@ -98,7 +98,7 @@ Write-Host "docker-compose logs -f rendering"
 Write-Host ""
 
 # host.docker.internal is not available on CM, so we need to add it manually
-$containerId = docker ps --filter ancestor=jss_astro-xm1-cm --format "{{.ID}}"
+$containerId = docker ps --filter ancestor=jss_astro-$Topology-cm --format "{{.ID}}"
 $ip = Get-NetIPAddress | Where-Object -FilterScript {$_.IPAddress.StartsWith("192") -and -not $_.InterfaceAlias.StartsWith("vEthernet")}
 $ipAddress = $ip.IPAddress
 Write-Host "Adding DNS record to container $containerId. Host: host.docker.internal. IP: $ipAddress"
