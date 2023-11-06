@@ -8,7 +8,7 @@ Param (
 $topologyArray = "xp0", "xp1", "xm1";
 
 $ErrorActionPreference = "Stop";
-$startDirectory = ".\run\sitecore-";
+$startDirectory = ".\topology\sitecore-";
 $workingDirectoryPath;
 $envCheck;
 # Double check whether init has been run

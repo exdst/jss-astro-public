@@ -1,6 +1,6 @@
 $topologyArray = "xp0", "xp1", "xm1";
 
-$startDirectory = ".\run\sitecore-";
+$startDirectory = ".\topology\sitecore-";
 $workinDirectoryPath;
 $envCheck;
 $envCheckVariable = "HOST_LICENSE_FOLDER";
