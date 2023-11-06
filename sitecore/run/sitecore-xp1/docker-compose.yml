@@ -140,7 +140,7 @@ services:
       MEDIA_REQUEST_PROTECTION_SHARED_SECRET: ${MEDIA_REQUEST_PROTECTION_SHARED_SECRET}
       LOG_LEVEL_VALUE: ${LOG_LEVEL_VALUE}
     healthcheck:
-      test: ["CMD", "powershell", "-command", "C:/Healthchecks/Healthcheck.ps1"]
+      test: ["CMD", "powershell", "-command", "C:\\Healthchecks\\Healthcheck.ps1"]
       timeout: 300s
     labels:
       - "traefik.enable=true"
@@ -299,7 +299,7 @@ services:
       Sitecore_Sitecore:XConnect:CollectionSearch:Services:Solr.SolrReaderSettings:Options:RequireHttps: 'false'
       Sitecore_Sitecore:XConnect:CollectionSearch:Services:XConnectSolrHealthCheckServicesConfiguration:Options:RequireHttps: 'false'
     healthcheck:
-      test: ["CMD", "powershell", "-command", "C:/Healthchecks/Healthcheck.ps1"]
+      test: ["CMD", "powershell", "-command", "C:\\Healthchecks\\Healthcheck.ps1"]
       timeout: 300s
   xdbautomation:
     isolation: ${ISOLATION}
@@ -345,7 +345,7 @@ services:
       Sitecore_ConnectionStrings_Processing.Engine.Tasks: Data Source=${SQL_SERVER};Initial Catalog=${SQL_DATABASE_PREFIX}.Processing.Engine.Tasks;User ID=${SQL_SA_LOGIN};Password=${SQL_SA_PASSWORD}
       Sitecore_License: ${SITECORE_LICENSE}
     healthcheck:
-      test: ["CMD", "powershell", "-command", "C:/Healthchecks/Healthcheck.ps1"]
+      test: ["CMD", "powershell", "-command", "C:\\Healthchecks\\Healthcheck.ps1"]
       timeout: 300s
   cortexreporting:
     isolation: ${ISOLATION}
@@ -357,7 +357,7 @@ services:
       Sitecore_ConnectionStrings_Reporting: Data Source=${SQL_SERVER};Initial Catalog=${SQL_DATABASE_PREFIX}.Reporting;User ID=${SQL_SA_LOGIN};Password=${SQL_SA_PASSWORD}
       Sitecore_License: ${SITECORE_LICENSE}
     healthcheck:
-      test: ["CMD", "powershell", "-command", "C:/Healthchecks/Healthcheck.ps1"]
+      test: ["CMD", "powershell", "-command", "C:\\Healthchecks\\Healthcheck.ps1"]
       timeout: 300s
   xdbrefdata:
     isolation: ${ISOLATION}
@@ -386,7 +386,7 @@ services:
       Sitecore_Sitecore:XConnect:SearchIndexer:Services:Solr.SolrWriterSettings:Options:RequireHttps: 'false'
       Sitecore_Sitecore:XConnect:CollectionSearch:Services:XConnectSolrHealthCheckServicesConfiguration:Options:RequireHttps: 'false'
     healthcheck:
-      test: ["CMD", "powershell", "-command", "C:/Healthchecks/Healthcheck.ps1 -Port 8080"]
+      test: ["CMD", "powershell", "-command", "C:\\Healthchecks\\Healthcheck.ps1 -Port 8080"]
       timeout: 300s
   xdbautomationworker:
     isolation: ${ISOLATION}

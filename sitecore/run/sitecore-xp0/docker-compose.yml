@@ -201,7 +201,7 @@ services:
       Sitecore_Sitecore:XConnect:SearchIndexer:Services:Solr.SolrReaderSettings:Options:RequireHttps: 'false'
       Sitecore_Sitecore:XConnect:SearchIndexer:Services:Solr.SolrWriterSettings:Options:RequireHttps: 'false'
     healthcheck:
-      test: ["CMD", "powershell", "-command", "C:/Healthchecks/Healthcheck.ps1"]
+      test: ["CMD", "powershell", "-command", "C:\\Healthchecks\\Healthcheck.ps1"]
       timeout: 300s
   xdbsearchworker:
     isolation: ${ISOLATION}
