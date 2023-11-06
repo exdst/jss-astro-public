@@ -24,7 +24,7 @@ It is fully featured SDK. You can use it to build your website with Astro and Si
 6. Change directory to the [Astro sample project](./astro-sitecore-jss/packages/astro-sitecore-jss-sample/) `cd ./astro-sitecore-jss/packages/astro-sitecore-jss-sample/`
 7. Install npm packages with `npm install`
 8. Start the project with `npm run dev` command
-9. Open [http://localhost:3000](http://localhost:3000) in your browser (If port 3000 is busy, different port will be used)
+9. Open [http://localhost:4321](http://localhost:4321) in your browser (If port 4321 is busy, different port will be used)
 10. Open Sitecore Experience Editor for item `/sitecore/content/Headless/Astro/home/styleguide`
 
 ## Production usage

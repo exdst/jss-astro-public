@@ -31,7 +31,7 @@ SharedFields:
   Value: "{FEE78395-7D1A-4761-AF55-43F7309D6BAD}"
 - ID: "5e8ed724-126a-4bb7-8106-85c2d1042c9e"
   Hint: ServerSideRenderingEngineApplicationUrl
-  Value: "http://host.docker.internal:3000/"
+  Value: "http://host.docker.internal:4321/"
 - ID: "72e83c8d-3578-4e50-b4c0-93a78a1729f2"
   Hint: FilesystemPath
   Value: /dist/Astro
@@ -40,7 +40,7 @@ SharedFields:
   Value: g0ohvcr6th9re6jadhsuekf0nn2aa5fhhsgodh5fxk0n
 - ID: "89849738-34ee-46bc-b525-825f1153189e"
   Hint: ServerSideRenderingEngineEndpointUrl
-  Value: "http://host.docker.internal:3000/api/editing/render"
+  Value: "http://host.docker.internal:4321/api/editing/render"
 - ID: "9016141c-ff51-40f2-9135-40f5161b9784"
   Hint: ServerSideRenderingEngine
   Value: http
