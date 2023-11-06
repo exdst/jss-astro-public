@@ -31,7 +31,7 @@ if (!$topologyArray.Contains($Topology)) {
   throw "The topology $Topology is not valid. Please choose one from existed $($topologyArray -join ', ')"
 }
 $ErrorActionPreference = "Stop";
-$workinDirectoryPath = ".\run\sitecore-$Topology"
+$workinDirectoryPath = ".\topology\sitecore-$Topology"
 
 if ($InitEnv) {
     if (-not $LicenseXmlPath.EndsWith("license.xml")) {
