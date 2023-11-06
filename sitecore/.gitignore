@@ -4,6 +4,8 @@
 # NuGet cache for Sitecore CLI
 .sitecore/package-cache/
 
+.env
+
 # Ephemeral index caches used by serialization, do not commit
 .scindex
 
