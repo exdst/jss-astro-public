@@ -1,23 +1,26 @@
-$topologyArray = "xp0", "xp1", "xm1";
+[CmdletBinding(DefaultParameterSetName = "no-arguments")]
+Param (    
+	[Parameter(Mandatory = $false,
+        HelpMessage = "Sets the instance topology")]
+    [ValidateSet("xp0","xp1","xm1")]
+    [string]$Topology = "xm1"
+)
 
-$startDirectory = ".\topology\sitecore-";
-$workinDirectoryPath;
-$envCheck;
+$ErrorActionPreference = "Stop";
+$workingDirectoryPath = ".\topology\sitecore-$Topology";
+
+# Double check whether init has been run
 $envCheckVariable = "HOST_LICENSE_FOLDER";
-
-foreach ($topology in $topologyArray) {
-  $envCheck = Get-Content (Join-Path -Path ($startDirectory + $topology) -ChildPath .env) -Encoding UTF8 | Where-Object { $_ -imatch "^$envCheckVariable=.+" }
-  if ($envCheck) {
-    $workinDirectoryPath = $startDirectory + $topology;
-    break
-  }
+$envCheck = Get-Content (Join-Path -Path ($workingDirectoryPath) -ChildPath .env) -Encoding UTF8 | Where-Object { $_ -imatch "^$envCheckVariable=.+" }
+if (-not $envCheck) {
+    throw "$envCheckVariable does not have a value. Did you run 'init.ps1 -InitEnv'?"
 }
 
-Push-Location $workinDirectoryPath
+Push-Location $workingDirectoryPath
 
 Write-Host "Down containers..." -ForegroundColor Green
 try {
-  docker-compose down
+  docker compose down
   if ($LASTEXITCODE -ne 0) {
     Write-Error "Container down failed, see errors above."
   }

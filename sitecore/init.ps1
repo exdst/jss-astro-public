@@ -19,6 +19,7 @@ Param (
         HelpMessage = "Sets the sitecore\\admin password for this environment via environment variable.",
         ParameterSetName = "env-init")]
     [string]$AdminPassword,
+	
     [Parameter(Mandatory = $false,
         HelpMessage = "Sets the instance topology",
         ParameterSetName = "env-init")]
@@ -26,10 +27,6 @@ Param (
     [string]$Topology = "xm1"
 )
 
-$topologyArray = "xp0", "xp1", "xm1";
-if (!$topologyArray.Contains($Topology)) {
-  throw "The topology $Topology is not valid. Please choose one from existed $($topologyArray -join ', ')"
-}
 $ErrorActionPreference = "Stop";
 $workinDirectoryPath = ".\topology\sitecore-$Topology"
 
@@ -140,7 +137,7 @@ if ($InitEnv) {
     Write-Host "Populating required .env file values..." -ForegroundColor Green
 
     # HOST_LICENSE_FOLDER
-    Set-EnvFileVariable "HOST_LICENSE_FOLDER" -Value $LicenseXmlPath
+    Set-EnvFileVariable "HOST_LICENSE_FOLDER" -Value "'${LicenseXmlPath}'"
 
     # CM_HOST
     Set-EnvFileVariable "CM_HOST" -Value "cm.headless.localhost"
@@ -159,39 +156,39 @@ if ($InitEnv) {
     # TELERIK_ENCRYPTION_KEY = random 64-128 chars
     Set-EnvFileVariable "TELERIK_ENCRYPTION_KEY" -Value (Get-SitecoreRandomString 128 -DisallowSpecial)
 
-    # MEDIA_REQUEST_PROTECTION_SHARED_SECRET
-    Set-EnvFileVariable "MEDIA_REQUEST_PROTECTION_SHARED_SECRET" -Value (Get-SitecoreRandomString 64 -DisallowSpecial)
+    # MEDIA_REQUEST_PROTECTION_SHARED_SECRET    
+	Set-EnvFileVariable "MEDIA_REQUEST_PROTECTION_SHARED_SECRET" -Value (Get-SitecoreRandomString 64 -DisallowSpecial)    
 
-    # SITECORE_IDSECRET = random 64 chars
+    # SITECORE_IDSECRET = random 64 chars    
     Set-EnvFileVariable "SITECORE_IDSECRET" -Value (Get-SitecoreRandomString 64 -DisallowSpecial)
 	
-	 # SITECORE GRAPHQL UPLOADMEDIAOPTIONS ENCRYPTIONKEY
+    # SITECORE GRAPHQL UPLOADMEDIAOPTIONS ENCRYPTIONKEY
     Set-EnvFileVariable "SITECORE_GRAPHQL_UPLOADMEDIAOPTIONS_ENCRYPTIONKEY" -Value (Get-SitecoreRandomString 16 -DisallowSpecial)
 
-    # SITECORE_ID_CERTIFICATE
-    $idCertPassword = Get-SitecoreRandomString 12 -DisallowSpecial
-    Set-EnvFileVariable "SITECORE_ID_CERTIFICATE" -Value (Get-SitecoreCertificateAsBase64String -DnsName "localhost" -Password (ConvertTo-SecureString -String $idCertPassword -Force -AsPlainText) -KeyLength 2048)
+	$idCertPassword = Get-SitecoreRandomString 12 -DisallowSpecial
 
-    # SITECORE_ID_CERTIFICATE_PASSWORD
+    # SITECORE_ID_CERTIFICATE	
+    $idCertificate = (Get-SitecoreCertificateAsBase64String -DnsName "localhost" -Password (ConvertTo-SecureString -String $idCertPassword -Force -AsPlainText) -KeyLength 2048)
+    Set-EnvFileVariable "SITECORE_ID_CERTIFICATE" -Value $idCertificate
+	
+	# SITECORE_ID_CERTIFICATE_PASSWORD
     Set-EnvFileVariable "SITECORE_ID_CERTIFICATE_PASSWORD" -Value $idCertPassword
-
+    
     # SQL_SA_PASSWORD
-    # Need to ensure it meets SQL complexity requirements
+    # Need to ensure it meets SQL complexity requirements    
     Set-EnvFileVariable "SQL_SA_PASSWORD" -Value (Get-SitecoreRandomString 19 -DisallowSpecial -EnforceComplexity)
 
     # SQL_SERVER
-    Set-EnvFileVariable "SQL_SERVER" -Value "mssql"
+    Set-EnvFileVariable "SQL_SERVER" -Value mssql
 
     # SQL_SA_LOGIN
-    Set-EnvFileVariable "SQL_SA_LOGIN" -Value "sa"
+    Set-EnvFileVariable "SQL_SA_LOGIN" -Value sa
 
     # SITECORE_ADMIN_PASSWORD
     Set-EnvFileVariable "SITECORE_ADMIN_PASSWORD" -Value $AdminPassword
 
-    # JSS_EDITING_SECRET
-    # Populate it for the Next.js local environment as well
-    $jssEditingSecret = Get-SitecoreRandomString 64 -DisallowSpecial
-    Set-EnvFileVariable "JSS_EDITING_SECRET" -Value $jssEditingSecret
+    # JSS editing secret, should be provided to CM and rendering host    
+    Set-EnvFileVariable "JSS_EDITING_SECRET" -Value (Get-SitecoreRandomString 64 -DisallowSpecial)
 	
     # Set the instance topology
     Set-EnvFileVariable "TOPOLOGY" -Value $Topology
