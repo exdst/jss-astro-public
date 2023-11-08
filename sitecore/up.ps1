@@ -2,42 +2,36 @@
 Param (
     [Parameter(HelpMessage = "Alternative login using app client.",
         ParameterSetName = "by-pass")]
-    [bool]$ByPass = $false
+    [bool]$ByPass = $false,
+	
+	[Parameter(Mandatory = $false,
+        HelpMessage = "Sets the instance topology")]
+    [ValidateSet("xp0","xp1","xm1")]
+    [string]$Topology = "xm1"
 )
 
-$topologyArray = "xp0", "xp1", "xm1";
-
 $ErrorActionPreference = "Stop";
-$startDirectory = ".\run\sitecore-";
-$workingDirectoryPath;
-$envCheck;
+$workingDirectoryPath = ".\topology\sitecore-$Topology";
+
 # Double check whether init has been run
 $envCheckVariable = "HOST_LICENSE_FOLDER";
-
-foreach ($topology in $topologyArray)
-{
-  $envCheck = Get-Content (Join-Path -Path ($startDirectory + $topology) -ChildPath .env) -Encoding UTF8 | Where-Object { $_ -imatch "^$envCheckVariable=.+" }
-  if ($envCheck) {
-    $workingDirectoryPath = $startDirectory + $topology;
-    break
-  }
-}
-
+$envCheck = Get-Content (Join-Path -Path ($workingDirectoryPath) -ChildPath .env) -Encoding UTF8 | Where-Object { $_ -imatch "^$envCheckVariable=.+" }
 if (-not $envCheck) {
     throw "$envCheckVariable does not have a value. Did you run 'init.ps1 -InitEnv'?"
 }
+
 Push-Location $workingDirectoryPath
 
 # Build all containers in the Sitecore instance, forcing a pull of latest base containers
 Write-Host "Building containers..." -ForegroundColor Green
-docker-compose build
+docker compose build
 if ($LASTEXITCODE -ne 0) {
     Write-Error "Container build failed, see errors above."
 }
 
 # Start the Sitecore instance
 Write-Host "Starting Sitecore environment..." -ForegroundColor Green
-docker-compose up -d
+docker compose up -d
 
 Pop-Location
 
@@ -94,7 +88,7 @@ Start-Process https://cm.headless.localhost/sitecore/
 
 Write-Host ""
 Write-Host "Use the following command to monitor your Rendering Host:" -ForegroundColor Green
-Write-Host "docker-compose logs -f rendering"
+Write-Host "docker compose logs -f rendering"
 Write-Host ""
 
 # host.docker.internal is not available on CM, so we need to add it manually
