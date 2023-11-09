@@ -1,6 +1,5 @@
 ---
-import { Image as OptimizedImage } from "@astrojs/image/components";
-import type { TransformOptions } from "@astrojs/image/dist/loaders";
+import { Image as OptimizedImage } from "astro:assets";
 import { prepareImageSource } from "../media/image-api";
 import { SitecoreContextMap } from '../context';
 import type { ImageField } from "./ImageField";
@@ -12,7 +11,7 @@ if(sitecoreContext.pageState === 'edit' || sitecoreContext.pageState === 'previe
   fallback = true;
 }
 
-export interface Props extends Omit<TransformOptions, "src" | "width" | "height"> {
+export interface Props {
   [attributeName: string]: any;
   field: ImageField;
   editable?: boolean;
@@ -58,11 +57,17 @@ const getAttributes = (): any => {
     alt: altText,
     src: imageSource,
     height: imageHeight,
-    width: imageWidth    
+    width: imageWidth
   }
 };
 
---- 
+const attributes = getAttributes()
 
-{ render && <OptimizedImage {...getAttributes() } /> }
+if (attributes?.width === undefined || attributes?.height === undefined) {
+  console.warn("Missing width or height attribute")
+  return
+}
+
+--- 
+{ render && <OptimizedImage {...attributes} /> }
 { fallback && <Image {...Astro.props} /> }

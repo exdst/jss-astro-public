@@ -20,7 +20,7 @@ scContext.itemId = layoutData.sitecore.route.itemId;
 SitecoreContextMap.setKey('scContext', scContext);
 SitecoreContextMap.setKey('dictionary', dictionary);
 
-const response = await fetch("http://localhost:3000/api/editing/page", {
+const response = await fetch("http://localhost:4321/api/editing/page", {
     method: "POST",
     headers: {
         "Content-Type": "application/json",

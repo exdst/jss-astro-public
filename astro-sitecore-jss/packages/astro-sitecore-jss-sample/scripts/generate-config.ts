@@ -1,7 +1,7 @@
 import { JssConfig, jssConfigGenerator } from "./config/config-generator";
 import fs from "fs";
 import path from "path";
-import { constantCase } from "constant-case";
+import * as changeCase from "change-case";
 
 const CONFIG_PATH = path.resolve("src/temp/config.js");
 
@@ -39,7 +39,7 @@ function writeConfig(config: JssConfig): void {
   let configText = `const config = {};\n`;
   
   Object.keys(config).forEach(key => {
-    configText += `config.${key} = import.meta.env.${constantCase(key)} || '${config[key]}';\n`
+    configText += `config.${key} = import.meta.env.${changeCase.constantCase(key)} || '${config[key]}';\n`
   });
 
   configText += "export default config;";
