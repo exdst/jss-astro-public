@@ -22,3 +22,9 @@ fs.unlinkSync(path.resolve(distFolder, 'tsconfig.json'));
 
 // Rename tsconfig.template.json to tsconfig.json
 fs.renameSync(path.resolve(distFolder, 'tsconfig.template.json'), path.resolve(distFolder, 'tsconfig.json'));
+
+// Delete astro.config.mjs, because it is configured for monorepo
+fs.unlinkSync(path.resolve(distFolder, 'astro.config.mjs'));
+
+// Rename astro.config.mjs to astro.config.template.mjs
+fs.renameSync(path.resolve(distFolder, 'astro.config.template.mjs'), path.resolve(distFolder, 'astro.config.mjs'));

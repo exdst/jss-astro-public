@@ -1,5 +1,6 @@
 [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingPlainTextForPassword', '', Justification='Value will be stored unencrypted in .env,
 # and used only for transient local development environments', Scope='Function')]
+#.\init.ps1 -InitEnv -LicenseXmlPath "C:\license\license.xml" -AdminPassword "b"
 
 [CmdletBinding(DefaultParameterSetName = "no-arguments")]
 Param (
@@ -18,6 +19,7 @@ Param (
         HelpMessage = "Sets the sitecore\\admin password for this environment via environment variable.",
         ParameterSetName = "env-init")]
     [string]$AdminPassword,
+	
     [Parameter(Mandatory = $false,
         HelpMessage = "Sets the instance topology",
         ParameterSetName = "env-init")]
@@ -25,12 +27,8 @@ Param (
     [string]$Topology = "xm1"
 )
 
-$topologyArray = "xp0", "xp1", "xm1";
-if (!$topologyArray.Contains($Topology)) {
-  throw "The topology $Topology is not valid. Please choose one from existed $($topologyArray -join ', ')"
-}
 $ErrorActionPreference = "Stop";
-$workinDirectoryPath = ".\run\sitecore-$Topology"
+$workinDirectoryPath = ".\topology\sitecore-$Topology"
 
 if ($InitEnv) {
     if (-not $LicenseXmlPath.EndsWith("license.xml")) {
@@ -128,7 +126,13 @@ Add-HostsEntry "angular.headless.localhost"
 ###############################
 
 if ($InitEnv) {
-    Push-Location $workinDirectoryPath
+    Push-Location $workinDirectoryPath	
+	
+	##################
+	# Firstly, create .env file from template for clean slate approach
+	##################
+	Write-Host "Creating .env file." -ForegroundColor Green
+	Copy-Item ".\.env.template" ".\.env" -Force
 
     Write-Host "Populating required .env file values..." -ForegroundColor Green
 
@@ -136,61 +140,58 @@ if ($InitEnv) {
     Set-EnvFileVariable "HOST_LICENSE_FOLDER" -Value "'${LicenseXmlPath}'"
 
     # CM_HOST
-    Set-EnvFileVariable "CM_HOST" -Value "'cm.headless.localhost'"
+    Set-EnvFileVariable "CM_HOST" -Value "cm.headless.localhost"
 
     if ($Topology -ne "xp0") {
       # CD_HOST
-      Set-EnvFileVariable "CD_HOST" -Value "'cd.headless.localhost'"
+      Set-EnvFileVariable "CD_HOST" -Value "cd.headless.localhost"
     }
 
     # ID_HOST
-    Set-EnvFileVariable "ID_HOST" -Value "'id.headless.localhost'"
+    Set-EnvFileVariable "ID_HOST" -Value "id.headless.localhost"
 
     # REPORTING_API_KEY = random 64-128 chars
-	$reportingApiKey = (Get-SitecoreRandomString 128 -DisallowSpecial)
-    Set-EnvFileVariable "REPORTING_API_KEY" -Value "'${reportingApiKey}'"
+    Set-EnvFileVariable "REPORTING_API_KEY" -Value (Get-SitecoreRandomString 128 -DisallowSpecial)
 
     # TELERIK_ENCRYPTION_KEY = random 64-128 chars
-	$telerikEncryptionKey = (Get-SitecoreRandomString 128)
-    Set-EnvFileVariable "TELERIK_ENCRYPTION_KEY" -Value "'${telerikEncryptionKey}'"
+    Set-EnvFileVariable "TELERIK_ENCRYPTION_KEY" -Value (Get-SitecoreRandomString 128 -DisallowSpecial)
 
-    # MEDIA_REQUEST_PROTECTION_SHARED_SECRET
-	$mediaRequestProtectionSharedSecret
-    Set-EnvFileVariable "MEDIA_REQUEST_PROTECTION_SHARED_SECRET" -Value "'${mediaRequestProtectionSharedSecret}'"
+    # MEDIA_REQUEST_PROTECTION_SHARED_SECRET    
+	Set-EnvFileVariable "MEDIA_REQUEST_PROTECTION_SHARED_SECRET" -Value (Get-SitecoreRandomString 64 -DisallowSpecial)    
 
-    # SITECORE_IDSECRET = random 64 chars
-	$sitecoreIdSecret = (Get-SitecoreRandomString 64 -DisallowSpecial)
-    Set-EnvFileVariable "SITECORE_IDSECRET" -Value "'${sitecoreIdSecret}'"
+    # SITECORE_IDSECRET = random 64 chars    
+    Set-EnvFileVariable "SITECORE_IDSECRET" -Value (Get-SitecoreRandomString 64 -DisallowSpecial)
+	
+    # SITECORE GRAPHQL UPLOADMEDIAOPTIONS ENCRYPTIONKEY
+    Set-EnvFileVariable "SITECORE_GRAPHQL_UPLOADMEDIAOPTIONS_ENCRYPTIONKEY" -Value (Get-SitecoreRandomString 16 -DisallowSpecial)
 
-    # SITECORE_ID_CERTIFICATE
-    $idCertPassword = Get-SitecoreRandomString 12 -DisallowSpecial
-	$idCertificate = (Get-SitecoreCertificateAsBase64String -DnsName "localhost" -Password (ConvertTo-SecureString -String $idCertPassword -Force -AsPlainText) -KeyLength 2048)
-    Set-EnvFileVariable "SITECORE_ID_CERTIFICATE" -Value "'${idCertificate}'"
+	$idCertPassword = Get-SitecoreRandomString 12 -DisallowSpecial
 
-    # SITECORE_ID_CERTIFICATE_PASSWORD
+    # SITECORE_ID_CERTIFICATE	
+    $idCertificate = (Get-SitecoreCertificateAsBase64String -DnsName "localhost" -Password (ConvertTo-SecureString -String $idCertPassword -Force -AsPlainText) -KeyLength 2048)
+    Set-EnvFileVariable "SITECORE_ID_CERTIFICATE" -Value $idCertificate
+	
+	# SITECORE_ID_CERTIFICATE_PASSWORD
     Set-EnvFileVariable "SITECORE_ID_CERTIFICATE_PASSWORD" -Value $idCertPassword
-
+    
     # SQL_SA_PASSWORD
-    # Need to ensure it meets SQL complexity requirements
-	$sqlPassword = (Get-SitecoreRandomString 19 -DisallowSpecial -EnforceComplexity)
-    Set-EnvFileVariable "SQL_SA_PASSWORD" -Value "'${sqlPassword}'"
+    # Need to ensure it meets SQL complexity requirements    
+    Set-EnvFileVariable "SQL_SA_PASSWORD" -Value (Get-SitecoreRandomString 19 -DisallowSpecial -EnforceComplexity)
 
     # SQL_SERVER
-    Set-EnvFileVariable "SQL_SERVER" -Value "'mssql'"
+    Set-EnvFileVariable "SQL_SERVER" -Value mssql
 
     # SQL_SA_LOGIN
-    Set-EnvFileVariable "SQL_SA_LOGIN" -Value "'sa'"
+    Set-EnvFileVariable "SQL_SA_LOGIN" -Value sa
 
     # SITECORE_ADMIN_PASSWORD
-    Set-EnvFileVariable "SITECORE_ADMIN_PASSWORD" -Value "'${AdminPassword}'"
+    Set-EnvFileVariable "SITECORE_ADMIN_PASSWORD" -Value $AdminPassword
 
-    # JSS_EDITING_SECRET
-    # Populate it for the Next.js local environment as well
-    $jssEditingSecret = Get-SitecoreRandomString 64 -DisallowSpecial
-    Set-EnvFileVariable "JSS_EDITING_SECRET" -Value "'${jssEditingSecret}'"
-
+    # JSS editing secret, should be provided to CM and rendering host    
+    Set-EnvFileVariable "JSS_EDITING_SECRET" -Value (Get-SitecoreRandomString 64 -DisallowSpecial)
+	
     # Set the instance topology
-	Set-EnvFileVariable "TOPOLOGY" -Value "'${Topology}'"
+    Set-EnvFileVariable "TOPOLOGY" -Value $Topology
     Write-Host "The instance topology: $Topology" -ForegroundColor Green
 
     Pop-Location

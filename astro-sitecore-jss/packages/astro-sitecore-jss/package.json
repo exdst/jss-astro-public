@@ -15,7 +15,6 @@
     "access": "public"
   },
   "dependencies": {
-    "@astrojs/image": "^0.17.3",
     "@sitecore-jss/sitecore-jss": "^21.2.4",
     "nanostores": "^0.9.3"
   },
