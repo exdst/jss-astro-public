@@ -15,6 +15,7 @@
     "bootstrap": "ts-node --project tsconfig.scripts.json scripts/bootstrap.ts"
   },
   "dependencies": {
+    "@analogjs/astro-angular": "^0.2.19",
     "@astro-sitecore-jss/astro-sitecore-jss": "latest",
     "@astrojs/node": "^6.0.3",
     "@astrojs/react": "^3.0.4",

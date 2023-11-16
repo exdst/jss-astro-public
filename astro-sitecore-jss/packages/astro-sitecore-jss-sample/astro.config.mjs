@@ -2,6 +2,7 @@ import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import vue from '@astrojs/vue';
 import node from '@astrojs/node';
+import angular from '@analogjs/astro-angular';
 
 // https://astro.build/config
 /*
@@ -14,7 +15,7 @@ import node from '@astrojs/node';
   https://www.npmjs.com/package/vite-tsconfig-paths
 */
 export default defineConfig({
-  integrations: [react(), vue()],
+  integrations: [react(), vue(), angular()],
   output: 'server',
   adapter: node({
     mode: 'standalone',
