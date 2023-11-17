@@ -3,8 +3,6 @@ import react from '@astrojs/react';
 import vue from '@astrojs/vue';
 import node from '@astrojs/node';
 import angular from '@analogjs/astro-angular';
-import path from 'path';
-import tsconfigPaths from 'vite-tsconfig-paths'
 
 export default defineConfig({
   integrations: [react(), vue(), angular()],
@@ -14,6 +12,13 @@ export default defineConfig({
   }),
   outDir: './dist',
   vite: {
-    plugins: [tsconfigPaths()]
+    resolve: {
+      alias: [
+        {
+          find: '@astro-sitecore-jss/astro-sitecore-jss',
+          replacement: 'packages/astro-sitecore-jss',
+        },
+      ],
+    },
   },
 });

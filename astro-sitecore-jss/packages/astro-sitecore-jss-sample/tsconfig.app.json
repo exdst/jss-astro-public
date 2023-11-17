@@ -30,6 +30,6 @@
     "allowJs": false
   },
   "files": [],
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "../astro-sitecore-jss/**/*.ts", "../astro-sitecore-jss/**/*.tsx, ../astro-sitecore-jss/**/*.Astro"],
   "exclude": ["node_modules", "tmp"]
 }
