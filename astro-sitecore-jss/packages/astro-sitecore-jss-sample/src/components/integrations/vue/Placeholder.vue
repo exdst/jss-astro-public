@@ -20,7 +20,7 @@ export default {
       type: Object,
     },
     componentFactory: {
-      type: Object,
+      type: Function,
     },
   },
   components: {

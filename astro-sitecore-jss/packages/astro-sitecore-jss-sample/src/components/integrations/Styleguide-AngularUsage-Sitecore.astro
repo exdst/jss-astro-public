@@ -1,5 +1,7 @@
 ---
 import StyleguideSpecimen from "../styleguide/Styleguide-Specimen.astro";
+import { ContentBlockComponent } from './angular/ContentBlock/content-block.component';
+
 ---
 
 <StyleguideSpecimen
@@ -7,5 +9,5 @@ import StyleguideSpecimen from "../styleguide/Styleguide-Specimen.astro";
   e2eId="styleguide-integration-angular-sitecore-content"
 >
   The same fields output but using Angular based component.
-  Content Block
+  <ContentBlockComponent client:load fields={Astro.props.route.fields}/>
 </StyleguideSpecimen>
