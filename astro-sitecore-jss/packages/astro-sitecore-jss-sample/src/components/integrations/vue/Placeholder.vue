@@ -3,7 +3,7 @@
     name="vue"
     :rendering="rendering"
     :params="params"
-    :componentFactory="componentFactory"
+    :componentFactory="{componentFactory}"
   />
 </template>
 
