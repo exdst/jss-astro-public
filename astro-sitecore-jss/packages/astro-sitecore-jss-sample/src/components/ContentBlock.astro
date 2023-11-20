@@ -1,6 +1,7 @@
 ---
 import { RichText } from '@astro-sitecore-jss/astro-sitecore-jss';
 import { Text } from '@astro-sitecore-jss/astro-sitecore-jss';
+import { ContentBlockComponent } from './integrations/angular/content-block.component';
 
 export interface Props {
   route: any;
@@ -12,4 +13,11 @@ const { fields } = Astro.props.route;
 <div class="contentBlock">
   <Text tag="h2" class="contentTitle" field={fields.heading} />
   <RichText class="contentDescription" field={fields.content} />
+  <div>
+    <span> Calling Angular component here</span>
+    --------
+    <ContentBlockComponent fields={fields} />
+    --------
+    <span>End Angular component here</span>
+  </div>
 </div>
