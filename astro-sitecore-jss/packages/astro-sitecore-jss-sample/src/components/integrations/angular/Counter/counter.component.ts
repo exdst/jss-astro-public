@@ -8,8 +8,6 @@ import { Component } from '@angular/core';
 export default class CounterComponent {
   count!: number;
 
-  constructor() { }
-
   ngOnInit() {
     this.count = 0;
   }
