@@ -9,7 +9,7 @@ SharedFields:
   Value: "Angular-ContentBlock"
 - ID: "069a8361-b1cd-437c-8c32-a3be78941446"
   Hint: Placeholders
-  Value: "{ECBC67DB-0C6C-45EF-9BFB-DBB22C3363FA}"
+  Value: 
 - ID: "06d5295c-ed2f-4a54-9bf2-26228d113318"
   Hint: __Icon
   Value: software/32x32/graph_edge_curved.png
@@ -43,11 +43,11 @@ Languages:
         sitecore\JssImport
     - ID: "8cdc337e-a112-42fb-bbb4-4143751e123f"
       Hint: __Revision
-      Value: "1ec336f9-ce2c-41c1-94a6-824081359bf8"
+      Value: "029cbb96-6d0d-49c9-be16-1646dfe3aaad"
     - ID: "badd9cf9-53e0-4d0c-bcc0-2d784c282f6a"
       Hint: __Updated by
       Value: |
         sitecore\Admin
     - ID: "d9cf14b1-fa16-4ba6-9288-e8a174d4d522"
       Hint: __Updated
-      Value: 20231108T163619Z
+      Value: 20231121T101653Z
