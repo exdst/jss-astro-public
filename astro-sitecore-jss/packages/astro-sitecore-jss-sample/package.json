@@ -15,11 +15,24 @@
     "bootstrap": "ts-node --project tsconfig.scripts.json scripts/bootstrap.ts"
   },
   "dependencies": {
+    "@analogjs/astro-angular": "^0.2.19",
+    "@angular-devkit/build-angular": "^17.0.1",
+    "@angular/animations": "^17.0.3",
+    "@angular/common": "^17.0.3",
+    "@angular/compiler": "^17.0.3",
+    "@angular/compiler-cli": "^17.0.3",
+    "@angular/core": "^17.0.3",
+    "@angular/language-service": "^17.0.3",
+    "@angular/platform-browser": "^17.0.3",
+    "@angular/platform-browser-dynamic": "^17.0.3",
+    "@angular/platform-server": "^17.0.3",
+    "@angular/router": "^17.0.3",
     "@astro-sitecore-jss/astro-sitecore-jss": "latest",
     "@astrojs/node": "^6.0.3",
     "@astrojs/react": "^3.0.4",
     "@astrojs/vue": "^3.0.3",
     "@sitecore-jss/sitecore-jss": "^21.0.8",
+    "@sitecore-jss/sitecore-jss-angular": "^21.5.0",
     "@sitecore-jss/sitecore-jss-react": "^21.0.8",
     "@sitecore-jss/sitecore-jss-vue": "^21.5.0",
     "@types/react": "^18.0.28",
@@ -35,8 +48,11 @@
     "nanostores": "^0.9.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "rxjs": "^7.8.1",
     "sharp": "^0.32.6",
-    "tsconfig-paths": "^4.2.0"
+    "tsconfig-paths": "^4.2.0",
+    "tslib": "^2.6.2",
+    "zone.js": "^0.14.2"
   },
   "devDependencies": {
     "npm-run-all": "^4.1.5",
