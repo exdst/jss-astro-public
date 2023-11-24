@@ -3,7 +3,7 @@
     name="vue"
     :rendering="rendering"
     :params="params"
-    :componentFactory="componentFactory"
+    :componentFactory="{componentFactory}"
   />
 </template>
 
@@ -20,7 +20,7 @@ export default {
       type: Object,
     },
     componentFactory: {
-      type: Object,
+      type: Function,
     },
   },
   components: {
