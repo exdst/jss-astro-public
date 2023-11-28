@@ -27,7 +27,7 @@
     "@angular/platform-browser-dynamic": "^17.0.4",
     "@angular/platform-server": "^17.0.4",
     "@angular/router": "^17.0.4",
-    "@astro-sitecore-jss/astro-sitecore-jss": "0.5.2",
+    "@astro-sitecore-jss/astro-sitecore-jss": "0.5.3",
     "@astrojs/node": "^6.0.4",
     "@astrojs/react": "^3.0.5",
     "@astrojs/vue": "^3.0.4",
