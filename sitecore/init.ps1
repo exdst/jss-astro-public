@@ -23,12 +23,25 @@ Param (
     [Parameter(Mandatory = $false,
         HelpMessage = "Sets the instance topology",
         ParameterSetName = "env-init")]
-    [ValidateSet("xp0","xp1","xm1")]
-    [string]$Topology = "xm1"
+    [ValidateSet("xp0","xp1","xm1","xmcloud")]
+    [string]$Topology = "xm1",
+
+    [Parameter(Mandatory = $false,
+        HelpMessage = "Initiate an xm-cloud config.",
+        ParameterSetName = "env-init")]
+    [switch]$Xmcloud
 )
 
 $ErrorActionPreference = "Stop";
-$workinDirectoryPath = ".\topology\sitecore-$Topology"
+$cmHostName = "cm.headless.localhost"
+$baseOS = "ltsc2019"
+
+if($Xmcloud){
+    $Topology = "xmcloud"	
+    $cmHostName = "xmcloudcm.localhost"
+}
+
+$workingDirectoryPath = ".\topology\sitecore-$Topology"
 
 if ($InitEnv) {
     if (-not $LicenseXmlPath.EndsWith("license.xml")) {
@@ -49,10 +62,11 @@ Write-Host "Preparing your Sitecore Containers environment!" -ForegroundColor Gr
 
 # Check for Sitecore Gallery
 Import-Module PowerShellGet
-$SitecoreGallery = Get-PSRepository | Where-Object { $_.SourceLocation -eq "https://sitecore.myget.org/F/sc-powershell/api/v2" }
+$SitecoreGallery = Get-PSRepository | Where-Object { $_.SourceLocation -eq "https://nuget.sitecore.com/resources/v2" }
 if (-not $SitecoreGallery) {
     Write-Host "Adding Sitecore PowerShell Gallery..." -ForegroundColor Green
-    Register-PSRepository -Name SitecoreGallery -SourceLocation https://sitecore.myget.org/F/sc-powershell/api/v2 -InstallationPolicy Trusted
+    Unregister-PSRepository -Name SitecoreGallery -ErrorAction SilentlyContinue
+    Register-PSRepository -Name SitecoreGallery -SourceLocation https://nuget.sitecore.com/resources/v2 -InstallationPolicy Trusted
     $SitecoreGallery = Get-PSRepository -Name SitecoreGallery
 }
 
@@ -67,67 +81,13 @@ Write-Host "Importing SitecoreDockerTools..." -ForegroundColor Green
 Import-Module SitecoreDockerTools -RequiredVersion $dockerToolsVersion
 Write-SitecoreDockerWelcome
 
-##################################
-# Configure TLS/HTTPS certificates
-##################################
-
-Push-Location docker\traefik\certs
-try {
-    $mkcert = ".\mkcert.exe"
-    if ($null -ne (Get-Command mkcert.exe -ErrorAction SilentlyContinue)) {
-        # mkcert installed in PATH
-        $mkcert = "mkcert"
-    } elseif (-not (Test-Path $mkcert)) {
-        Write-Host "Downloading and installing mkcert certificate tool..." -ForegroundColor Green
-        Invoke-WebRequest "https://github.com/FiloSottile/mkcert/releases/download/v1.4.1/mkcert-v1.4.1-windows-amd64.exe" -UseBasicParsing -OutFile mkcert.exe
-        if ((Get-FileHash mkcert.exe).Hash -ne "1BE92F598145F61CA67DD9F5C687DFEC17953548D013715FF54067B34D7C3246") {
-            Remove-Item mkcert.exe -Force
-            throw "Invalid mkcert.exe file"
-        }
-    }
-    Write-Host "Generating Traefik TLS certificate..." -ForegroundColor Green
-    & $mkcert -install
-    & $mkcert "*.headless.localhost"
-
-    # stash CAROOT path for messaging at the end of the script
-    $caRoot = "$(& $mkcert -CAROOT)\rootCA.pem"
-    Write-Host "Setting NODE Extra CA Cert to $caRoot"
-    setx NODE_EXTRA_CA_CERTS $caRoot    
-}
-catch {
-    Write-Error "An error occurred while attempting to generate TLS certificate: $_"
-}
-finally {
-    Pop-Location
-}
-
-
-################################
-# Add Windows hosts file entries
-################################
-
-Write-Host "Adding Windows hosts file entries..." -ForegroundColor Green
-
-Add-HostsEntry "cm.headless.localhost"
-if ($Topology -ne "xp0") {
-  Add-HostsEntry "cd.headless.localhost"
-}
-
-Add-HostsEntry "id.headless.localhost"
-Add-HostsEntry "astro.headless.localhost"
-Add-HostsEntry "nextjs.headless.localhost"
-Add-HostsEntry "react.headless.localhost"
-Add-HostsEntry "vue.headless.localhost"
-Add-HostsEntry "angular.headless.localhost"
-
-
 ###############################
 # Populate the environment file
 ###############################
 
 if ($InitEnv) {
-    Push-Location $workinDirectoryPath	
-	
+    Push-Location $workingDirectoryPath	
+    
 	##################
 	# Firstly, create .env file from template for clean slate approach
 	##################
@@ -136,30 +96,69 @@ if ($InitEnv) {
 
     Write-Host "Populating required .env file values..." -ForegroundColor Green
 
+
+################################
+# Add Windows hosts file entries
+################################
+
+Write-Host "Adding Windows hosts file entries..." -ForegroundColor Green
+
+Add-HostsEntry "$cmHostName"
+Add-HostsEntry "www.rendering.localhost"
+
+if($Xmcloud){
+    ###############################
+    # Generate scjssconfig
+    ###############################
+
+    Set-EnvFileVariable "JSS_DEPLOYMENT_SECRET_xmcloudpreview" -Value $xmCloudBuild.renderingHosts.xmcloudpreview.jssDeploymentSecret
+
+    ################################
+    # Generate Sitecore Api Key
+    ################################
+
+    $sitecoreApiKey = (New-Guid).Guid
+    Set-EnvFileVariable "SITECORE_API_KEY_xmcloudpreview" -Value $sitecoreApiKey    
+} else {
+    if ($Topology -ne "xp0") {
+        Add-HostsEntry "cd.headless.localhost"
+        }
+    
+        Add-HostsEntry "id.headless.localhost"
+        Add-HostsEntry "astro.headless.localhost"
+        Add-HostsEntry "nextjs.headless.localhost"
+        Add-HostsEntry "react.headless.localhost"
+        Add-HostsEntry "vue.headless.localhost"
+        Add-HostsEntry "angular.headless.localhost"
+}
+
     # HOST_LICENSE_FOLDER
-    Set-EnvFileVariable "HOST_LICENSE_FOLDER" -Value "'${LicenseXmlPath}'"
+    Set-EnvFileVariable "HOST_LICENSE_FOLDER" -Value "${LicenseXmlPath}"
 
     # CM_HOST
-    Set-EnvFileVariable "CM_HOST" -Value "cm.headless.localhost"
+    Set-EnvFileVariable "CM_HOST" -Value "$cmHostName"
 
-    if ($Topology -ne "xp0") {
-      # CD_HOST
-      Set-EnvFileVariable "CD_HOST" -Value "cd.headless.localhost"
+    if($Xmcloud){
+        # RENDERING_HOST
+        Set-EnvFileVariable "RENDERING_HOST" -Value "www.rendering.localhost"
+
+        # SITECORE_VERSION
+    Set-EnvFileVariable "SITECORE_VERSION" -Value "1-$baseOS"
+
+    # EXTERNAL_IMAGE_TAG_SUFFIX
+    Set-EnvFileVariable "EXTERNAL_IMAGE_TAG_SUFFIX" -Value $baseOS
+
     }
+    else {
+        if ($Topology -ne "xp0") {
+            # CD_HOST
+            Set-EnvFileVariable "CD_HOST" -Value "cd.headless.localhost"
+          }
+      
+          # ID_HOST
+          Set-EnvFileVariable "ID_HOST" -Value "id.headless.localhost"
 
-    # ID_HOST
-    Set-EnvFileVariable "ID_HOST" -Value "id.headless.localhost"
-
-    # REPORTING_API_KEY = random 64-128 chars
-    Set-EnvFileVariable "REPORTING_API_KEY" -Value (Get-SitecoreRandomString 128 -DisallowSpecial)
-
-    # TELERIK_ENCRYPTION_KEY = random 64-128 chars
-    Set-EnvFileVariable "TELERIK_ENCRYPTION_KEY" -Value (Get-SitecoreRandomString 128 -DisallowSpecial)
-
-    # MEDIA_REQUEST_PROTECTION_SHARED_SECRET    
-	Set-EnvFileVariable "MEDIA_REQUEST_PROTECTION_SHARED_SECRET" -Value (Get-SitecoreRandomString 64 -DisallowSpecial)    
-
-    # SITECORE_IDSECRET = random 64 chars    
+          # SITECORE_IDSECRET = random 64 chars    
     Set-EnvFileVariable "SITECORE_IDSECRET" -Value (Get-SitecoreRandomString 64 -DisallowSpecial)
 	
     # SITECORE GRAPHQL UPLOADMEDIAOPTIONS ENCRYPTIONKEY
@@ -173,6 +172,16 @@ if ($InitEnv) {
 	
 	# SITECORE_ID_CERTIFICATE_PASSWORD
     Set-EnvFileVariable "SITECORE_ID_CERTIFICATE_PASSWORD" -Value $idCertPassword
+    }    
+
+    # REPORTING_API_KEY = random 64-128 chars
+    Set-EnvFileVariable "REPORTING_API_KEY" -Value (Get-SitecoreRandomString 128 -DisallowSpecial)
+
+    # TELERIK_ENCRYPTION_KEY = random 64-128 chars
+    Set-EnvFileVariable "TELERIK_ENCRYPTION_KEY" -Value (Get-SitecoreRandomString 128 -DisallowSpecial)
+
+    # MEDIA_REQUEST_PROTECTION_SHARED_SECRET    
+	Set-EnvFileVariable "MEDIA_REQUEST_PROTECTION_SHARED_SECRET" -Value (Get-SitecoreRandomString 64 -DisallowSpecial)       
     
     # SQL_SA_PASSWORD
     # Need to ensure it meets SQL complexity requirements    
@@ -187,8 +196,11 @@ if ($InitEnv) {
     # SITECORE_ADMIN_PASSWORD
     Set-EnvFileVariable "SITECORE_ADMIN_PASSWORD" -Value $AdminPassword
 
-    # JSS editing secret, should be provided to CM and rendering host    
-    Set-EnvFileVariable "JSS_EDITING_SECRET" -Value (Get-SitecoreRandomString 64 -DisallowSpecial)
+    ################################
+    # Generate JSS_EDITING_SECRET
+    ################################
+    $jssEditingSecret = Get-SitecoreRandomString 64 -DisallowSpecial
+    Set-EnvFileVariable "JSS_EDITING_SECRET" -Value $jssEditingSecret
 	
     # Set the instance topology
     Set-EnvFileVariable "TOPOLOGY" -Value $Topology
@@ -199,8 +211,50 @@ if ($InitEnv) {
 
 Write-Host "Done!" -ForegroundColor Green
 
-Write-Host
-Write-Host ("#"*75) -ForegroundColor Cyan
-Write-Host
-Write-Host "You will need to restart your terminal or VS Code for it to take effect." -ForegroundColor Cyan
-Write-Host ("#"*75) -ForegroundColor Cyan
+Push-Location docker\traefik\certs
+
+try {
+##################################
+# Configure TLS/HTTPS certificates
+##################################
+
+$mkcert = ".\mkcert.exe"
+if ($null -ne (Get-Command mkcert.exe -ErrorAction SilentlyContinue)) {
+    # mkcert installed in PATH
+    $mkcert = "mkcert"
+} elseif (-not (Test-Path $mkcert)) {
+    Write-Host "Downloading and installing mkcert certificate tool..." -ForegroundColor Green
+    Invoke-WebRequest "https://github.com/FiloSottile/mkcert/releases/download/v1.4.1/mkcert-v1.4.1-windows-amd64.exe" -UseBasicParsing -OutFile mkcert.exe
+    if ((Get-FileHash mkcert.exe).Hash -ne "1BE92F598145F61CA67DD9F5C687DFEC17953548D013715FF54067B34D7C3246") {
+        Remove-Item mkcert.exe -Force
+        throw "Invalid mkcert.exe file"
+    }
+}
+Write-Host "Generating Traefik TLS certificate..." -ForegroundColor Green
+& $mkcert -install
+& $mkcert "*.headless.localhost"
+& $mkcert "*.rendering.localhost"
+& $mkcert "xmcloudcm.localhost"
+
+# stash CAROOT path for messaging at the end of the script
+$caRoot = "$(& $mkcert -CAROOT)\rootCA.pem"
+Write-Host "Setting NODE Extra CA Cert to $caRoot"
+setx NODE_EXTRA_CA_CERTS $caRoot    
+
+
+    Write-Host
+    Write-Host ("#"*75) -ForegroundColor Cyan
+    Write-Host "To avoid HTTPS errors, set the NODE_EXTRA_CA_CERTS environment variable" -ForegroundColor Cyan
+    Write-Host "using the following commmand:" -ForegroundColor Cyan
+    Write-Host "setx NODE_EXTRA_CA_CERTS $caRoot"
+    Write-Host
+    Write-Host "You will need to restart your terminal or VS Code for it to take effect." -ForegroundColor Cyan
+    Write-Host ("#"*75) -ForegroundColor Cyan    
+}
+catch {
+    Write-Error "An error occurred while attempting to generate TLS certificate: $_"
+}
+finally {
+    Pop-Location
+}
+
