@@ -124,11 +124,11 @@ if ($Xmcloud) {
     Write-Host "Logging into Sitecore..." -ForegroundColor Green
     if ($ClientCredentialsLogin -eq "true") {
         dotnet sitecore cloud login --client-id $xmCloudClientCredentialsLoginClientId --client-secret $xmCloudClientCredentialsLoginClientSecret --client-credentials true
-        dotnet sitecore login --authority $xmCloudClientCredentialsLoginDomain --audience $xmCloudClientCredentialsLoginAudience --client-id $xmCloudClientCredentialsLoginClientId --client-secret $xmCloudClientCredentialsLoginClientSecret --cm https://$xmCloudHost --client-credentials true --allow-write true
+        dotnet sitecore login --authority $xmCloudClientCredentialsLoginDomain --audience $xmCloudClientCredentialsLoginAudience --client-id $xmCloudClientCredentialsLoginClientId --client-secret $xmCloudClientCredentialsLoginClientSecret --cm https://$xmCloudHost --client-credentials true --allow-write true -n local
     }
     else {
         dotnet sitecore cloud login
-        dotnet sitecore connect --ref xmcloud --cm https://$xmCloudHost --allow-write true -n default
+        dotnet sitecore connect --ref xmcloud --cm https://$xmCloudHost --allow-write true -n local
     }
 }
 else {

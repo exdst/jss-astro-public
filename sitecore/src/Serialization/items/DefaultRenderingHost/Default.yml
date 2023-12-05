@@ -1,4 +1,4 @@
----
+﻿---
 ID: "dffee92b-0441-45a4-9207-67810b72bd46"
 Parent: "895e25c4-12b2-4b2c-8233-82f3b79eef53"
 Template: "bc71d442-3e4f-46ba-887c-746e54f9bb83"
@@ -6,10 +6,10 @@ Path: /sitecore/system/Settings/Services/Rendering Hosts/Default
 SharedFields:
 - ID: "e32c1801-79b3-4fc1-a9c4-3c6e6c2968ae"
   Hint: ServerSideRenderingEngineApplicationUrl
-  Value: "http://rendering:3000"
+  Value: "http://host.docker.internal:4321/"
 - ID: "fc76919b-0d7c-4732-865d-2af795fb38a4"
   Hint: ServerSideRenderingEngineEndpointUrl
-  Value: "http://rendering:3000/api/editing/render"
+  Value: "http://host.docker.internal:4321/api/editing/render"
 Languages:
 - Language: en
   Versions:
@@ -24,11 +24,11 @@ Languages:
         sitecore\Admin
     - ID: "8cdc337e-a112-42fb-bbb4-4143751e123f"
       Hint: __Revision
-      Value: "c9cd6f4c-0f8a-45af-8792-044e422401b0"
+      Value: "311fb66c-fa38-4436-aa5f-94da5fff49b7"
     - ID: "badd9cf9-53e0-4d0c-bcc0-2d784c282f6a"
       Hint: __Updated by
       Value: |
-        sitecore\xmc-e2e-admin@sitecore.com
+        sitecore\antontishchenko@gmail.com
     - ID: "d9cf14b1-fa16-4ba6-9288-e8a174d4d522"
       Hint: __Updated
-      Value: 20220628T155530Z
+      Value: 20231205T142847Z

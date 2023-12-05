@@ -18,7 +18,8 @@ function Validate-LicenseExpiry {
         }
     }
 
-    $licenseXmlPath = Join-Path $licenseFolder "license.xml"
+    Write-Host $licenseFolder
+    $licenseXmlPath = Join-Path $licenseFolder.Trim("'") "license.xml"
 
     if (-not (Test-Path $licenseXmlPath)) {
         throw "license.xml file does not exist in the specified folder ($licenseXmlPath)."
