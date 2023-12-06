@@ -18,7 +18,6 @@ function Validate-LicenseExpiry {
         }
     }
 
-    Write-Host $licenseFolder
     $licenseXmlPath = Join-Path $licenseFolder.Trim("'") "license.xml"
 
     if (-not (Test-Path $licenseXmlPath)) {
