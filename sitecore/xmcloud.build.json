@@ -1,0 +1,32 @@
+{
+    "renderingHosts": {
+      "xmcloudpreview": {
+        "path": "../astro-sitecore-jss/packages/astro-sitecore-jss-sample",
+        "nodeVersion": "18.18.1",
+        "jssDeploymentSecret": "110F1C44A496B45478640DD36F80C18C9",
+        "enabled": true,
+        "type": "sxa",
+        "lintCommand": "lint",
+        "startCommand": "dev",
+        "buildCommand": "dev",
+        "runCommand": "dev"
+      }
+    },
+    "postActions": {
+        "actions":{
+          "warmUpCm": {
+            "urls": [
+              "/sitecore/shell",
+              "/sitecore/shell/Applications/Content%20Editor.aspx?sc_bw=1",
+              "/sitecore/client/Applications/Launchpad"
+            ]
+          },
+          "populateSchema": {
+            "indexNames": []
+          },
+          "reindex": {
+            "indexNames": []
+          }
+        }
+    }
+}
