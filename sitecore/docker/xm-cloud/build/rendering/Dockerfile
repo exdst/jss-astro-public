@@ -8,8 +8,8 @@
 ARG PARENT_IMAGE
 FROM ${PARENT_IMAGE} as debug
 
-WORKDIR /app
+WORKDIR /app/packages/astro-sitecore-jss-sample
 
-EXPOSE 3000
+EXPOSE 4321
 #ENTRYPOINT "npm install && npm install next@canary && npm run start:connected"
 ENTRYPOINT "npm install && npm run dev"
