@@ -40,3 +40,18 @@ It is possible to stop and remove running containers by ```./down.ps1```.
 Note: Use ```-Xmcloud``` switch to properly stop and remove containers for xm-cloud topology
 
 In case of ```docker-compose down``` please make sure you are placed at the same folder where you run ```docker-compose up``` previously.
+
+ 4. **Rendering host**
+
+All the topologies include Astro rendering host container (not in use by default). To use this rendering host instead of a local one the following settings have to be updated:
+
+1. In the astro-sitecore-jss-sample\scjssconfig.json configuration file update the "sitecoreApiHost" setting as the following:
+    ```"sitecoreApiHost": "http://cm",```
+
+2. In sitecore content editor navigate to the /sitecore/system/Settings/Services/Rendering Hosts/Default item and update the next fields:
+```ServerSideRenderingEngineApplicationUrl value set to: "http://rendering:4321/"```
+```ServerSideRenderingEngineEndpointUrl value set to: "http://rendering:4321/api/editing/render"```
+
+3. In sitecore content editor navigate to the /sitecore/content/Headless/Astro/Settings item and update the next fields:
+```ServerSideRenderingEngineApplicationUrl value set to: "http://rendering:4321/"```
+```ServerSideRenderingEngineEndpointUrl value set to: "http://rendering:4321/api/editing/render"```

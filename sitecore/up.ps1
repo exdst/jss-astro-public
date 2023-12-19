@@ -157,7 +157,7 @@ dotnet sitecore index rebuild
 
 
 if ($Xmcloud) {
-    $templatesFolder = "docker\xm-cloud\build\cm\templates"
+    $templatesFolder = "docker-xm-cloud\build\cm\templates"
     Write-Host "Pushing Default rendering host configuration" -ForegroundColor Green
     dotnet sitecore ser push -i RenderingHost
 
