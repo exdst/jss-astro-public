@@ -16,7 +16,7 @@ services:
   nodejs:
     image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-nodejs:${VERSION:-latest}
     build:
-      context: ../../docker/build/nodejs
+      context: ../../docker-xm-cloud/build/nodejs
       args:
         PARENT_IMAGE: ${NODEJS_PARENT_IMAGE}
         NODEJS_VERSION: ${NODEJS_VERSION}
@@ -26,7 +26,7 @@ services:
   rendering:
     image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-rendering:${VERSION:-latest}
     build:
-      context: ../../docker/build/rendering
+      context: ../../docker-xm-cloud/build/rendering
       target: ${BUILD_CONFIGURATION}
       args:
         PARENT_IMAGE: ${REGISTRY}${COMPOSE_PROJECT_NAME}-nodejs:${VERSION:-latest}

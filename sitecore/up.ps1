@@ -33,6 +33,7 @@ Validate-LicenseExpiry
 $envContent = Get-Content .env -Encoding UTF8
 $cmHostName = $envContent | Where-Object { $_ -imatch "^CM_HOST=.+" }
 $cmHostName = $cmHostName.Split("=")[1]
+
 if ($Xmcloud) {    
     $sitecoreDockerRegistry = $envContent | Where-Object { $_ -imatch "^SITECORE_DOCKER_REGISTRY=.+" }
     $sitecoreVersion = $envContent | Where-Object { $_ -imatch "^SITECORE_VERSION=.+" }
@@ -59,8 +60,10 @@ if ($Xmcloud) {
     $nodeVersion = $xmCloudBuild.renderingHosts.xmcloudpreview.nodeVersion
     if (![string]::IsNullOrWhitespace($nodeVersion)) {
         Set-EnvFileVariable "NODEJS_VERSION" -Value $xmCloudBuild.renderingHosts.xmcloudpreview.nodeVersion
-    }
-   
+    }   
+}
+else {
+    $sitecoreApiKey = ($envContent | Where-Object { $_ -imatch "^SITECORE_API_KEY=.+" }).Split("=")[1]
 }
 
 # Double check whether init has been run
@@ -133,10 +136,10 @@ if ($Xmcloud) {
 }
 else {
     if ($ByPass) {
-        dotnet sitecore login --cm https://cm.headless.localhost/ --auth https://id.headless.localhost/ --allow-write true --client-id "SitecoreCLIServer" --client-secret "testsecret" --client-credentials true
+        dotnet sitecore login --cm https://cm.headless.localhost/ --auth https://id.headless.localhost/ --allow-write true --client-id "SitecoreCLIServer" --client-secret "testsecret" --client-credentials true -n local
     }
     else {
-        dotnet sitecore login --cm https://cm.headless.localhost/ --auth https://id.headless.localhost/ --allow-write true
+        dotnet sitecore login --cm https://cm.headless.localhost/ --auth https://id.headless.localhost/ --allow-write true -n local
     }
 }
 
@@ -146,32 +149,31 @@ if ($LASTEXITCODE -ne 0) {
 
 # Populate Solr managed schemas to avoid errors during item deploy
 Write-Host "Populating Solr managed schema..." -ForegroundColor Green
-dotnet sitecore index schema-populate
+dotnet sitecore index schema-populate -n local
+
 if ($LASTEXITCODE -ne 0) {
     Write-Error "Populating Solr managed schema failed, see errors above."
 }
 
 # Rebuild indexes
 Write-Host "Rebuilding indexes..." -ForegroundColor Green
-dotnet sitecore index rebuild
+dotnet sitecore index rebuild -n local
 
+Write-Host "Pushing Default rendering host configuration" -ForegroundColor Green
+dotnet sitecore ser push -i RenderingHost -n local
+Write-Host "Pushing items to Sitecore..." -ForegroundColor Green
+dotnet sitecore ser push -n local
 
-if ($Xmcloud) {
-    $templatesFolder = "docker-xm-cloud\build\cm\templates"
-    Write-Host "Pushing Default rendering host configuration" -ForegroundColor Green
-    dotnet sitecore ser push -i RenderingHost
-
-    Write-Host "Pushing sitecore API key" -ForegroundColor Green
-    & $templatesFolder\import-templates.ps1 -RenderingSiteName "xmcloudpreview" -SitecoreApiKey $sitecoreApiKey
-
-    Write-Host "Pushing items to Sitecore..." -ForegroundColor Green
-    dotnet sitecore ser push -n "local"
-
+if ($Xmcloud) {   
+    $renderingSiteName = "xmcloudpreview"   
 }
-else {
-    Write-Host "Pushing items to Sitecore..." -ForegroundColor Green
-    dotnet sitecore ser push
+else {    
+    $renderingSiteName = "astropreview"
 }
+
+$templatesFolder = "docker-xm-cloud\build\cm\templates"
+Write-Host "Pushing sitecore API key" -ForegroundColor Green
+& $templatesFolder\import-templates.ps1 -RenderingSiteName $renderingSiteName -SitecoreApiKey $sitecoreApiKey
 
 if ($LASTEXITCODE -ne 0) {
     Write-Error "Serialization push failed, see errors above."
