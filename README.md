@@ -79,5 +79,6 @@ If you would like to see demo, please, contact
 * Bogdan Druziuk, [GitHub](https://github.com/bdruziuk), [LinkedIn](https://www.linkedin.com/in/bogdan-druziuk-50069763/)
 * Oleksandr Melnyk, [GitHub](https://github.com/OlekMel)
 * Stanislav Chernetsky, [GitHub](https://github.com/stanislavSV)
+* Vasyl Gavrylyuk, [GitHub](https://github.com/vsegrad)
 
 Sponsored by [EXDST](https://exdst.com/)
