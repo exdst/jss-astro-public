@@ -106,6 +106,7 @@ Write-Host "Adding Windows hosts file entries..." -ForegroundColor Green
 Add-HostsEntry "$cmHostName"
 Add-HostsEntry "www.rendering.localhost"
 
+$sitecoreApiKey = (New-Guid).Guid
 if($Xmcloud){
     ###############################
     # Generate scjssconfig
@@ -117,9 +118,10 @@ if($Xmcloud){
     # Generate Sitecore Api Key
     ################################
 
-    $sitecoreApiKey = (New-Guid).Guid
-    Set-EnvFileVariable "SITECORE_API_KEY_xmcloudpreview" -Value $sitecoreApiKey    
+    Set-EnvFileVariable "SITECORE_API_KEY_xmcloudpreview" -Value $sitecoreApiKey
 } else {
+    Set-EnvFileVariable "SITECORE_API_KEY" -Value $sitecoreApiKey    
+    
     if ($Topology -ne "xp0") {
         Add-HostsEntry "cd.headless.localhost"
         }

@@ -29,5 +29,5 @@ foreach ($item in $files) {
 $localConfig = (Join-Path $PSScriptRoot "sitecore.json")
 ReplaceExistingModules -srcConfig ".\sitecore.json" -dstConfig $localConfig
 Write-Host "Pushing sitecore api key to Sitecore..." -ForegroundColor Green
-dotnet sitecore ser push -s --config $PSScriptRoot
+dotnet sitecore ser push -s --config $PSScriptRoot -n local
 
