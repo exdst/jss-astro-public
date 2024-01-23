@@ -9,3 +9,15 @@
 
 /deploy/cm/*
 !/deploy/cm/.gitkeep
+
+/xm-cloud/data/cm/*
+!/xm-cloud/data/cm/.gitkeep
+/xm-cloud/data/cd/*
+!/xm-cloud/data/cd/.gitkeep
+/xm-cloud/data/sql/*
+!/xm-cloud/data/sql/.gitkeep
+/xm-cloud/data/solr/*
+!/xm-cloud/data/solr/.gitkeep
+
+/xm-cloud/deploy/cm/*
+!/xm-cloud/deploy/cm/.gitkeep
