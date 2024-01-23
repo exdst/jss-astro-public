@@ -1,6 +1,6 @@
 {
   "name": "@astro-sitecore-jss/create-astro-sitecore-jss",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "Astro Sitecore JSS initializer",
   "bin": "./dist/index.js",
   "scripts": {
