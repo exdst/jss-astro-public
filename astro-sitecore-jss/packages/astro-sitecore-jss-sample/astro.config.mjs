@@ -25,5 +25,8 @@ export default defineConfig({
         replacement: 'packages/astro-sitecore-jss'
       }]
     }
-  }
+  },
+  image: {
+    domains: ['astro.headless.localhost'],
+  },
 });
