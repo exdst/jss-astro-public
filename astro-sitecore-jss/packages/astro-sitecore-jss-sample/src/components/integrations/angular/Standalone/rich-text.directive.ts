@@ -9,7 +9,7 @@ import {
   Renderer2,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { isAbsoluteUrl } from '@sitecore-jss/sitecore-jss/utils';
+import JssUtils from '@sitecore-jss/sitecore-jss/utils';
 import type { RichTextField } from '@sitecore-jss/sitecore-jss-angular';
 
 @Directive({
@@ -43,6 +43,7 @@ export class RichTextDirective implements OnChanges {
 
   private updateView() {
     const field = this.field;
+    const { isAbsoluteUrl } = JssUtils;
     if (!field || (!field.editable && !field.value)) {
       return;
     }

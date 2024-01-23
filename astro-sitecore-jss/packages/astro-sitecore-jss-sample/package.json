@@ -28,17 +28,17 @@
     "@angular/platform-server": "^17.0.4",
     "@angular/router": "^17.0.4",
     "@astro-sitecore-jss/astro-sitecore-jss": "0.5.3",
-    "@astrojs/node": "^6.0.4",
-    "@astrojs/react": "^3.0.5",
-    "@astrojs/vue": "^3.0.4",
+    "@astrojs/node": "^7.0.4",
+    "@astrojs/react": "^3.0.9",
+    "@astrojs/vue": "^4.0.8",
     "@sitecore-jss/sitecore-jss": "^21.0.8",
     "@sitecore-jss/sitecore-jss-angular": "^21.5.0",
     "@sitecore-jss/sitecore-jss-react": "^21.0.8",
     "@sitecore-jss/sitecore-jss-vue": "^21.5.0",
     "@types/react": "^18.2.38",
     "@types/react-dom": "^18.2.16",
-    "@vitejs/plugin-vue": "^4.5.0",
-    "astro": "^3.5.6",
+    "@vitejs/plugin-vue": "^5.0.2",
+    "astro": "^4.1.1",
     "bootstrap": "^5.2.3",
     "change-case": "^4.1.2",
     "debug": "^4.3.4",
@@ -49,13 +49,13 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "rxjs": "^7.8.1",
-    "sharp": "^0.32.6",
+    "sharp": "^0.33.1",
     "tsconfig-paths": "^4.2.0",
     "tslib": "^2.6.2",
     "zone.js": "^0.14.2"
   },
   "devDependencies": {
     "npm-run-all": "^4.1.5",
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.2"
   }
 }
