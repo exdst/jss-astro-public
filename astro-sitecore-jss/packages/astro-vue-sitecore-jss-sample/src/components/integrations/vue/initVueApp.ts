@@ -6,9 +6,4 @@ import { SitecoreJssPlaceholderPlugin } from '@sitecore-jss/sitecore-jss-vue';
 export default (app: App) => {
   app.use(SitecoreJssPlaceholderPlugin, { componentFactory });
   app.use(SitecoreJssStorePlugin);
-  app.methods = {
-    toggleContextView() {
-      app.data.contextViewVisible = !app.data.contextViewVisible;
-    }
-  },
 };
