@@ -1,0 +1,32 @@
+---
+import StyleguideSpecimen from "../styleguide/Styleguide-Specimen.astro";
+import { useTranslations } from '@astro-sitecore-jss/astro-sitecore-jss';
+import { SitecoreContextMap } from '@astro-sitecore-jss/astro-sitecore-jss';
+import { Link, LinkFieldValue } from '@astro-sitecore-jss/astro-sitecore-jss';
+import { Text } from '@astro-sitecore-jss/astro-sitecore-jss';
+
+const scContext = SitecoreContextMap.get()["scContext"];
+const t = useTranslations();
+
+const { fields } = Astro.props.route
+
+const enStyleguide = { href: "/en/styleguide" } as LinkFieldValue;
+const daDKStyleguide = { href: "/da-DK/styleguide" } as LinkFieldValue;
+---
+
+<StyleguideSpecimen route={Astro.props.route} e2eId="styleguide-multilingual">
+  <Text field={fields.sample} encode={false} tag="p" />
+  <p>
+    This is a static dictionary entry from <code>/data/dictionary</code>
+    :&nbsp;
+    {t("styleguide-sample")}
+  </p>
+
+  <p>
+    <Link field={enStyleguide}>Show in English</Link>
+    <br />
+    <Link field={daDKStyleguide}>Show in da-DK</Link>
+  </p>
+
+  <p>The current language is: {scContext.language}</p>
+</StyleguideSpecimen>

@@ -1,0 +1,12 @@
+---
+import StyleguideSpecimen from '../styleguide/Styleguide-Specimen.astro';
+import ContentBlock from './vue/ContentBlock.vue';
+---
+
+<StyleguideSpecimen
+  route={Astro.props.route}
+  e2eId="styleguide-integration-vue-sitecore-content"
+>
+  The same fields output but using Vue based component.
+  <ContentBlock client:load fields={Astro.props.route.fields} />
+</StyleguideSpecimen>

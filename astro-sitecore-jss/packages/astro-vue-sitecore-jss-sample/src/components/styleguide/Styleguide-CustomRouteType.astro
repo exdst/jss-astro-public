@@ -1,0 +1,30 @@
+---
+import { RichText, Text } from '@astro-sitecore-jss/astro-sitecore-jss';
+import { Link, LinkFieldValue } from '@astro-sitecore-jss/astro-sitecore-jss';
+import type { Field  } from '@sitecore-jss/sitecore-jss/layout';
+import { SitecoreContextMap } from '@astro-sitecore-jss/astro-sitecore-jss';
+
+type StyleguideCustomRouteTypeFields = {
+  headline: Field<string>;
+  author: Field<string>;
+  content: Field<string>;
+};
+
+const sitecoreContext = SitecoreContextMap.get()['scContext'];
+const fields = sitecoreContext.route?.fields as StyleguideCustomRouteTypeFields;
+
+const routeLink = { href: "/styleguide" } as LinkFieldValue;
+---
+<div data-e2e-id="styleguide-customroutetype">
+    <Text tag="h3" field={fields.headline} />
+
+    <p>
+      <em>
+        By <Text field={fields.author} />
+      </em>
+    </p>
+
+    <RichText field={fields.content} />
+
+    <Link field={routeLink}>Return to the Styleguide</Link>
+  </div>
