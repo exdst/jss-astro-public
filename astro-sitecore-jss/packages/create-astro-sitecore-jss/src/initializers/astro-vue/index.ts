@@ -8,8 +8,9 @@ import { prompts, AstroAnswer } from './prompts';
 import { AstroArgs } from './args';
 
 export default class AstroInitializer implements Initializer {
-  name = 'astro (including base vue, react, and angular samples)';
-  description = 'This template is for creating a new Astro app, includes base scenarious for all Sitecore fields and React, Vue, and Angular samples.';
+  name = 'astro + vue (template for migration existing vue app to astro + vue)';
+  description = 'This template is for migrating an existing Vue app to Astro + Vue';
+  
   get isBase() {
     return true;
   }
@@ -22,7 +23,7 @@ export default class AstroInitializer implements Initializer {
       ...answers,
     };
 
-    const templatePath = path.resolve(__dirname, '../../templates/astro');
+    const templatePath = path.resolve(__dirname, '../../templates/astro-vue');
     await transform(templatePath, mergedArgs);
 
     const pkgPath = path.resolve(`${args.destination}${sep}package.json`);

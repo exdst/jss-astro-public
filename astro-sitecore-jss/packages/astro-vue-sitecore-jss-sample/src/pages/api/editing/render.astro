@@ -1,0 +1,38 @@
+---
+import { SitecoreContextMap } from '@astro-sitecore-jss/astro-sitecore-jss';
+import type { LayoutServiceContext, RouteData } from '@sitecore-jss/sitecore-jss/layout';
+import JssLayout from './../../../layouts/JssLayout.astro';
+
+export type SitecoreContextValue = LayoutServiceContext & {
+    itemId?: string;
+    route?: RouteData;
+};
+
+const body = await Astro.request.json();
+const path = body.args[0];
+const layoutData = JSON.parse(body.args[1]);
+const dictionary = JSON.parse(body.args[2]);
+
+let scContext = layoutData.sitecore.context as SitecoreContextValue;
+scContext.route = layoutData.sitecore.route;
+scContext.itemId = layoutData.sitecore.route.itemId;
+
+SitecoreContextMap.setKey('scContext', scContext);
+SitecoreContextMap.setKey('dictionary', dictionary);
+
+const response = await fetch("http://localhost:4321/api/editing/page", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+});
+
+const data = await response.text();
+
+return new Response(
+    JSON.stringify({html:data}),
+    {status: 200}
+);
+---
+<JssLayout title="a" layoutData={layoutData} />

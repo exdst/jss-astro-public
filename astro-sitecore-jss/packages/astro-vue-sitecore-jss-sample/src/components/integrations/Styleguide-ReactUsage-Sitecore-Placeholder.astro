@@ -1,0 +1,31 @@
+---
+import StyleguideSpecimen from "../styleguide/Styleguide-Specimen.astro";
+import { Placeholder } from '@sitecore-jss/sitecore-jss-react';
+import ComponentFactory from "./react/componentFactory";
+
+---
+<StyleguideSpecimen
+  route={Astro.props.route}
+  e2eId="styleguide-integration-react-placeholder"
+>
+  <Placeholder
+    name="react"
+    rendering={Astro.props.route}
+    componentFactory={ComponentFactory}
+  />
+</StyleguideSpecimen>
+
+<script is:inline>
+if (window.top.Sitecore != null) {
+  const chromeTags = document.getElementsByTagName("code");
+  for (let i = 0; i < chromeTags.length; i++) {
+    const element = chromeTags[i];
+    if (element.attributes.getNamedItem("phkey") !== undefined) {
+      const phKey = element.attributes.getNamedItem("phkey")?.value ?? "";
+      if (element.attributes.getNamedItem("key")?.value === undefined) {
+        element.setAttribute("key", phKey);
+      }
+    }
+  }
+}
+</script>

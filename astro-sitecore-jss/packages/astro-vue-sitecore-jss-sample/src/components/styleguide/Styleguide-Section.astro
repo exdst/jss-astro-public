@@ -1,0 +1,12 @@
+---
+import Placeholder from '../system/Placeholder.astro';
+import { Text } from '@astro-sitecore-jss/astro-sitecore-jss';
+
+const { fields, uid } = Astro.props.route;
+const renderingId = `i${uid && uid.replace(/[{}]/g, '')}`;
+---
+
+<div class="pt-3" id={renderingId}>
+  <Text field={fields.heading} class="border-bottom" tag="h3" />
+  <Placeholder rendering={Astro.props.route} name="jss-styleguide-section" />
+</div>

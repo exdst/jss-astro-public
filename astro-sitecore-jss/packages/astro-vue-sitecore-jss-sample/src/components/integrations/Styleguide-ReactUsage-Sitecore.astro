@@ -1,0 +1,12 @@
+---
+import StyleguideSpecimen from "../styleguide/Styleguide-Specimen.astro";
+import ContentBlock from "./react/ContentBlock";
+---
+
+<StyleguideSpecimen
+  route={Astro.props.route}
+  e2eId="styleguide-integration-react-sitecore-content"
+>
+  The same fields output but using React based component.
+  <ContentBlock client:load fields={Astro.props.route.fields} />
+</StyleguideSpecimen>

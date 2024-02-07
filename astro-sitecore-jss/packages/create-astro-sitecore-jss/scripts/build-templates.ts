@@ -1,30 +1,42 @@
 import path from 'path';
 import fs from 'fs-extra';
-const distFolder = path.resolve(__dirname, '../dist/templates/astro');
 
-// Create dist folder
-//fs.mkdir(distFolder, { recursive: true });
-// Copy sample app to dist
-const sampleAppFolder = path.resolve(__dirname, '../../../packages/astro-sitecore-jss-sample');
-console.log(sampleAppFolder);
-
-
-fs.copySync(sampleAppFolder, distFolder,
+const samples = [
   {
-    filter: function (name) {
-      return name.indexOf('node_modules') === -1;
-    }
-  });
+    dist: '../dist/templates/astro',
+    sample: '../../../packages/astro-sitecore-jss-sample'
+  },
+  {
+    dist: '../dist/templates/astro-vue',
+    sample: '../../../packages/astro-vue-sitecore-jss-sample'
+  }
+]
 
+for (const sample of samples) {
 
-// Delete tsconfig.json, because it is configured for monorepo
-fs.unlinkSync(path.resolve(distFolder, 'tsconfig.json'));
+  const distFolder = path.resolve(__dirname, sample.dist);
 
-// Rename tsconfig.template.json to tsconfig.json
-fs.renameSync(path.resolve(distFolder, 'tsconfig.template.json'), path.resolve(distFolder, 'tsconfig.json'));
+  // Create dist folder
+  //fs.mkdir(distFolder, { recursive: true });
+  // Copy sample app to dist
+  const sampleAppFolder = path.resolve(__dirname, sample.sample);
 
-// Delete astro.config.mjs, because it is configured for monorepo
-fs.unlinkSync(path.resolve(distFolder, 'astro.config.mjs'));
+  fs.copySync(sampleAppFolder, distFolder,
+    {
+      filter: function (name) {
+        return name.indexOf('node_modules') === -1;
+      }
+    });
 
-// Rename astro.config.mjs to astro.config.template.mjs
-fs.renameSync(path.resolve(distFolder, 'astro.config.template.mjs'), path.resolve(distFolder, 'astro.config.mjs'));
+  // Delete tsconfig.json, because it is configured for monorepo
+  fs.unlinkSync(path.resolve(distFolder, 'tsconfig.json'));
+
+  // Rename tsconfig.template.json to tsconfig.json
+  fs.renameSync(path.resolve(distFolder, 'tsconfig.template.json'), path.resolve(distFolder, 'tsconfig.json'));
+
+  // Delete astro.config.mjs, because it is configured for monorepo
+  fs.unlinkSync(path.resolve(distFolder, 'astro.config.mjs'));
+
+  // Rename astro.config.mjs to astro.config.template.mjs
+  fs.renameSync(path.resolve(distFolder, 'astro.config.template.mjs'), path.resolve(distFolder, 'astro.config.mjs'));
+}

@@ -56,7 +56,6 @@ const main = async () => {
       name: 'template',
       message: 'Which template would you like to create?',
       choices: baseTemplates,
-      default: 'nextjs',
     });
     templates.push(answer.template);
   }

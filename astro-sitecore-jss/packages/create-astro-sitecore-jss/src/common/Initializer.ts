@@ -18,4 +18,14 @@ export interface Initializer {
    * @param {BaseArgs} args CLI arguments
    */
   init: (args: BaseArgs) => Promise<InitializerResults>;
+
+  /**
+   * Returns the name of the initializer
+   */
+  name: string;
+
+  /**
+   * Returns the description of the initializer
+   */
+  description: string;
 }

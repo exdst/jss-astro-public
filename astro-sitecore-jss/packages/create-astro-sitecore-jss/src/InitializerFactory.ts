@@ -9,6 +9,8 @@ export class InitializerFactory {
       );
       return new Initializer();
     } catch (error) {
+      console.log(`The following error occurred while trying to create initializer:`);
+      console.log(error);
       return undefined;
     }
   }

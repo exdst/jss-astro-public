@@ -1,0 +1,8 @@
+---
+import StyleguideSpecimen from '../styleguide/Styleguide-Specimen.astro';
+import Counter from './react/Counter';
+
+---
+<StyleguideSpecimen route={Astro.props.route} e2eId="styleguide-integration-react-simple">
+  <Counter client:load/>
+</StyleguideSpecimen>

@@ -1,0 +1,10 @@
+---
+import JssLayout from "./../../../layouts/JssLayout.astro";
+
+const body = await Astro.request.json();
+const path = body.args[0];
+const layoutData = JSON.parse(body.args[1]);
+const dictionary = JSON.parse(body.args[2]);
+
+---
+<JssLayout title="a" layoutData={layoutData} />

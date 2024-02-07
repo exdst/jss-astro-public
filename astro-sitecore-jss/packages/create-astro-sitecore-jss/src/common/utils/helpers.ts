@@ -76,19 +76,32 @@ export const sortKeys = (obj: JsonObjectType) => {
   return sorted;
 };
 
+type Choice = {
+  name: string;
+  value: string;
+  description: string;
+};
+
 /**
  * Returns subset of base templates
  * @param {string} templatePath path to the templates
  * @returns {string[]} base templates
  */
-export const getBaseTemplates = async (templatePath: string): Promise<string[]> => {
+
+export const getBaseTemplates = async (templatePath: string): Promise<Choice[]> => {
   const templates = fs.readdirSync(templatePath, 'utf8');
   const initFactory = new InitializerFactory();
   const baseTemplates = [];
 
   for (const template of templates) {
     const res = await initFactory.create(template);
-    res?.isBase && baseTemplates.push(template);
+    res?.isBase && baseTemplates.push(
+      {
+        name: res.name,
+        value: template,
+        description: res.description,
+      },
+    );
   }
   return baseTemplates;
 };
