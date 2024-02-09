@@ -6,7 +6,7 @@ import * as changeCase from "change-case";
 const CONFIG_PATH = path.resolve("src/temp/config.js");
 
 const defaultConfig: JssConfig = {
-  jssAppName: process.env.JSS_APP_NAME,
+  sitecoreSiteName: process.env.SITECORE_SITE_NAME || process.env.JSS_APP_NAME,
   sitecoreApiKey: process.env.SITECORE_API_KEY,
   sitecoreApiHost: process.env.SITECORE_API_HOST,
   graphQLEndpointPath: process.env.GRAPH_QL_ENDPOINT_PATH,
