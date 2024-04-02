@@ -1,7 +1,7 @@
 const plugins = require("./../config/plugins");
 
 export interface JssConfig extends Record<string, string | undefined> {
-  jssAppName?: string;
+  sitecoreSiteName?: string;
   sitecoreApiKey?: string;
   sitecoreApiHost?: string;
   graphQLEndpointPath?: string;
