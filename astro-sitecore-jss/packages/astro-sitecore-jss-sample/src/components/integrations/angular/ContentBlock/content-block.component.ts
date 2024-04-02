@@ -12,6 +12,6 @@ import { RichTextDirective } from '../Standalone/rich-text.directive';
 
 })
 export class ContentBlockComponent {
-  @Input() fields: ComponentRendering | undefined;
+  @Input() fields: ComponentRendering | any | undefined;
 }
 
