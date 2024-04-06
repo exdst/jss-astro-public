@@ -19,7 +19,7 @@ Languages:
     - ID: "0f1c1ad9-2923-5e40-b3ec-5f987421ba47"
       Hint: content
       Value: |
-        <p>Thanks for using JSS!! Here are some resources to get you started:</p>
+        <p>This website is built using the Astro web framework<br /><br />Thanks for using JSS!! Here are some resources to get you started:</p>
         
         <h3><a href="https://jss.sitecore.com" rel="noopener noreferrer">Documentation</a></h3>
         <p>The official JSS documentation can help you with any JSS task from getting started to advanced techniques.</p>
@@ -59,17 +59,17 @@ Languages:
       Value: 20230414T131121Z
     - ID: "3e431de1-525e-47a3-b6b0-1ccbec3a8c98"
       Hint: __Workflow state
-      Value: "{FCFDBB96-946A-4D2F-BCCD-5573073FC176}"
+      Value: "{AF32C98B-C828-42AF-A649-74C1DE3303FB}"
     - ID: "8cdc337e-a112-42fb-bbb4-4143751e123f"
       Hint: __Revision
-      Value: "bc4a21cb-ce8b-408d-baa9-bad674ec1672"
+      Value: "d884cdfb-1dd3-40c1-8f97-da840024d84c"
     - ID: "badd9cf9-53e0-4d0c-bcc0-2d784c282f6a"
       Hint: __Updated by
       Value: |
-        sitecore\JssImport
+        sitecore\Admin
     - ID: "d9cf14b1-fa16-4ba6-9288-e8a174d4d522"
       Hint: __Updated
-      Value: 20230414T131121Z
+      Value: 20240406T173612Z
     - ID: "f48327a1-48ee-5e40-a2a9-0ebb4255701a"
       Hint: heading
-      Value: Welcome to Sitecore JSS
+      Value: "SUGCON 2024: Sitecore Headless Software Development Kit for Astro"
