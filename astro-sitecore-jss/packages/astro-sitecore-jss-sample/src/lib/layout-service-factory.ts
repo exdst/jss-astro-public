@@ -1,14 +1,14 @@
 import jss from '@sitecore-jss/sitecore-jss/layout';
 import type { LayoutService } from '@sitecore-jss/sitecore-jss/layout';
 import config from '../temp/config';
+import clientFactory from './graphql/graphql-create-client-factory';
 const { RestLayoutService, GraphQLLayoutService } = jss;
 
 export class LayoutServiceFactory {
   create(): LayoutService {
     return config.fetchWith === 'GraphQL'
       ? new GraphQLLayoutService({
-        endpoint: config.graphQLEndpoint,
-        apiKey: config.sitecoreApiKey,
+        clientFactory,
         siteName: config.jssAppName,
       })
       : new RestLayoutService({
