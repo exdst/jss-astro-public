@@ -386,6 +386,13 @@ Languages:
           <d
             id="{FE5D7FDF-89C0-4D99-9AA3-B5FBD009C9F3}">
             <r
+              uid="{2E248F8D-71BA-424E-AA19-09ACF2ECF327}"
+              p:after="p[@uid='{0876EDE4-6982-514E-A8F7-19A496591D41}']"
+              s:ds="local:/Page Data/Vue-ContentBlock-1"
+              s:id="{3D6FC9BD-BE09-4297-A095-5129F8519D51}"
+              s:par="CacheClearingBehavior=Clear on publish"
+              s:ph="/jss-main/jss-styleguide-layout-{34A6553C-81DE-5CD3-989E-853F6CB6DF8C}-0/jss-styleguide-section-{008A2F5B-4BA0-45FB-91CA-3342C1C70791}-0/vue-{2E07230F-A3C2-460F-AD29-356792EE7745}-0" />
+            <r
               uid="{67ED499E-0CD9-44D5-A87A-006C727339AA}"
               p:after="r[@uid='{07EB65DC-D5B1-43C8-91DA-97E8B50A8930}']"
               s:ds="local:/Page Data/Styleguide-Vue-Simple"
@@ -433,14 +440,14 @@ Languages:
       Value: "{AF32C98B-C828-42AF-A649-74C1DE3303FB}"
     - ID: "8cdc337e-a112-42fb-bbb4-4143751e123f"
       Hint: __Revision
-      Value: "08aa66ab-da6c-46f0-97a5-3ece38f3f9ef"
+      Value: "2a33b3d9-35b1-4423-9706-945f8b0b3ed0"
     - ID: "badd9cf9-53e0-4d0c-bcc0-2d784c282f6a"
       Hint: __Updated by
       Value: |
         sitecore\Admin
     - ID: "d9cf14b1-fa16-4ba6-9288-e8a174d4d522"
       Hint: __Updated
-      Value: 20231121T101342Z
+      Value: 20240521T190540Z
     - ID: "ddcc7d64-cbf8-539d-99e9-20f530dce037"
       Hint: pageTitle
       Value: Styleguide | Sitecore JSS
