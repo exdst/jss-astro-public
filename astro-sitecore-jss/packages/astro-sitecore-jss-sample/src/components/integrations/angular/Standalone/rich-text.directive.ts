@@ -9,7 +9,7 @@ import {
   Renderer2,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import JssUtils from '@sitecore-jss/sitecore-jss/utils';
+import * as JssUtils from '@sitecore-jss/sitecore-jss/utils';
 import type { RichTextField } from '@sitecore-jss/sitecore-jss-angular';
 
 @Directive({
