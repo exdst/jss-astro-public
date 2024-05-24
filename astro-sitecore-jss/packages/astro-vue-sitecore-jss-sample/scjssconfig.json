@@ -1,9 +1,9 @@
 {
   "sitecore": {
-    "jssAppName": "vue-astro-migration",
+    "jssAppName": "astro",
     "sitecoreApiKey": "{D028BE48-F2F7-4111-A067-CD6EFC9ED0A9}",
-    "sitecoreApiHost": "https://vue-astro-migration.headless.localhost",
-    "rootItemId": "{AA344702-AFE1-4B2F-9471-E4357AECA7CF}",
+    "sitecoreApiHost": "https://astro.headless.localhost",
+    "rootItemId": "{1CC41A46-5AB8-4487-B321-FA4B8847EB37}",
     "graphQLEndpoint": "",
     "graphQLEndpointPath": "/sitecore/api/graph/edge",
     "defaultLanguage": "en",
