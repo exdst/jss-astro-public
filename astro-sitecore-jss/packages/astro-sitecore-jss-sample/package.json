@@ -31,6 +31,7 @@
     "@astrojs/node": "^8.2.5",
     "@astrojs/react": "^3.0.9",
     "@astrojs/vue": "^4.5.0",
+    "@babel/preset-react": "^7.24.7",
     "@sitecore-cloudsdk/events": "^0.3.0",
     "@sitecore-feaas/clientside": "^0.5.12",
     "@sitecore-jss/sitecore-jss": "^22.0.0",
