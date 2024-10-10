@@ -48,6 +48,9 @@ export default defineConfig({
       }]
     }
   },
+  security: {
+    checkOrigin: false,
+  },
   image: {
     domains: ['astro.headless.localhost'],
   },
