@@ -1,24 +1,19 @@
 ---
+export interface FileFieldValue {
+  [propName: string]: unknown;
+  src?: string;
+  title?: string;
+  displayName?: string;
+}
 
-export interface FileProps {
-  src: string,
-  name: string,
-  displayName: string,
-  title: string,
-  keywords: string,
-  description: string,
-  extension: string,
-  mimeType: string,
-  size: string
-  
+export interface FileField {
+  value: FileFieldValue;
 }
 
 export interface Props {
-  field: {
-    value?: FileProps,
-    src?: string
-  },
-  target: string,
+  [htmlAttributes: string]: unknown;
+  /** The file field data. */
+  field: FileFieldValue | FileField;
 }
 
 const { field } = Astro.props;
@@ -29,7 +24,7 @@ if (!field || (!field.value && !field.src)) {
 }
 
 // handle link directly on field for forgetful devs
-const file = (field.src ? field : field.value) as FileProps;
+const file = (field.src ? field : field.value) as FileFieldValue;
 
 if (!file) {
   return "";

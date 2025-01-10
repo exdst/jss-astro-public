@@ -1,9 +1,28 @@
 ---
-import type { LinkFieldValue, LinkField } from './LinkField';
+import { EditableFieldProps } from './sharedTypes';
 
-export interface Props {
-  field: LinkFieldValue;
-  editable?: boolean;
+export interface LinkFieldValue {
+  [htmlAttributes: string]: unknown;
+  href?: string;
+  title?: string;
+  target?: string;
+  querystring?: string;
+}
+
+export interface LinkField {
+  value: LinkFieldValue;
+  editableFirstPart?: string;
+  editableLastPart?: string;
+}
+
+export interface Props extends EditableFieldProps {
+  [htmlAttributes: string]: unknown;
+  /** The link field data. */
+  field: LinkField | LinkFieldValue;
+  /**
+  * Displays a link text ('description' in Sitecore) even when children exist
+  * NOTE: when in Sitecore Experience Editor, this setting is ignored due to technical limitations, and the description is always rendered.
+  */
   showLinkTextWithChildrenPresent?: boolean;
 }
 
@@ -32,11 +51,11 @@ const linkText =
 const finalChildren = children ? [linkText, ...children] : linkText;
 
 const attrs = (function () {
-  const { field, ...attrs } = Astro.props;
+  const { field, class: cssClass, ...attrs } = Astro.props;
   const { showLinkTextWithChildrenPresent, ...finalAttrs } = attrs;
   return {
     ...finalAttrs,
-    class: link.class,
+    class: `${link.class} ${cssClass}`.trim(),
     href: link.querystring ? `${link.href}?${link.querystring}` : link.href,
     title: link.title,
     target: link.target,

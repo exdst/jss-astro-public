@@ -1,13 +1,13 @@
 ---
 import StyleguideSpecimen from '../styleguide/Styleguide-Specimen.astro';
-import { File, FileFieldProps } from '@astro-sitecore-jss/astro-sitecore-jss';
+import { File, FileField } from '@astro-sitecore-jss/astro-sitecore-jss';
 
 export interface Props  {
   route: any
 }
 
 const { fields  } = Astro.props.route
-const file: FileFieldProps = fields.file;
+const file: FileField = fields.file;
 ---
 
 <!--
