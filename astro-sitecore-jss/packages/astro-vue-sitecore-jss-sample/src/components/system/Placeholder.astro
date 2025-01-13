@@ -4,6 +4,7 @@
 //We can't call component as function: https://docs.astro.build/en/reference/errors/invalid-component-args/
 //It causes dependency between Placeholder.astro and ComponentFactory.astro
 //And as ComponentFactory is dynamic and could not be moved out of application, we need to keep Placeholder.astro here as well.
+import { SitecoreContextMap, placeholderService } from '@astro-sitecore-jss/astro-sitecore-jss';
 import ComponentFactory from '../../temp/component-factory.astro';
 import type {
   ComponentRendering,
@@ -12,6 +13,7 @@ import type {
   Field,
   Item,
 } from '@sitecore-jss/sitecore-jss/layout';
+
 export type JssDynamicComponent = ComponentRendering & {
   isxEditorComponent?: boolean;
 };
@@ -33,7 +35,7 @@ export interface Props {
 }
 
 export function convertToDynamicComponents(
-  components: (ComponentRendering | HtmlElementRendering)[] | undefined
+  components: (ComponentRendering | HtmlElementRendering)[] | undefined,
 ) {
   return (
     components &&
@@ -51,22 +53,48 @@ export function convertToDynamicComponents(
 
 const { rendering } = Astro.props;
 
-const components = convertToDynamicComponents(
-  rendering.placeholders && rendering.placeholders[Astro.props.name]
-);
+const sitecoreContext = SitecoreContextMap.get()['scContext'];
+
+const placeholderData =
+  await placeholderService.getPlaceholderDataFromRenderingData(
+    rendering,
+    Astro.props.name,
+    sitecoreContext?.editMode,
+  );
+
+const components = convertToDynamicComponents(placeholderData);
+
 const isEditor =
   components &&
   components.every((component) =>
-    component.isxEditorComponent ? true : false
+    component.isxEditorComponent ? true : false,
   );
 const hasChildren = await Astro.slots.has('default');
 const children = await Astro.slots.render('default', [components, isEditor]);
+
+const componentsExtended =
+  components &&
+  components.map((component) => {
+    if (component.params) {
+      component.params.styles = `${component.params?.GridParameters || ''} ${component.params?.Styles || ''}`;
+    }
+
+    const componentProps = {
+      ...component,
+      rendering: component,
+      params: component.params,
+    };
+    return componentProps;
+  });
 ---
 
 {
   (hasChildren && <Fragment set:html={children} />) ||
-    (components &&
-      components.map((component) => (
-        <ComponentFactory name={component.componentName} route={component} />
+    (componentsExtended &&
+      componentsExtended.map((componentExtended) => (
+        <ComponentFactory
+          name={componentExtended.rendering.componentName}
+          route={componentExtended}
+        />
       )))
 }
