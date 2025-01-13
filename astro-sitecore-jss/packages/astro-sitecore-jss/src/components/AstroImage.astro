@@ -2,8 +2,9 @@
 import { Image as OptimizedImage } from "astro:assets";
 import { prepareImageSource } from "../media/image-api";
 import { SitecoreContextMap } from '../context';
-import type { ImageField } from "./ImageField";
+import type { ImageField } from "./Image.astro";
 import Image from "./Image.astro";
+import { EditableFieldProps } from "./sharedTypes";
 
 const sitecoreContext = SitecoreContextMap.get()['scContext'];
 let fallback = false;
@@ -11,10 +12,9 @@ if(sitecoreContext.pageState === 'edit' || sitecoreContext.pageState === 'previe
   fallback = true;
 }
 
-export interface Props {
-  [attributeName: string]: any;
+export interface Props extends EditableFieldProps{
+  [htmlAttributes: string]: unknown;
   field: ImageField;
-  editable?: boolean;
   height?: number;
   width?: number;
   imageParams?: { [paramName: string]: string | number }
