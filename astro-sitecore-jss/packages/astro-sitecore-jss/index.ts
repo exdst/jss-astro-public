@@ -10,4 +10,6 @@ export { default as File, type FileField } from './src/components/File.astro';
 export { default as EditFrame } from './src/components/EditFrame.astro';
 
 export { SitecoreContextMap } from './src/context';
-export { useTranslations } from './src/i18n/utils'; 
+export { useTranslations } from './src/i18n/utils';
+export { placeholderService } from './src/lib/placeholder-service';
+export { EditMode } from './src/models'; 
