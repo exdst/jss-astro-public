@@ -76,7 +76,7 @@ const componentsExtended =
   components &&
   components.map((component) => {
     if (component.params) {
-      component.params.styles = `${component.params?.GridParameters || ''} ${component.params?.Styles || ''}`;
+      component.params.styles = `${component.params?.GridParameters || ''} ${component.params?.Styles || ''}`.trim();
     }
 
     const componentProps = {
