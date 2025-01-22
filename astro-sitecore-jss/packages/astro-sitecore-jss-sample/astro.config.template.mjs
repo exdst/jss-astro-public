@@ -24,8 +24,7 @@ const angularConfig = {
   vite: {
     transformFilter: (code, id ) => {
       return !id.includes('/packages/astro-sitecore-jss/')
-    },
-    disableTypeChecking: true
+    }
   }
 }
 
