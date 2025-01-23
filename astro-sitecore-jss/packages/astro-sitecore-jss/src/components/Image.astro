@@ -20,12 +20,16 @@ export interface Props extends Omit<HTMLAttributes<"img">, "src"> {
   [htmlAttributes: string]: unknown;
   field: ImageField;
   src?: string | null;
+  height?: number;
+  width?: number;
   imageParams?: { [paramName: string]: string | number };
 }
 
 const {
   field,
   src,
+  height,
+  width,
   imageParams,
   ...attrs
 } = Astro.props as Props;
@@ -35,17 +39,34 @@ if (field.editable || (!field.value || !field.value?.src)) {
   render = false;
 }
 
+const resolveDimensionNumber = (propsDimention?: number, imageFieldDimention?: string): number | undefined => {
+  if(propsDimention) {
+    return propsDimention;
+  }
+
+  if(attrs.aspectRatio) {
+    return undefined;
+  }
+
+  return parseInt(imageFieldDimention ?? "0");
+}
+
 const imageSource = prepareImageSource(
   src ?? field.value?.src ?? "",
   imageParams
 );
+
 const altText = attrs.alt ? attrs.alt : field.value?.alt ?? "";
+const imageWidth = resolveDimensionNumber(width, field.value?.width);
+const imageHeight = resolveDimensionNumber(height, field.value?.height);
 
 const getAttributes = (): any => {
   return {
     ...attrs,
-    src: imageSource,
     alt: altText,
+    src: imageSource,
+    height: imageHeight,
+    width: imageWidth
   };
 };
 ---
