@@ -1,6 +1,6 @@
 {
   "name": "@astro-sitecore-jss/astro-sitecore-jss",
-  "version": "0.7.2",
+  "version": "1.0.1",
   "description": "Sitecore JavaScript Rendering SDK for Astro",
   "type": "module",
   "exports": {
