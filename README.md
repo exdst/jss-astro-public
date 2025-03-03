@@ -57,8 +57,8 @@ Some examples:
 
 ### Sitecore
 
-Currently, project supports only Sitecore first approach. You are not able to push items to Sitecore from code.
-Please, follow instruction under [Sitecore](./sitecore/README.md) folder to setup Sitecore instance.
+Currently, the project supports only the Sitecore first approach. You are not able to push items to Sitecore from code.
+Please follow the instructions in the [Sitecore](./sitecore/README.md) folder to set up the Sitecore instance.
 It is Docker based, so you can easily run it locally with a few commands.
 
 ## NPM packages
@@ -68,10 +68,29 @@ It is Docker based, so you can easily run it locally with a few commands.
 
 ## Contacts
 
-If you would like to see demo, please, contact  
+If you would like to see the demo, please contact  
 
 * [Email](mailto:at@exdst.com)
 * [LindedIn](https://www.linkedin.com/in/anton-tishchenko-b45b2923/)
+
+## Articles
+
+* Sitecore JavaScript Software Development Kit for Astro, [EXDST blog](https://exdst.com/posts/20231002-sitecore-astro)
+* Interactive React Islands with Sitecore and Astro, [EXDST blog](https://exdst.com/posts/20231122-sitecore-astro-react)
+* Interactive Vue Islands with Sitecore and Astro, [EXDST blog](https://exdst.com/posts/20231123-sitecore-astro-vue)
+* Interactive Angular Islands with Sitecore and Astro, [EXDST blog](https://exdst.com/posts/20231123-sitecore-astro-angular)
+* Sitecore XM Cloud and Astro Web Framework, [EXDST blog](https://exdst.com/posts/20231206-sitecore-xm-cloud-astro)
+* Starting Your First Sitecore Astro Project, [EXDST blog](https://exdst.com/posts/20240103-first-sitecore-astro-project)
+* Creating Your First Sitecore Astro Rendering, [EXDST blog](https://exdst.com/posts/20240104-sitecore-astro-rendering)
+* Migration of Sitecore Vue Website to Astro, [EXDST blog](https://exdst.com/posts/20240202-sitecore-jss-vue-astro-migration)
+* Migration of Sitecore React Website to Astro, [EXDST blog](https://exdst.com/posts/20240403-sitecore-react-astro)
+* Astro + React + Angular together, [EXDST blog](https://exdst.com/posts/20240829-astro-react-angular-together)
+* Deploy Astro to XM Cloud, [EXDST blog](https://exdst.com/posts/20250127-sitecore-xm-cloud-astro)
+* Sitecore + Astro, [Youtube, SUG Latam](https://www.youtube.com/watch?v=pP6pcaO_FhY)
+* Sitecore Headless Software Development Kit for Astro, [Youtube, SUGCON](https://www.youtube.com/watch?v=PzOSONAdxe8)
+
+## Demo Website
+You can see Astro together with Sitecore in action in [this repository](https://github.com/exdst/Sitecore.Demo.XMCloud.Verticals). It is a fork of the Sitecore Next.js Demo website, reimplemented on Astro, which proves Astro capabilities and better Astro performance compared to Next.js.
 
 ## Contributors
 
@@ -80,5 +99,6 @@ If you would like to see demo, please, contact
 * Oleksandr Melnyk, [GitHub](https://github.com/OlekMel)
 * Stanislav Chernetsky, [GitHub](https://github.com/stanislavSV)
 * Vasyl Gavrylyuk, [GitHub](https://github.com/vsegrad)
+* Vadym Shcherban, [GitHub](https://github.com/Lawliet1701) 
 
 Sponsored by [EXDST](https://exdst.com/)
