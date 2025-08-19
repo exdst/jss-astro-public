@@ -132,8 +132,6 @@ describe('EditingConfigMiddleware', () => {
 
     const res = await handler(req);
 
-    console.log('res :>> ', res);
-
     expect(res.headers.has('Access-Control-Allow-Origin')).to.be.true;
     expect(res.headers.get('Access-Control-Allow-Origin')).to.equal(
       allowedOrigin
