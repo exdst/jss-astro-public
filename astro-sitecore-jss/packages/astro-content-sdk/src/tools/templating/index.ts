@@ -1,0 +1,2 @@
+export { getComponentList } from './components';
+
