@@ -81,7 +81,7 @@ const astroMapTemplate = (
     }
   });
 
-  return `
+  return `//@ts-nocheck
 import { AstroContentSdkComponent } from '@astro-sitecore-jss/astro-content-sdk';
 
 // Components imported from the app itself
