@@ -4,10 +4,13 @@ import {
   EDITING_ALLOWED_ORIGINS,
   DesignLibraryRenderPreviewData,
   isDesignLibraryMode,
+  EditingPreviewData,
 } from '@sitecore-content-sdk/core/editing';
 import { enforceCors, getEditingSecret } from '../utils';
 import { getAllowedOriginsFromEnv } from '@sitecore-content-sdk/core/utils';
-
+import { DEFAULT_VARIANT } from '@sitecore-content-sdk/core/personalize';
+import * as cookie from 'cookie';
+import { COOKIE_NAME_PRERENDER_DATA } from './constants';
 /**
  * Configuration for the Editing Render Middleware.
  */
@@ -67,6 +70,25 @@ export class EditingRenderMiddleware {
       ...EDITING_ALLOWED_ORIGINS,
     ].join(' ')}`;
   }
+
+  /**
+   * Gets the preview data cookies string
+   */
+  private getPreviewDataCookies = (
+    data: EditingPreviewData | DesignLibraryRenderPreviewData
+  ): string => {
+    return cookie.serialize(
+      COOKIE_NAME_PRERENDER_DATA,
+      JSON.stringify(data, (_, value) => (value === null ? undefined : value)),
+      {
+        httpOnly: true,
+        path: '/',
+        maxAge: 3,
+        sameSite: 'none',
+        secure: true,
+      }
+    );
+  };
 
   private handler = async (_req: Request): Promise<Response> => {
     const { method, headers } = _req;
@@ -196,39 +218,30 @@ export class EditingRenderMiddleware {
       );
     }
 
+    let previewDataCookies = '';
+
     if (isDesignLibraryMode(mode)) {
-      // res.setPreviewData(
-      //   {
-      //     itemId: query.sc_itemid,
-      //     componentUid: query.sc_uid,
-      //     renderingId: query.sc_renderingId,
-      //     language: query.sc_lang,
-      //     site: query.sc_site,
-      //     mode,
-      //     dataSourceId: query.dataSourceId,
-      //     version: query.sc_version,
-      //   } as DesignLibraryRenderPreviewData,
-      //   {
-      //     maxAge: 3,
-      //   }
-      //);
+      previewDataCookies = this.getPreviewDataCookies({
+        itemId: query.get('sc_itemid'),
+        componentUid: query.get('sc_uid'),
+        renderingId: query.get('sc_renderingid'),
+        language: query.get('sc_lang'),
+        site: query.get('sc_site'),
+        mode: query.get('mode'),
+        dataSourceId: query.get('datasourceid'),
+        version: query.get('sc_version'),
+      } as DesignLibraryRenderPreviewData);
     } else {
-      // res.setPreviewData(
-      //   {
-      //     site: query.sc_site,
-      //     itemId: query.sc_itemid,
-      //     language: query.sc_lang,
-      //     // for sc_variantId we may employ multiple variants (page-layout + component level)
-      //     variantIds: query.sc_variant?.split(',') || [DEFAULT_VARIANT],
-      //     version: query.sc_version,
-      //     mode: query.mode,
-      //     layoutKind: query.sc_layoutKind,
-      //   } as EditingPreviewData,
-      //   // Cache the preview data for 3 seconds to ensure the page is rendered with the correct preview data not the cached one
-      //   {
-      //     maxAge: 3,
-      //   }
-      // );
+      previewDataCookies = this.getPreviewDataCookies({
+        site: query.get('sc_site'),
+        itemId: query.get('sc_itemid'),
+        language: query.get('sc_lang'),
+        // for sc_variantId we may employ multiple variants (page-layout + component level)
+        variantIds: query.get('sc_variant')?.split(',') || [DEFAULT_VARIANT],
+        version: query.get('sc_version'),
+        mode: query.get('mode'),
+        layoutKind: query.get('sc_layoutkind'),
+      } as EditingPreviewData);
     }
 
     const route =
@@ -247,6 +260,7 @@ export class EditingRenderMiddleware {
     // Restrict the page to be rendered only within the allowed origins
     _res.headers.append('Content-Security-Policy', this.getSCPHeader());
     _res.headers.append('Location', route ?? '/');
+    _res.headers.append('Set-Cookie', previewDataCookies);
 
     return new Response(null, {
       status: 307,

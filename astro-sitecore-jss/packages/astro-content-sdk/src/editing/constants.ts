@@ -1,0 +1,1 @@
+export const COOKIE_NAME_PRERENDER_DATA = "_preview_data";

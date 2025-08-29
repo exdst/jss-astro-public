@@ -1,4 +1,5 @@
 import { getAllowedOriginsFromEnv } from '@sitecore-content-sdk/core/utils';
+import * as cookie from 'cookie';
 
 export const getEditingSecret = (): string => {
   const secret = process.env.SITECORE_EDITING_SECRET;
@@ -59,6 +60,18 @@ export const enforceCors = (
   }
   return false;
 };
+
+export const extractPath = (params: Record<string, string | undefined>) => {
+  return params === undefined
+    ? '/'
+    : Array.isArray(params.path)
+      ? params.path.join('/')
+      : params.path ?? '/';
+};
+
+export const parseCookie = (value: string): Record<string, string | undefined> => {
+  return cookie.parse(value);
+}
 
 /**
  * Converts a string value in a regex pattern allowing wildcard matching

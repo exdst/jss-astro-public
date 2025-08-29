@@ -10,13 +10,9 @@ import {
 } from '@sitecore-content-sdk/core/editing';
 import { EditingRenderMiddleware } from './editing-render-middleware';
 import sinonChai from 'sinon-chai';
+import sinon from 'sinon';
 
 use(sinonChai);
-
-// const mockNextJsPreviewCookies = [
-//   '__prerender_bypass=1122334455; Path=/; SameSite=Lax',
-//   '__next_preview_data=6677889900; Path=/; SameSite=Lax',
-// ];
 
 type Query = {
   [key: string]: string;
@@ -212,19 +208,25 @@ describe('EditingRenderMiddleware', () => {
     const req = mockRequest({ query });
 
     const middleware = new EditingRenderMiddleware();
+
+    const getPreviewDataCookiesSpy = sinon.spy(
+      middleware as any,
+      'getPreviewDataCookies'
+    );
+
     const handler = middleware.getHandler();
 
     const res = await handler(req);
 
-    // expect(res.setPreviewData, 'set preview mode w/ data').to.have.been.calledWith({
-    //   site: 'website',
-    //   itemId: '{11111111-1111-1111-1111-111111111111}',
-    //   language: 'en',
-    //   variantIds: ['dev'],
-    //   version: 'latest',
-    //   mode: 'edit',
-    //   layoutKind: 'shared',
-    // });
+    expect(getPreviewDataCookiesSpy).to.have.been.calledWith({
+      site: 'website',
+      itemId: '{11111111-1111-1111-1111-111111111111}',
+      language: 'en',
+      variantIds: ['dev'],
+      version: 'latest',
+      mode: 'edit',
+      layoutKind: 'shared',
+    });
 
     expect(res.status).to.equal(307);
     expect(res.body).to.equal(null);
@@ -239,7 +241,7 @@ describe('EditingRenderMiddleware', () => {
       )}`
     );
   });
-  /*
+
   it('should pass multiple variant ids into setPreviewData when sc_variantId parameter has many values', async () => {
     const query = {
       mode: 'edit',
@@ -252,24 +254,29 @@ describe('EditingRenderMiddleware', () => {
     } as EditingRenderQueryParams;
 
     const req = mockRequest({ query });
-    const res = mockResponse();
 
     const middleware = new EditingRenderMiddleware();
+
+    const getPreviewDataCookiesSpy = sinon.spy(
+      middleware as any,
+      'getPreviewDataCookies'
+    );
+
     const handler = middleware.getHandler();
 
-    await handler(req, res);
+    await handler(req);
 
-    expect(res.setPreviewData, 'set preview mode w/ data').to.have.been.calledWith({
+    expect(getPreviewDataCookiesSpy).to.have.been.calledWith({
       site: 'website',
       itemId: '{11111111-1111-1111-1111-111111111111}',
       language: 'en',
       variantIds: ['id-1', 'id-2', 'id-3'],
-      version: undefined,
+      version: null,
       mode: 'edit',
-      layoutKind: undefined,
+      layoutKind: null,
     });
   });
-*/
+
   it('should handle request with missing optional parameters', async () => {
     const queryWithoutOptionalParams = {
       mode: 'edit',
@@ -282,19 +289,25 @@ describe('EditingRenderMiddleware', () => {
     const req = mockRequest({ query: queryWithoutOptionalParams });
 
     const middleware = new EditingRenderMiddleware();
+
+    const getPreviewDataCookiesSpy = sinon.spy(
+      middleware as any,
+      'getPreviewDataCookies'
+    );
+
     const handler = middleware.getHandler();
 
     const res = await handler(req);
 
-    // expect(res.setPreviewData, 'set preview mode w/ data').to.have.been.calledWith({
-    //   site: 'website',
-    //   itemId: '{11111111-1111-1111-1111-111111111111}',
-    //   language: 'en',
-    //   variantIds: ['_default'],
-    //   version: undefined,
-    //   mode: 'edit',
-    //   layoutKind: undefined,
-    // });
+    expect(getPreviewDataCookiesSpy).to.have.been.calledWith({
+      site: 'website',
+      itemId: '{11111111-1111-1111-1111-111111111111}',
+      language: 'en',
+      variantIds: ['_default'],
+      version: null,
+      mode: 'edit',
+      layoutKind: null,
+    });
 
     expect(res.status).to.equal(307);
     expect(res.body).to.equal(null);
@@ -321,17 +334,22 @@ describe('EditingRenderMiddleware', () => {
 
     const handler = middleware.getHandler();
 
+    const getPreviewDataCookiesSpy = sinon.spy(
+      middleware as any,
+      'getPreviewDataCookies'
+    );
+
     const res = await handler(req);
 
-    // expect(res.setPreviewData, 'set preview mode w/ data').to.have.been.calledWith({
-    //   site: 'website',
-    //   itemId: '{11111111-1111-1111-1111-111111111111}',
-    //   language: 'en',
-    //   variantIds: ['dev'],
-    //   version: 'latest',
-    //   mode: 'edit',
-    //   layoutKind: 'shared',
-    // });
+    expect(getPreviewDataCookiesSpy).to.have.been.calledWith({
+      site: 'website',
+      itemId: '{11111111-1111-1111-1111-111111111111}',
+      language: 'en',
+      variantIds: ['dev'],
+      version: 'latest',
+      mode: 'edit',
+      layoutKind: 'shared',
+    });
 
     expect(res.headers.has('Location')).to.be.true;
     expect(res.headers.get('Location')).to.equal('/custom/path/styleguide');
@@ -389,20 +407,26 @@ describe('EditingRenderMiddleware', () => {
       const req = mockRequest({ query });
 
       const middleware = new EditingRenderMiddleware();
+
+      const getPreviewDataCookiesSpy = sinon.spy(
+        middleware as any,
+        'getPreviewDataCookies'
+      );
+
       const handler = middleware.getHandler();
 
       const res = await handler(req);
 
-      // expect(res.setPreviewData, 'set preview mode w/ data').to.have.been.calledWith({
-      //   itemId: query.sc_itemid,
-      //   componentUid: query.sc_uid,
-      //   renderingId: query.sc_renderingId,
-      //   language: query.sc_lang,
-      //   site: query.sc_site,
-      //   mode: DesignLibraryMode.Normal,
-      //   dataSourceId: query.dataSourceId,
-      //   version: query.sc_version,
-      // });
+      expect(getPreviewDataCookiesSpy).to.have.been.calledWith({
+        itemId: query.sc_itemid,
+        componentUid: query.sc_uid,
+        renderingId: query.sc_renderingId,
+        language: query.sc_lang,
+        site: query.sc_site,
+        mode: DesignLibraryMode.Normal,
+        dataSourceId: query.dataSourceId,
+        version: query.sc_version,
+      });
 
       expect(res.status).to.equal(307);
       expect(res.headers.has('Content-Security-Policy')).to.be.true;
@@ -419,20 +443,26 @@ describe('EditingRenderMiddleware', () => {
       });
 
       const middleware = new EditingRenderMiddleware();
+
+      const getPreviewDataCookiesSpy = sinon.spy(
+        middleware as any,
+        'getPreviewDataCookies'
+      );
+
       const handler = middleware.getHandler();
 
       const res = await handler(req);
 
-      // expect(res.setPreviewData, 'set preview mode w/ data').to.have.been.calledWith({
-      //   itemId: query.sc_itemid,
-      //   componentUid: query.sc_uid,
-      //   renderingId: query.sc_renderingId,
-      //   language: query.sc_lang,
-      //   site: query.sc_site,
-      //   mode: DesignLibraryMode.Metadata,
-      //   dataSourceId: query.dataSourceId,
-      //   version: query.sc_version,
-      // });
+      expect(getPreviewDataCookiesSpy).to.have.been.calledWith({
+        itemId: query.sc_itemid,
+        componentUid: query.sc_uid,
+        renderingId: query.sc_renderingId,
+        language: query.sc_lang,
+        site: query.sc_site,
+        mode: DesignLibraryMode.Metadata,
+        dataSourceId: query.dataSourceId,
+        version: query.sc_version,
+      });
 
       expect(res.status).to.equal(307);
       expect(res.headers.has('Content-Security-Policy')).to.be.true;
@@ -479,19 +509,25 @@ describe('EditingRenderMiddleware', () => {
       const req = mockRequest({ query });
 
       const middleware = new EditingRenderMiddleware();
+
+      const getPreviewDataCookiesSpy = sinon.spy(
+        middleware as any,
+        'getPreviewDataCookies'
+      );
+
       const handler = middleware.getHandler();
 
       const res = await handler(req);
 
-      // expect(res.setPreviewData, 'set preview mode w/ data').to.have.been.calledWith({
-      //   site: 'website',
-      //   itemId: '{11111111-1111-1111-1111-111111111111}',
-      //   language: 'en',
-      //   variantIds: ['dev'],
-      //   version: 'latest',
-      //   mode: 'preview',
-      //   layoutKind: 'final',
-      // });
+      expect(getPreviewDataCookiesSpy).to.have.been.calledWith({
+        site: 'website',
+        itemId: '{11111111-1111-1111-1111-111111111111}',
+        language: 'en',
+        variantIds: ['dev'],
+        version: 'latest',
+        mode: 'preview',
+        layoutKind: 'final',
+      });
 
       expect(res.headers.has('Access-Control-Allow-Origin')).to.be.true;
       expect(res.headers.get('Access-Control-Allow-Origin')).to.equal(
@@ -509,13 +545,6 @@ describe('EditingRenderMiddleware', () => {
           ' '
         )}`
       );
-
-      // expect(res.setHeader).to.have.been.calledWith('Set-Cookie', [
-      //   '__prerender_bypass=1122334455; Path=/; SameSite=None; Secure',
-      //   '__next_preview_data=6677889900; Path=/; SameSite=None; Secure',
-      //   'sc_site=website; Path=/; HttpOnly; SameSite=None; Secure',
-      //   'sc_preview=true; Path=/; HttpOnly; SameSite=None; Secure',
-      // ]);
 
       expect(res.status).to.equal(307);
       expect(res.body).to.equal(null);
