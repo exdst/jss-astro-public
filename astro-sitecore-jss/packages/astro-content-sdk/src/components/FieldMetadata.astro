@@ -1,0 +1,28 @@
+﻿---
+// The component which renders field metadata markup
+
+import { MetadataKind } from '@sitecore-content-sdk/core/editing';
+
+interface FieldMetadataProps {
+  metadata: { [key: string]: unknown };
+}
+
+const props = Astro.props as FieldMetadataProps;
+
+const data = JSON.stringify(props.metadata);
+
+const attributes = {
+  type: 'text/sitecore',
+  chrometype: 'field',
+  className: 'scpm',
+};
+
+const codeOpenAttributes = { ...attributes, kind: MetadataKind.Open };
+const codeCloseAttributes = { ...attributes, kind: MetadataKind.Close };
+---
+
+<>
+  <code {...codeOpenAttributes}>{data}</code>
+  <slot />
+  <code {...codeCloseAttributes}>{}</code>
+</>

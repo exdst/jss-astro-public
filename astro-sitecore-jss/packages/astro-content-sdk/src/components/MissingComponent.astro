@@ -1,0 +1,39 @@
+---
+interface MissingComponentProps {
+  rendering?: {
+    componentName?: string;
+  };
+  errorOverride?: string;
+}
+
+const props = Astro.props as MissingComponentProps;
+
+const componentName =
+  props.rendering && props.rendering.componentName
+    ? props.rendering.componentName
+    : 'Unnamed Component';
+
+// error override would mean component is not unimplemented
+!props.errorOverride &&
+  console.log(
+    `Component props for unimplemented '${componentName}' component`,
+    props
+  );
+
+const errorMessage =
+  props.errorOverride ||
+  'Content SDK component is missing Astro implementation. See the developer console for more information.';
+---
+
+<div
+  style={{
+    background: 'darkorange',
+    outline: '5px solid orange',
+    padding: '10px',
+    color: 'white',
+    maxWidth: '500px',
+  }}
+>
+  <h2>{componentName}</h2>
+  <p>{errorMessage}</p>
+</div>

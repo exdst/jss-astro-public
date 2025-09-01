@@ -1,0 +1,47 @@
+﻿---
+// Returns the passed field component or default component in case field value is empty and edit mode is 'metadata'
+
+import {
+  GenericFieldValue,
+  Field,
+  isFieldValueEmpty,
+  FieldMetadata,
+} from '@sitecore-content-sdk/core/layout';
+import { AstroContentSdkComponent } from '../sharedTypes/component-props';
+
+interface FieldComponentProps {
+  // Partial<T> type is used here because _field.value_ could be required or optional for the different field types
+  field?: (Partial<Field> | GenericFieldValue) & FieldMetadata;
+  editable?: boolean;
+  emptyFieldEditingComponent?: AstroContentSdkComponent;
+  defaultEmptyFieldEditingComponent: AstroContentSdkComponent;
+}
+
+const getEmptyFieldEditingComponent = (
+  props: FieldComponentProps
+): AstroContentSdkComponent | null => {
+  const { editable = true } = props;
+  if (props.field?.metadata && editable && isFieldValueEmpty(props.field)) {
+    return (
+      props.emptyFieldEditingComponent ||
+      props.defaultEmptyFieldEditingComponent
+    );
+  }
+
+  return null;
+};
+
+const { field, editable = true } = Astro.props as FieldComponentProps;
+
+const isEmptyEditableField =
+  field?.metadata && editable && isFieldValueEmpty(field);
+
+const EmptyComponent = getEmptyFieldEditingComponent(
+  Astro.props as FieldComponentProps
+);
+---
+
+<>
+  {isEmptyEditableField && EmptyComponent && <EmptyComponent />}
+  {!isEmptyEditableField && <slot />}
+</>
