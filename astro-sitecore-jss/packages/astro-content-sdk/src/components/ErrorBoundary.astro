@@ -1,0 +1,78 @@
+﻿---
+import { Page } from '@sitecore-content-sdk/core/client';
+import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
+import { AstroContentSdkComponent } from '../sharedTypes/component-props';
+import { SitecoreContext } from '../context';
+
+export type ErrorBoundaryProps = {
+  page: Page;
+  type: string;
+  isDynamic?: boolean;
+  errorComponent?: AstroContentSdkComponent;
+  rendering?: ComponentRendering;
+  componentLoadingMessage?: string;
+  disableSuspense?: boolean;
+};
+
+let props = Astro.props as ErrorBoundaryProps;
+const page = SitecoreContext.get()['page'];
+props = { ...props, page };
+
+const defaultErrorMessage = 'There was a problem loading this section.';
+
+const isInDevMode = (): boolean => {
+  return process.env.NODE_ENV === 'development';
+};
+
+const showErrorDetails = (): boolean => {
+  return (
+    isInDevMode() || props.page.mode.isEditing || props.page.mode.isPreview
+  );
+};
+
+let state: { error?: Error } = {};
+
+let html;
+
+try {
+  html = await Astro.slots.render('default');
+} catch (e) {
+  state = { error: e };
+  if (showErrorDetails()) {
+    console.error(
+      `An error occurred in component ${props.rendering?.componentName} (${props.rendering?.uid}): `
+    );
+  }
+  console.error(e);
+}
+---
+
+<>
+  {!state.error && <Fragment set:html={html} />}
+  {
+    state.error && props.errorComponent && (
+      <props.errorComponent error={state.error} />
+    )
+  }
+  {
+    state.error && !props.errorComponent && showErrorDetails() && (
+      <div>
+        <div class="sc-content-sdk-placeholder-error">
+          A rendering error occurred in component{' '}
+          <em>{props.rendering?.componentName}</em>
+          <br />
+          Error: <em>{state.error.message || JSON.stringify(state.error)}</em>
+        </div>
+      </div>
+    )
+  }
+  {
+    state.error && !props.errorComponent && !showErrorDetails() && (
+      <div>
+        <div class="sc-content-sdk-placeholder-error">
+          {defaultErrorMessage}
+        </div>
+      </div>
+    )
+  }
+</>
