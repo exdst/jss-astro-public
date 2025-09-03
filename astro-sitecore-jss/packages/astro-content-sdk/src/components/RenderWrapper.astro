@@ -1,0 +1,31 @@
+---
+import { AstroContentSdkComponent } from '../sharedTypes/component-props';
+
+interface RenderWrapperProps {
+  wrapper?: AstroContentSdkComponent | string;
+}
+
+const { wrapper } = Astro.props as RenderWrapperProps;
+
+let html;
+let WrapperComponent = wrapper as AstroContentSdkComponent;
+
+const isHtmlWrapper = wrapper && typeof wrapper === 'string';
+
+if (isHtmlWrapper) {
+  const componentHtml = await Astro.slots.render('default');
+  html = wrapper.replace('${component}', componentHtml);
+}
+---
+
+<>
+  {!wrapper && <slot />}
+  {
+    wrapper && !isHtmlWrapper && (
+      <WrapperComponent>
+        <slot />
+      </WrapperComponent>
+    )
+  }
+  {isHtmlWrapper && <Fragment set:html={html} />}
+</>

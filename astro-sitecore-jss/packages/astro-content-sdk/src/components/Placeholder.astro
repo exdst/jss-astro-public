@@ -1,0 +1,123 @@
+---
+import {
+  PlaceholderProps,
+  getPlaceholderDataFromRenderingData,
+  getComponentsForRenderingData,
+} from './PlaceholderCommon.astro';
+import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
+import ErrorBoundary from './ErrorBoundary.astro';
+import PlaceholderMetadata from './PlaceholderMetadata.astro';
+import { SitecoreContext } from '../context';
+import { AstroContentSdkComponent } from '../sharedTypes/component-props';
+import RenderWrapper from './RenderWrapper.astro';
+import EmptyPlaceholder from './EmptyPlaceholder.astro';
+
+export interface PlaceholderComponentProps extends PlaceholderProps {
+  /**
+   * Render HTML or an Astro component when the placeholder contains no content components.
+   */
+  renderEmpty?: string | AstroContentSdkComponent;
+
+  /**
+   * Render HTML or an Astro component wrapped around the placeholder and components.
+   * For HTML wrapper use ${component} string placeholder to set where the placeholder and components should be rendered.
+   */
+  render?: string | AstroContentSdkComponent;
+
+  /**
+   * Render HTML or an Astro component wrapped around each non-system component added to the placeholder.
+   * For HTML wrapper use ${component} string placeholder to set where the component should be rendered.
+   * Mutually exclusive with `render`.
+   */
+  renderEach?: string | AstroContentSdkComponent;
+}
+
+const props = Astro.props as PlaceholderComponentProps;
+
+const page = SitecoreContext.get()['page'];
+const childProps: PlaceholderComponentProps = { ...props, page };
+
+delete childProps.componentMap;
+
+const renderingData = childProps.rendering;
+
+const placeholderData = getPlaceholderDataFromRenderingData(
+  renderingData,
+  childProps.name,
+  childProps.page.mode.isEditing
+);
+
+const isEmpty = !placeholderData.length;
+
+const components = getComponentsForRenderingData(placeholderData, childProps);
+---
+
+{
+  (
+    <RenderWrapper
+      wrapper={
+        isEmpty
+          ? childProps.page.mode.isEditing && EmptyPlaceholder
+          : childProps.render
+      }
+    >
+      <ErrorBoundary>
+        <RenderWrapper wrapper={isEmpty && childProps.renderEmpty}>
+          {
+            // Conditional rendering based on editing mode
+            childProps.page.mode.isEditing ? (
+              <PlaceholderMetadata
+                placeholderName={childProps.name}
+                rendering={childProps.rendering as ComponentRendering}
+              >
+                {components.map((component) => {
+                  const Component = component.component;
+
+                  return (
+                    <RenderWrapper wrapper={childProps.renderEach}>
+                      <PlaceholderMetadata
+                        rendering={component.rendering as ComponentRendering}
+                      >
+                        {!component.isEmpty && (
+                          <ErrorBoundary
+                            errorComponent={childProps.errorComponent}
+                            {...component.props}
+                          >
+                            <Component {...component.props} />
+                          </ErrorBoundary>
+                        )}
+                        {component.isEmpty && (
+                          <Component {...component.props} />
+                        )}
+                      </PlaceholderMetadata>
+                    </RenderWrapper>
+                  );
+                })}
+              </PlaceholderMetadata>
+            ) : (
+              <>
+                {components.map((component) => {
+                  const Component = component.component;
+                  return (
+                    <RenderWrapper
+                      wrapper={
+                        isEmpty ? childProps.renderEmpty : childProps.renderEach
+                      }
+                    >
+                      <ErrorBoundary
+                        errorComponent={childProps.errorComponent}
+                        {...component.props}
+                      >
+                        <Component {...component.props} />
+                      </ErrorBoundary>
+                    </RenderWrapper>
+                  );
+                })}
+              </>
+            )
+          }
+        </RenderWrapper>
+      </ErrorBoundary>
+    </RenderWrapper>
+  )
+}
