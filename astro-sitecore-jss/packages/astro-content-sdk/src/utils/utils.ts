@@ -74,6 +74,25 @@ export const parseCookie = (value: string): Record<string, string | undefined> =
 }
 
 /**
+ * "class" property will be transformed into or appended to "className" instead.
+ * @param {string} otherAttrs all other props included on the image component
+ * @returns {void}
+ */
+export const addClassName = (otherAttrs: { [key: string]: unknown }): void => {
+  if (otherAttrs.class) {
+    // if any classes are defined properly already
+    if (otherAttrs.className) {
+      let className: string = otherAttrs.className as string;
+      className += ` ${otherAttrs.class}`;
+      otherAttrs.className = className;
+    } else {
+      otherAttrs.className = otherAttrs.class;
+    }
+    delete otherAttrs.class;
+  }
+};
+
+/**
  * Converts a string value in a regex pattern allowing wildcard matching
  * @param {string} pattern input with wildcards i.e. site.*.com
  * @returns {string} modified string that can be used as regexp input

@@ -1,43 +1,55 @@
 ---
-import { EditableFieldProps } from './sharedTypes';
 import {
   FieldMetadata,
   isFieldValueEmpty,
 } from '@sitecore-content-sdk/core/layout';
-import WithEmptyFieldEditingComponent from '../enhancers/WithEmptyFieldEditingComponent.astro';
+import { EditableFieldProps } from './sharedTypes';
 import WithFieldMetadata from '../enhancers/WithFieldMetadata.astro';
+import WithEmptyFieldEditingComponent from '../enhancers/WithEmptyFieldEditingComponent.astro';
 import DefaultEmptyFieldEditingComponentText from './DefaultEmptyFieldEditingComponentText.astro';
 
-export interface RichTextField extends FieldMetadata {
-  value?: string;
-}
-
-export interface RichTextProps extends EditableFieldProps {
+export interface DateFieldProps extends EditableFieldProps {
+  /** The date field data. */
   [htmlAttributes: string]: unknown;
-  /** The text field data. */
-  field: RichTextField;
+  field: FieldMetadata & {
+    value?: string;
+  };
   /**
    * The HTML element that will wrap the contents of the field.
    */
   tag?: string;
+
+  render?: (date: Date | null) => string | null;
 }
 
 const {
   field,
-  tag = 'div',
+  tag,
   editable = true,
+  render,
   emptyFieldEditingComponent,
-} = Astro.props as RichTextProps;
+  ...otherProps
+} = Astro.props as DateFieldProps;
 
 const isEmptyField = isFieldValueEmpty(field);
 
-const Tag = tag;
+const htmlProps: {
+  [htmlAttr: string]: unknown;
+} = {
+  ...otherProps,
+};
 
-const attrs = (function () {
-  const { field, ...attrs } = Astro.props;
-  const { tag, ...finalAttrs } = attrs;
-  return finalAttrs;
-})();
+let children;
+if (!isEmptyField) {
+  if (render) {
+    // @ts-ignore
+    children = render(field.value ? new Date(field.value) : null);
+  } else {
+    children = field.value;
+  }
+}
+
+const Tag = tag || 'span';
 ---
 
 {
@@ -51,7 +63,12 @@ const attrs = (function () {
         }
         emptyFieldEditingComponent={emptyFieldEditingComponent}
       >
-        {!isEmptyField && <Tag {...attrs} set:html={field.value} />}
+        {!isEmptyField && (
+          <>
+            {tag && <Tag {...htmlProps} set:html={children} />}
+            {!tag && <Fragment {...htmlProps} set:html={children} />}
+          </>
+        )}
       </WithEmptyFieldEditingComponent>
     </WithFieldMetadata>
   )

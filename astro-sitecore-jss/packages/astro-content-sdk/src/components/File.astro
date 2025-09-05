@@ -1,0 +1,46 @@
+---
+import { isFieldValueEmpty } from '@sitecore-content-sdk/core/layout';
+
+export interface FileFieldValue {
+  [propName: string]: unknown;
+  src?: string;
+  title?: string;
+  displayName?: string;
+}
+
+export interface FileField {
+  value: FileFieldValue;
+}
+
+export interface FileProps {
+  [attributeName: string]: unknown;
+  /** The file field data. */
+  field: FileFieldValue | FileField;
+}
+
+const { field, ...otherProps } = Astro.props as FileProps;
+
+const dynamicField: FileField | FileFieldValue = field;
+
+const isEmptyField = isFieldValueEmpty(dynamicField);
+
+let file, linkText, anchorAttrs, finalChildren;
+
+if (!isEmptyField) {
+  // handle link directly on field for forgetful devs
+  file = (
+    (dynamicField as FileFieldValue).src ? field : dynamicField.value
+  ) as FileFieldValue;
+
+  if (file) {
+    const children = await Astro.slots.render('default');
+    linkText = !children ? file.title || file.displayName : null;
+    anchorAttrs = { href: file.src };
+    finalChildren = children ? children : linkText;
+  }
+}
+
+const attrs = { ...anchorAttrs, ...otherProps };
+---
+
+{!isEmptyField && file && <a {...attrs} set:html={finalChildren}></a>}

@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-expressions */
 import { expect, use, spy } from 'chai';
-import { enforceCors, getEditingSecret } from './utils';
+import { addClassName, enforceCors, getEditingSecret } from './utils';
 import spies from 'chai-spies';
 
 use(spies);
@@ -134,5 +134,28 @@ describe('enforceCors', () => {
     const req = mockRequest({ origin: 'https://preallowed.com' });
     const res = mockResponse('https://preallowed.com');
     expect(enforceCors(req, res)).to.be.equal(true);
+  });
+});
+
+describe('addClassName', () => {
+  it('should add class attribute value to className', () => {
+    const modifiableAttrs = {
+      className: 'first-class',
+      class: 'second-class',
+    };
+    addClassName(modifiableAttrs);
+    expect(modifiableAttrs).to.deep.equal({
+      className: 'first-class second-class',
+    });
+
+    it('should convert class attribute value to className when className is absent', () => {
+      const modifiableAttrs = {
+        class: 'second-class',
+      };
+      addClassName(modifiableAttrs);
+      expect(modifiableAttrs).to.deep.equal({
+        className: 'second-class',
+      });
+    });
   });
 });
