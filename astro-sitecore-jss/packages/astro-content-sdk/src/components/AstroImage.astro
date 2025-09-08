@@ -1,0 +1,115 @@
+---
+import { Image as OptimizedImage } from 'astro:assets';
+import { SitecoreContext } from '../context';
+import type {
+  BaseImageProps,
+  ImageField,
+  ImageFieldValue,
+} from './Image.astro';
+import Image from './Image.astro';
+import { EditableFieldProps } from './sharedTypes';
+import { Page } from '@sitecore-content-sdk/core/client';
+import { isFieldValueEmpty } from '@sitecore-content-sdk/core/layout';
+import { addClassName } from '../utils';
+import { mediaApi } from '@sitecore-content-sdk/core/media';
+
+const page = SitecoreContext.get()['page'] as Page;
+let fallback = false,
+  render = true;
+
+if (page.mode.isEditing || page.mode.isPreview) {
+  fallback = true;
+}
+
+export interface AstroImageProps extends BaseImageProps, EditableFieldProps {
+  // srcSet attribute for Astro Image
+  widths?: number[];
+}
+
+const {
+  editable = true,
+  imageParams,
+  field,
+  alt,
+  mediaUrlPrefix,
+  emptyFieldEditingComponent,
+  ...otherProps
+} = Astro.props as AstroImageProps;
+
+const dynamicMedia = field as ImageField | ImageFieldValue;
+
+const isEmptyField = isFieldValueEmpty(dynamicMedia);
+
+if (fallback || isEmptyField) {
+  render = false;
+}
+
+let img;
+if (!isEmptyField) {
+  // handle image directly on field for forgetful devs
+  img = (dynamicMedia as ImageFieldValue).src
+    ? { ...field }
+    : (dynamicMedia.value as ImageFieldValue);
+
+  if (img) {
+    // prevent metadata from being passed to the img tag
+    if (img.metadata) {
+      delete img.metadata;
+    }
+  }
+}
+
+const getImageAttrs = (
+  {
+    src,
+    ...otherAttrs
+  }: {
+    [key: string]: unknown;
+    src?: string;
+  },
+  imageParams?: { [paramName: string]: string | number },
+  mediaUrlPrefix?: RegExp
+) => {
+  if (!src) {
+    return null;
+  }
+  addClassName(otherAttrs);
+
+  const newAttrs: { [attr: string]: unknown } = {
+    ...otherAttrs,
+  };
+
+  // update image URL for content sdk handler and image rendering params
+  const resolvedSrc = mediaApi.updateImageUrl(src, imageParams, mediaUrlPrefix);
+
+  // always output original src as fallback for older browsers
+  newAttrs.src = resolvedSrc;
+  return newAttrs;
+};
+
+const attrs = getImageAttrs(
+  { ...img, ...otherProps },
+  imageParams,
+  mediaUrlPrefix
+);
+
+const getAttributes = (): any => {
+  return {
+    ...attrs,
+    alt: alt ? alt : (attrs?.alt ?? ''),
+    src: attrs?.src,
+    height: attrs?.height,
+    width: attrs?.width,
+  };
+};
+
+if (attrs?.width === undefined || attrs?.height === undefined) {
+  console.warn('Missing width or height attribute');
+  render = false;
+}
+
+const attributes = getAttributes();
+---
+
+{render && <OptimizedImage {...attributes} />}
+{fallback && <Image {...Astro.props} />}

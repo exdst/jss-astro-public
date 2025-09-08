@@ -84,6 +84,10 @@
   "files": [
     "dist",
     "types",
+    "src/components",
+    "src/enhancers",
+    "src/utils/*.ts",
+    "context.ts",
     "/*.js",
     "/*.d.ts"
   ]

@@ -5,7 +5,7 @@ import {
   FieldMetadata,
   isFieldValueEmpty,
 } from '@sitecore-content-sdk/core/layout';
-import { addClassName } from '../utils/utils';
+import { addClassName } from '../utils';
 import WithFieldMetadata from '../enhancers/WithFieldMetadata.astro';
 import WithEmptyFieldEditingComponent from '../enhancers/WithEmptyFieldEditingComponent.astro';
 import DefaultEmptyFieldEditingComponentImage from './DefaultEmptyFieldEditingComponentImage.astro';
@@ -37,21 +37,17 @@ export interface ImageSizeParameters {
   sc?: number;
 }
 
-export interface ImageProps extends EditableFieldProps {
+export interface BaseImageProps {
   [attributeName: string]: unknown;
   /** Image field data (consistent with other field types) */
   field?: (ImageField | ImageFieldValue) & FieldMetadata;
-
   /**
    * Parameters that will be attached to Sitecore media URLs
    */
   imageParams?: {
     [paramName: string]: string | number;
   };
-
-  srcSet?: ImageSizeParameters[];
-
-  /**
+    /**
    * Custom regexp that finds media URL prefix that will be replaced by `/-/jssmedia` or `/~/jssmedia`.
    * @example
    * /\/([-~]{1})assets\//i
@@ -59,6 +55,10 @@ export interface ImageProps extends EditableFieldProps {
    * /~assets/website -> /~/jssmedia/website
    */
   mediaUrlPrefix?: RegExp;
+}
+
+export interface ImageProps extends BaseImageProps, EditableFieldProps {
+  srcSet?: ImageSizeParameters[];
 }
 
 const getImageAttrs = (

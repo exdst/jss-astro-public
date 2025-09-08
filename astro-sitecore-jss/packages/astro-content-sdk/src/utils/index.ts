@@ -1,1 +1,7 @@
-export { enforceCors, getEditingSecret, extractPath, parseCookie } from "./utils";
+export {
+  enforceCors,
+  getEditingSecret,
+  extractPath,
+  parseCookie,
+  addClassName,
+} from './utils';
