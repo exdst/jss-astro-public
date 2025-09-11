@@ -20,7 +20,6 @@ export const generateMap: GenerateMapFunction = ({
   mapTemplate = astroMapTemplate,
 }: GenerateMapArgs) => {
   const components = getComponentList(paths, exclude);
-  console.log('components', components);
 
   const componentMapContent = mapTemplate(components, componentImports);
 

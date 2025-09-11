@@ -162,8 +162,6 @@ describe('SitecoreClient', () => {
 
       sandbox.stub(sitecoreClient, 'parsePath').returns('/test/path');
 
-      console.log('Sandbox', sandbox);
-      console.log('sitecoreClient :>> ', sitecoreClient);
       layoutServiceStub.fetchLayoutData.returns(testLayoutData);
 
       await sitecoreClient.getPage(path, {
@@ -186,8 +184,6 @@ describe('SitecoreClient', () => {
       const path = '/some/path';
       const siteInfo = { name: 'default-site', hostName: '*', language: 'en' };
 
-      console.log('Sandbox', sandbox);
-      console.log('siteTools :>> ', siteTools);
       sandbox
         .stub(siteTools, 'getSiteRewriteData')
         .returns({ siteName: 'default-site' });

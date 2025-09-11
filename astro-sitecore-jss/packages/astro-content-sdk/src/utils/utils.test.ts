@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-expressions */
 import { expect, use, spy } from 'chai';
-import { addClassName, enforceCors, getEditingSecret } from './utils';
 import spies from 'chai-spies';
+import { addClassName, enforceCors, getEditingSecret } from './utils';
 
 use(spies);
 
