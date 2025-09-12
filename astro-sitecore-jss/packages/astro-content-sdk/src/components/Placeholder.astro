@@ -7,7 +7,7 @@ import {
 import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
 import ErrorBoundary from './ErrorBoundary.astro';
 import PlaceholderMetadata from './PlaceholderMetadata.astro';
-import { SitecoreContext } from '../context';
+import { useSitecore } from '../context';
 import { AstroContentSdkComponent } from '../sharedTypes/component-props';
 import RenderWrapper from './RenderWrapper.astro';
 import EmptyPlaceholder from './EmptyPlaceholder.astro';
@@ -34,7 +34,7 @@ export interface PlaceholderComponentProps extends PlaceholderProps {
 
 const props = Astro.props as PlaceholderComponentProps;
 
-const page = SitecoreContext.get()['page'];
+const { page } = useSitecore();
 const childProps: PlaceholderComponentProps = { ...props, page };
 
 delete childProps.componentMap;

@@ -13,7 +13,7 @@ export interface SitecoreContextProps {
   /**
    * The component map to use for rendering components.
    */
-  componentMap: ComponentMap;
+  componentMap?: ComponentMap;
   /**
    * The page data.
    */
@@ -28,4 +28,15 @@ export const updateSitecoreContext = ({
   SitecoreContext.setKey('page', page);
   SitecoreContext.setKey('api', api);
   SitecoreContext.setKey('componentMap', componentMap);
+};
+
+export const useSitecore = (): SitecoreContextProps => {
+  return {
+    page: SitecoreContext.get()['page'],
+    api: SitecoreContext.get()['api'],
+  };
+};
+
+export const useComponentMap = (): ComponentMap => {
+  return SitecoreContext.get()['componentMap'];
 };

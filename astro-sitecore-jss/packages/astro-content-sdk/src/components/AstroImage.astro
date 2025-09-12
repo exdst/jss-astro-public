@@ -1,6 +1,6 @@
 ---
 import { Image as OptimizedImage } from 'astro:assets';
-import { SitecoreContext } from '../context';
+import { useSitecore } from '../context';
 import type {
   BaseImageProps,
   ImageField,
@@ -8,12 +8,11 @@ import type {
 } from './Image.astro';
 import Image from './Image.astro';
 import { EditableFieldProps } from './sharedTypes';
-import { Page } from '@sitecore-content-sdk/core/client';
 import { isFieldValueEmpty } from '@sitecore-content-sdk/core/layout';
 import { addClassName } from '../utils';
 import { mediaApi } from '@sitecore-content-sdk/core/media';
 
-const page = SitecoreContext.get()['page'] as Page;
+const { page } = useSitecore();
 let fallback = false,
   render = true;
 

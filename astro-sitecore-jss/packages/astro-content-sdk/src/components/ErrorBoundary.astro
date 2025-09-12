@@ -2,7 +2,7 @@
 import { Page } from '@sitecore-content-sdk/core/client';
 import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
 import { AstroContentSdkComponent } from '../sharedTypes/component-props';
-import { SitecoreContext } from '../context';
+import { useSitecore } from '../context';
 
 export type ErrorBoundaryProps = {
   page: Page;
@@ -15,7 +15,7 @@ export type ErrorBoundaryProps = {
 };
 
 let props = Astro.props as ErrorBoundaryProps;
-const page = SitecoreContext.get()['page'];
+const { page } = useSitecore();
 props = { ...props, page };
 
 const defaultErrorMessage = 'There was a problem loading this section.';

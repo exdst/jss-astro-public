@@ -1,9 +1,6 @@
 ---
 import { Page } from '@sitecore-content-sdk/core/client';
-import {
-  AstroContentSdkComponent,
-  ComponentMap,
-} from '../sharedTypes/component-props';
+import { AstroContentSdkComponent } from '../sharedTypes/component-props';
 import {
   ComponentRendering,
   RouteData,
@@ -16,7 +13,7 @@ import { constants } from '@sitecore-content-sdk/core';
 import EmptyRendering from './EmptyRendering.astro';
 import HiddenRendering from './HiddenRendering.astro';
 import MissingComponent from './MissingComponent.astro';
-import { SitecoreContext } from '../context';
+import { useComponentMap } from '../context';
 
 /** Provided for the component which represents rendering data */
 export type ComponentProps = {
@@ -244,7 +241,7 @@ export const getComponentsForRenderingData = (
 export const getComponentForRendering = (
   renderingDefinition: ComponentRendering
 ): AstroContentSdkComponent | null => {
-  const componentMap = SitecoreContext.get()['componentMap'] as ComponentMap;
+  const componentMap = useComponentMap();
 
   if (!componentMap || componentMap.size === 0) {
     console.warn(

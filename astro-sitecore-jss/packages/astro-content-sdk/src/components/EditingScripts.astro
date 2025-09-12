@@ -5,13 +5,10 @@
  * @returns An Astro component containing the editing scripts or an empty fragment if not in editing/preview mode.
  */
 
-import { Page } from '@sitecore-content-sdk/core/client';
-import { SitecoreContext } from '../context';
+import { useSitecore } from '../context';
 import { getContentSdkPagesClientData, getDesignLibraryScriptLink } from '@sitecore-content-sdk/core/editing';
 
-const { mode, layout } = SitecoreContext.get()['page'] as Page;
-const api = SitecoreContext.get()['api'];
-
+const { page: { mode, layout }, api } = useSitecore();
 const { clientData, clientScripts } = layout.sitecore.context;
 
 let scriptUrl;
