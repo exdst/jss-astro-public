@@ -14,6 +14,8 @@ import sinon from 'sinon';
 
 use(sinonChai);
 
+const mockPreviewCookies = ['_previewData=1122334455; Path=/; SameSite=Lax'];
+
 type Query = {
   [key: string]: string;
 };
@@ -510,10 +512,9 @@ describe('EditingRenderMiddleware', () => {
 
       const middleware = new EditingRenderMiddleware();
 
-      const getPreviewDataCookiesSpy = sinon.spy(
-        middleware as any,
-        'getPreviewDataCookies'
-      );
+      const getPreviewDataCookiesSpy = sinon
+        .stub(middleware as any, 'getPreviewDataCookies')
+        .returns(mockPreviewCookies);
 
       const handler = middleware.getHandler();
 
@@ -538,6 +539,13 @@ describe('EditingRenderMiddleware', () => {
       expect(res.headers.get('Access-Control-Allow-Methods')).to.equal(
         'GET, POST, OPTIONS, DELETE, PUT, PATCH'
       );
+
+      expect(res.headers.has('Set-Cookie')).to.be.true;
+      expect(res.headers.getSetCookie()).to.have.members([
+        '_previewData=1122334455; Path=/; SameSite=Lax',
+        'sc_site=website; Path=/; HttpOnly; SameSite=None; Secure',
+        'sc_preview=true; Path=/; HttpOnly; SameSite=None; Secure',
+      ]);
 
       expect(res.headers.has('Content-Security-Policy')).to.be.true;
       expect(res.headers.get('Content-Security-Policy')).to.equal(

@@ -5,12 +5,15 @@ import {
   DesignLibraryRenderPreviewData,
   isDesignLibraryMode,
   EditingPreviewData,
+  PREVIEW_KEY,
 } from '@sitecore-content-sdk/core/editing';
 import { enforceCors, getEditingSecret } from '../utils';
 import { getAllowedOriginsFromEnv } from '@sitecore-content-sdk/core/utils';
 import { DEFAULT_VARIANT } from '@sitecore-content-sdk/core/personalize';
 import * as cookie from 'cookie';
 import { COOKIE_NAME_PRERENDER_DATA } from './constants';
+import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
+import { SITE_KEY } from '@sitecore-content-sdk/core/site';
 /**
  * Configuration for the Editing Render Middleware.
  */
@@ -242,6 +245,15 @@ export class EditingRenderMiddleware {
         mode: query.get('mode'),
         layoutKind: query.get('sc_layoutkind'),
       } as EditingPreviewData);
+    }
+
+    // Set Preview mode identifier cookie, if the page is rendered in Sitecore Preview mode
+    if (mode === LayoutServicePageState.Preview) {
+      const previewSite = `${SITE_KEY}=${query.get('sc_site')}; Path=/; HttpOnly; SameSite=None; Secure`;
+      const previewCookie = `${PREVIEW_KEY}=true; Path=/; HttpOnly; SameSite=None; Secure`;
+
+      _res.headers.append('Set-Cookie', previewSite);
+      _res.headers.append('Set-Cookie', previewCookie);
     }
 
     const route =
