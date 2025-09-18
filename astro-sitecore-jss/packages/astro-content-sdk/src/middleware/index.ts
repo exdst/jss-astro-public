@@ -1,5 +1,6 @@
 ﻿export { debug } from '@sitecore-content-sdk/core';
 export { MiddlewareBase, MiddlewareBaseConfig, Middleware } from './middleware';
+export { RobotsMiddleware } from './robots-middleware';
 export {
   PersonalizeService,
   PersonalizeServiceConfig,
