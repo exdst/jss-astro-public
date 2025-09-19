@@ -5,6 +5,7 @@ import sinonChai from 'sinon-chai';
 import { RobotsMiddleware } from './robots-middleware';
 import { SitecoreClient } from '@sitecore-content-sdk/core/client';
 import { SiteInfo } from '@sitecore-content-sdk/core/site';
+import { mockRequest } from '../test-data/helpers';
 
 chai.use(sinonChai);
 
@@ -29,16 +30,6 @@ describe('RobotsMiddleware', () => {
     { name: 'test-site-two', hostName: 'localhost', language: 'da' },
   ];
 
-  const baseUrl = 'https://test.com';
-  const mockRequest = (headers?: { [key: string]: string }) => {
-    return new Request(baseUrl, {
-      headers: {
-        host: 'example.com',
-        ...headers,
-      },
-    });
-  };
-
   beforeEach(() => {
     sitecoreClientStub = sandbox.createStubInstance(SitecoreClient);
     siteResolverStub = {
@@ -47,7 +38,9 @@ describe('RobotsMiddleware', () => {
     };
 
     req = mockRequest({
-      host: 'example.com',
+      headers: {
+        host: 'example.com',
+      },
     });
 
     middleware = new RobotsMiddleware(
@@ -111,7 +104,7 @@ describe('RobotsMiddleware', () => {
   });
 
   it('should use "localhost" as fallback when host header is missing', async () => {
-    req = new Request(baseUrl); // no host header
+    req = new Request('https://test.com'); // no host header
 
     sitecoreClientStub.getRobots.resolves('User-agent: *\nDisallow: /');
 

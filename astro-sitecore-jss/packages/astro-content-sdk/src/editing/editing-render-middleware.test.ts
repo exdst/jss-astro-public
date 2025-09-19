@@ -11,17 +11,13 @@ import {
 import { EditingRenderMiddleware } from './editing-render-middleware';
 import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
+import { mockRequest as MockRequest, Query } from '../test-data/helpers';
 
 use(sinonChai);
 
 const mockPreviewCookies = ['_previewData=1122334455; Path=/; SameSite=Lax'];
 
-type Query = {
-  [key: string]: string;
-};
-
 const allowedOrigin = 'https://allowed.com';
-const baseUrl = 'https://test.com';
 
 const mockRequest = ({
   query,
@@ -32,8 +28,8 @@ const mockRequest = ({
   method?: string;
   headers?: { [key: string]: string };
 }) => {
-  const url = addQueryToUrl(baseUrl, query);
-  return new Request(url, {
+  return MockRequest({
+    query: query ? toQuery(query) : query,
     method: method ?? 'GET',
     headers: {
       host: 'localhost:3000',
@@ -41,24 +37,6 @@ const mockRequest = ({
       ...headers,
     },
   });
-};
-
-const addQueryToUrl = (
-  baseUrl: string,
-  query?: Query | EditingRenderQueryParams
-): string => {
-  const url = new URL(baseUrl);
-
-  if (query) {
-    const normalizedQuery: Query = toQuery(query);
-
-    const params = new URLSearchParams(normalizedQuery);
-    params.forEach((value, key) => {
-      url.searchParams.set(key, value);
-    });
-  }
-
-  return url.toString();
 };
 
 const toQuery = (params: Query | EditingRenderQueryParams): Query => {

@@ -3,40 +3,23 @@ import { expect } from 'chai';
 import { EditingConfigMiddleware } from './editing-config-middleware';
 import { QUERY_PARAM_EDITING_SECRET } from '@sitecore-content-sdk/core/editing';
 import { AstroContentSdkComponent } from '../sharedTypes/component-props';
-
-type Query = {
-  [key: string]: string;
-};
+import { mockRequest as MockRequest, Query } from '../test-data/helpers';
 
 const allowedOrigin = 'https://allowed.com';
-const baseUrl = 'https://test.com';
 
 const mockRequest = (
   method: string,
   query?: Query,
   headers?: { [key: string]: string }
 ) => {
-  const url = addQueryToUrl(baseUrl, query);
-  return new Request(url, {
+  return MockRequest({
+    query,
     method,
     headers: {
       origin: allowedOrigin,
       ...headers,
     },
   });
-};
-
-const addQueryToUrl = (baseUrl: string, query?: Query): string => {
-  const url = new URL(baseUrl);
-
-  if (query) {
-    const params = new URLSearchParams(query);
-    params.forEach((value, key) => {
-      url.searchParams.set(key, value);
-    });
-  }
-
-  return url.toString();
 };
 
 const componentsMap = new Map<string, AstroContentSdkComponent>();
@@ -153,7 +136,11 @@ describe('EditingConfigMiddleware', () => {
 
   const testEditingConfig = async (
     components: Map<string, AstroContentSdkComponent>,
-    expectedResult
+    expectedResult: {
+      components: string[];
+      packages: { testPackageOne: string };
+      editMode: string;
+    }
   ) => {
     const key = 'wrongkey';
     const query = { key } as Query;

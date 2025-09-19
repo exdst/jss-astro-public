@@ -2,6 +2,7 @@
 import { expect, use, spy } from 'chai';
 import spies from 'chai-spies';
 import { addClassName, enforceCors, getEditingSecret } from './utils';
+import { mockRequest as MockRequest } from '../test-data/helpers';
 
 use(spies);
 
@@ -30,7 +31,8 @@ describe('enforceCors', () => {
     origin,
     method,
   }: { origin?: string; method?: string } = {}) => {
-    return new Request(mockOrigin, {
+    return MockRequest({
+      url: mockOrigin,
       method: method || 'GET',
       headers: {
         origin: origin || mockOrigin,
