@@ -4,10 +4,15 @@ import { use } from 'chai';
 import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
 import chaiString from 'chai-string';
-import { MiddlewareBase, REWRITE_HEADER_NAME } from './middleware';
+import {
+  defineMiddleware,
+  Middleware,
+  MiddlewareBase,
+  REWRITE_HEADER_NAME,
+} from './middleware';
 import { SiteResolver } from '../site';
 import { COOKIE_NAME_PRERENDER_DATA } from '../editing';
-import { APIContext } from 'astro';
+import { APIContext, AstroCookieSetOptions, RewritePayload } from 'astro';
 
 use(sinonChai);
 const expect = chai.use(chaiString).expect;
@@ -26,52 +31,77 @@ class MockSiteResolver extends SiteResolver {
   }));
 }
 
+const createContext = (props: any = {}) => {
+  const context = {
+    request: {
+      url: '',
+      headers: {
+        get(key: string) {
+          const headers = {
+            ...context.request.headers,
+            ...props?.headerValues,
+          };
+          return headers[key];
+        },
+        append(key: string, value: string | Record<string, any>) {
+          context.request.headers[key] = value;
+        },
+      },
+    },
+    cookies: {
+      get(cookieName: string) {
+        const cookies = { ...props?.cookieValues };
+        return cookies[cookieName] ? { value: cookies[cookieName] } : undefined;
+      },
+      set(
+        cookieName: string,
+        value: string | Record<string, any>,
+        options?: AstroCookieSetOptions
+      ) {
+        context.cookies[cookieName] = { value, ...options };
+      },
+      ...props?.cookies,
+      ...props.cookieValues,
+    },
+    url: {
+      ...props?.url,
+    },
+    currentLocale: props.currentLocale,
+    preferredLocale: props.preferredLocale,
+    rewrite: (_) => props.response,
+  } as APIContext;
+
+  return context;
+};
+
+const createResponse = (props: any = {}) => {
+  const response = {
+    ...props,
+    url: props.url,
+    headers: {
+      get(key: string) {
+        const headers = {
+          ...response.headers,
+          ...props.headerValues,
+        };
+        return headers[key];
+      },
+      append(key: string, value: string | Record<string, any>) {
+        response.headers[key] = value;
+      },
+      ...props.headers,
+    },
+  } as Response;
+
+  return response;
+};
+
 describe('MiddlewareBase', () => {
   class SampleMiddleware extends MiddlewareBase {
     handle() {
       return Promise.resolve({} as Response);
     }
   }
-
-  const createContext = (props: any = {}) => {
-    const context = {
-      request: {
-        url: '',
-        headers: {
-          get(key: string) {
-            const headers = {
-              ...context.request.headers,
-              ...props?.headerValues,
-            };
-            return headers[key];
-          },
-          append(key: string, value: string | Record<string, any>) {
-            context.request.headers[key] = value;
-          }
-        },
-      },
-      cookies: {
-        get(cookieName: string) {
-          const cookies = { ...props?.cookieValues };
-          return cookies[cookieName]
-            ? { value: cookies[cookieName] }
-            : undefined;
-        },
-      },
-      url: {
-        ...props?.url,
-      },
-      currentLocale: props.currentLocale,
-      preferredLocale: props.preferredLocale,
-      rewrite: (_) => props.response,
-    } as APIContext;
-
-    return context;
-  };
-
-  const createResponse = (props: any = {}) => {
-    return { ...props } as Response;
-  };
 
   describe('defaultHostname', () => {
     it('should set default hostname', () => {
@@ -186,7 +216,8 @@ describe('MiddlewareBase', () => {
             url: {
               pathname: '/api/layout/render',
             },
-          })
+          }),
+          createResponse()
         )
       ).to.equal(true);
 
@@ -196,7 +227,8 @@ describe('MiddlewareBase', () => {
             url: {
               pathname: '/sitecore/render',
             },
-          })
+          }),
+          createResponse()
         )
       ).to.equal(true);
     });
@@ -215,7 +247,8 @@ describe('MiddlewareBase', () => {
             url: {
               pathname: 'bar',
             },
-          })
+          }),
+          createResponse()
         )
       ).to.equal(false);
       expect(
@@ -224,7 +257,8 @@ describe('MiddlewareBase', () => {
             url: {
               pathname: 'foo',
             },
-          })
+          }),
+          createResponse()
         )
       ).to.equal(true);
     });
@@ -308,16 +342,18 @@ describe('MiddlewareBase', () => {
 
   describe('getSite', () => {
     it('should get site by name when site cookie is provided', () => {
-      const context = createContext({
-        cookieValues: {
-          sc_site: 'xxx',
+      const context = createContext();
+
+      const res = createResponse({
+        headers: {
+          'Set-Cookie': 'sc_site=xxx',
         },
       });
 
       const middleware = new SampleMiddleware({ sites: [] });
       middleware['siteResolver'] = new MockSiteResolver([]);
 
-      expect(middleware['getSite'](context).name).to.equal('xxx');
+      expect(middleware['getSite'](context, res).name).to.equal('xxx');
       expect(middleware['siteResolver'].getByName).to.be.calledWith('xxx');
     });
 
@@ -326,15 +362,18 @@ describe('MiddlewareBase', () => {
         getByName = sinon.stub().callsFake((_siteName: string) => undefined);
       }
 
-      const context = createContext({
-        cookieValues: {
-          sc_site: 'xxx',
+      const context = createContext();
+
+      const res = createResponse({
+        headers: {
+          'Set-Cookie': 'sc_site=xxx',
         },
       });
+
       const middleware = new SampleMiddleware({ sites: [] });
       middleware['siteResolver'] = new MockSiteResolver([]);
 
-      expect(middleware['getSite'](context)).deep.equal({
+      expect(middleware['getSite'](context, res)).deep.equal({
         name: 'xxx',
         language: 'en',
         hostName: '*',
@@ -381,8 +420,8 @@ describe('MiddlewareBase', () => {
   describe('rewrite', () => {
     let rewriteStub = sinon.stub();
 
-    const createRewriteResponse = (rewritePath) => {
-      const getPathname = (path) => {
+    const createRewriteResponse = (rewritePath: RewritePayload) => {
+      const getPathname = (path: RewritePayload) => {
         if (typeof path === 'string') {
           return path;
         }
@@ -417,13 +456,21 @@ describe('MiddlewareBase', () => {
         url: url,
       });
 
+      const mockNext = async (rewritePath?: RewritePayload) => {
+        return createResponse({
+          url: rewritePath,
+          headers: [],
+        });
+      };
+
       rewriteStub = sinon
         .stub(context, 'rewrite')
         .callsFake(createRewriteResponse);
 
-      middleware['rewrite']('/new', context);
+      const response = await middleware['rewrite']('/new', mockNext);
 
-      expect(context.request.headers.get(REWRITE_HEADER_NAME)).to.equal('/new');
+      expect(response.headers.get(REWRITE_HEADER_NAME)).to.equal('/new');
+      expect(response.url).to.endWith('/new');
     });
 
     it('should not rewrite header when skipHeader is true', async () => {
@@ -437,13 +484,105 @@ describe('MiddlewareBase', () => {
         url: url,
       });
 
+      const mockNext = async (rewritePath?: RewritePayload) => {
+        return createResponse({
+          url: rewritePath,
+          headers: [],
+        });
+      };
+
       rewriteStub = sinon
         .stub(context, 'rewrite')
         .callsFake(createRewriteResponse);
 
-      middleware['rewrite']('/new', context, true);
+      const response = await middleware['rewrite']('/new', mockNext, true);
 
-      expect(context.request.headers.get(REWRITE_HEADER_NAME)).to.be.undefined;
+      expect(response.headers.get(REWRITE_HEADER_NAME)).to.be.undefined;
+      expect(response.url).to.endWith('/new');
     });
+  });
+});
+
+describe('defineMiddleware', () => {
+  it('should execute middlewares', async () => {
+    type CustomResponse = {
+      params: string[];
+    } & Response;
+
+    class SampleMiddleware extends MiddlewareBase {
+      handle(_: APIContext, res: CustomResponse): Promise<Response> {
+        res.params.push('m1');
+        return Promise.resolve(res);
+      }
+    }
+
+    const middleware1 = new SampleMiddleware({
+      sites: [],
+    });
+    const middleware2: Middleware = {
+      handle: (_, res) => {
+        (res as CustomResponse).params.push('m2');
+        return Promise.resolve(res);
+      },
+    };
+    const middleware3: Middleware = {
+      handle: (_, res) => {
+        (res as CustomResponse).params.push('m3');
+        return Promise.resolve(res);
+      },
+    };
+
+    const context = {} as APIContext;
+    const res = {
+      params: [],
+    } as unknown as Response;
+    const mockNext = async () => res;
+
+    const result = await defineMiddleware(
+      middleware2,
+      middleware1,
+      middleware3
+    ).exec(context, mockNext);
+
+    expect(result).to.deep.equal({
+      params: ['m2', 'm1', 'm3'],
+    });
+  });
+
+  it('should execute middlewares with empty response', async () => {
+    class SampleMiddleware extends MiddlewareBase {
+      handle(_: APIContext, res: Response) {
+        res.headers.append('m1', 'true');
+        return Promise.resolve(res);
+      }
+    }
+
+    const middleware1 = new SampleMiddleware({ sites: [] });
+    const middleware2: Middleware = {
+      handle: (_, res) => {
+        res.headers.append('m2', 'true');
+        return Promise.resolve(res);
+      },
+    };
+    const middleware3: Middleware = {
+      handle: (_, res) => {
+        res.headers.append('m3', 'true');
+        return Promise.resolve(res);
+      },
+    };
+
+    const context = {} as APIContext;
+    const res = createResponse();
+    const mockNext = async () => res;
+
+    const result = await defineMiddleware(
+      middleware2,
+      middleware1,
+      middleware3
+    ).exec(context, mockNext);
+
+    expect(result.headers.get('m1')).to.equal('true');
+    expect(result.headers.get('m2')).to.equal('true');
+    expect(result.headers.get('m3')).to.equal('true');
   });
 });

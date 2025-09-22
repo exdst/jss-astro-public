@@ -5,6 +5,7 @@ import { MiddlewareBase, MiddlewareBaseConfig } from './middleware';
 import { SitecoreConfig } from '../config';
 import { PREVIEW_KEY } from '@sitecore-content-sdk/core/editing';
 import { APIContext, MiddlewareNext } from 'astro';
+import * as cookie from 'cookie';
 
 export type CookieAttributes = {
   /**
@@ -35,13 +36,10 @@ export class MultisiteMiddleware extends MiddlewareBase {
     super(config);
   }
 
-  handle = async (
-    context: APIContext,
-    next: MiddlewareNext
-  ): Promise<Response> => {
+  handle = async (context: APIContext, res: Response, next: MiddlewareNext): Promise<Response> => {
     if (!this.config.enabled) {
       debug.multisite('skipped (multisite middleware is disabled globally)');
-      return next();
+      return res;
     }
     try {
       const pathname = context.url.pathname;
@@ -55,16 +53,16 @@ export class MultisiteMiddleware extends MiddlewareBase {
         hostname,
       });
 
-      if (this.disabled(context)) {
+      if (this.disabled(context, res)) {
         debug.multisite('skipped (multisite middleware is disabled)');
 
-        return next();
+        return res;
       }
 
       if (this.isPreview(context)) {
         debug.multisite('skipped (preview)');
 
-        return next();
+        return res;
       }
 
       let siteName: string;
@@ -90,7 +88,7 @@ export class MultisiteMiddleware extends MiddlewareBase {
       });
 
       // Set rewrite header
-      this.rewrite(rewritePath, context);
+      const response = await this.rewrite(rewritePath, next);
 
       // default site cookie attributes
       const defaultCookieAttributes = {
@@ -100,7 +98,10 @@ export class MultisiteMiddleware extends MiddlewareBase {
       } as CookieAttributes;
 
       // Share site name with the following executed middlewares
-      context.cookies.set(SITE_KEY, siteName, defaultCookieAttributes);
+      response.headers.append(
+        'Set-Cookie',
+        cookie.serialize(SITE_KEY, siteName, defaultCookieAttributes)
+      );
 
       debug.multisite(
         'multisite middleware end in %dms: %o',
@@ -108,21 +109,21 @@ export class MultisiteMiddleware extends MiddlewareBase {
         {
           rewritePath,
           siteName,
-          headers: this.extractDebugHeaders(context.request.headers),
-          cookies: context.cookies,
+          headers: this.extractDebugHeaders(response.headers),
+          cookies: response.headers.get('Set-Cookie'),
         }
       );
 
-      return next(rewritePath);
+      return response;
     } catch (error) {
       console.log('Multisite middleware failed:');
       console.log(error);
-      return next();
+      return res;
     }
   };
 
-  protected disabled(context: APIContext): boolean | undefined {
+  protected disabled(context: APIContext, res: Response): boolean | undefined {
     // ignore files
-    return context.url.pathname.includes('.') || super.disabled(context);
+    return context.url.pathname.includes('.') || super.disabled(context, res);
   }
 }

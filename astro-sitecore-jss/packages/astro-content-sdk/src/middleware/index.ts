@@ -1,5 +1,10 @@
 ﻿export { debug } from '@sitecore-content-sdk/core';
-export { MiddlewareBase, MiddlewareBaseConfig, Middleware } from './middleware';
+export {
+  MiddlewareBase,
+  MiddlewareBaseConfig,
+  Middleware,
+  defineMiddleware,
+} from './middleware';
 export { RobotsMiddleware } from './robots-middleware';
 export { SitemapMiddleware } from './sitemap-middleware';
 export {
