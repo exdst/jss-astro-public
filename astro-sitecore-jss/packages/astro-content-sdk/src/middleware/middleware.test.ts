@@ -34,7 +34,7 @@ class MockSiteResolver extends SiteResolver {
 const createContext = (props: any = {}) => {
   const context = {
     request: {
-      url: '',
+      url: props?.url,
       headers: {
         get(key: string) {
           const headers = {
@@ -63,9 +63,7 @@ const createContext = (props: any = {}) => {
       ...props?.cookies,
       ...props.cookieValues,
     },
-    url: {
-      ...props?.url,
-    },
+    url: props?.url,
     currentLocale: props.currentLocale,
     preferredLocale: props.preferredLocale,
     rewrite: (_) => props.response,
@@ -418,40 +416,10 @@ describe('MiddlewareBase', () => {
   });
 
   describe('rewrite', () => {
-    let rewriteStub = sinon.stub();
-
-    const createRewriteResponse = (rewritePath: RewritePayload) => {
-      const getPathname = (path: RewritePayload) => {
-        if (typeof path === 'string') {
-          return path;
-        }
-
-        if (path instanceof URL) {
-          return path.pathname;
-        }
-
-        return new URL(path.url).pathname;
-      };
-
-      return Promise.resolve(
-        createResponse({
-          url: getPathname(rewritePath),
-          headers: new Map(),
-        })
-      );
-    };
-
-    after(() => {
-      rewriteStub.restore();
-    });
-
     it('should add header by default', async () => {
       const middleware = new SampleMiddleware({ sites: [] });
-      const url = {
-        href: 'http://localhost:3000/not-found',
-        locale: 'en',
-        pathname: 'http://localhost:3000/found',
-      };
+      const url = new URL('http://localhost:3000/not-found');
+
       const context = createContext({
         url: url,
       });
@@ -463,23 +431,16 @@ describe('MiddlewareBase', () => {
         });
       };
 
-      rewriteStub = sinon
-        .stub(context, 'rewrite')
-        .callsFake(createRewriteResponse);
-
-      const response = await middleware['rewrite']('/new', mockNext);
+      const response = await middleware['rewrite']('/new', context, mockNext);
 
       expect(response.headers.get(REWRITE_HEADER_NAME)).to.equal('/new');
-      expect(response.url).to.endWith('/new');
+      expect(response.url.toString()).to.endWith('/new');
     });
 
     it('should not rewrite header when skipHeader is true', async () => {
       const middleware = new SampleMiddleware({ sites: [] });
-      const url = {
-        href: 'http://localhost:3000/not-found',
-        locale: 'en',
-        pathname: 'http://localhost:3000/found',
-      };
+      const url = new URL('http://localhost:3000/not-found');
+
       const context = createContext({
         url: url,
       });
@@ -491,14 +452,15 @@ describe('MiddlewareBase', () => {
         });
       };
 
-      rewriteStub = sinon
-        .stub(context, 'rewrite')
-        .callsFake(createRewriteResponse);
-
-      const response = await middleware['rewrite']('/new', mockNext, true);
+      const response = await middleware['rewrite'](
+        '/new',
+        context,
+        mockNext,
+        true
+      );
 
       expect(response.headers.get(REWRITE_HEADER_NAME)).to.be.undefined;
-      expect(response.url).to.endWith('/new');
+      expect(response.url.toString()).to.endWith('/new');
     });
   });
 });

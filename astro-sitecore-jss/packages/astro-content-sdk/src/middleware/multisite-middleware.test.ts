@@ -30,6 +30,7 @@ describe('MultisiteMiddleware', () => {
   };
 
   const siteName = 'foo';
+  const hostname = 'http://test.test/styleguide';
 
   const defaultConfig = {
     sites: [],
@@ -40,9 +41,8 @@ describe('MultisiteMiddleware', () => {
 
   const createContext = (props: any = {}) => {
     const context = {
-      ...props,
       request: {
-        url: '',
+        url: props.url || new URL(hostname),
         headers: {
           get(key: string) {
             const headers = {
@@ -74,17 +74,7 @@ describe('MultisiteMiddleware', () => {
         ...props?.cookies,
         ...props.cookieValues,
       },
-      url: {
-        pathname: '/styleguide',
-        origin: 'https://test.test',
-        searchParams: {
-          get(key) {
-            return context.url.searchParams[key];
-          },
-          ...props.searchParams,
-        },
-        ...props.url,
-      },
+      url: props.url || new URL(hostname),
       currentLocale: props.currentLocale,
       preferredLocale: props.preferredLocale,
       rewrite: (_) => props.response,
@@ -225,6 +215,7 @@ describe('MultisiteMiddleware', () => {
       const res = createResponse();
 
       const context = createContext({
+        url: new URL(hostname),
         cookieValues: {
           _preview_data: true,
         },
@@ -283,7 +274,9 @@ describe('MultisiteMiddleware', () => {
 
       //expect(finalRes).to.deep.equal(res);
 
-      expect(mockNext).calledWith('/_site_foobar/styleguide');
+      expect(mockNext).calledWith(
+        sinon.match({ pathname: '/_site_foobar/styleguide' })
+      );
     });
   });
 
@@ -326,8 +319,9 @@ describe('MultisiteMiddleware', () => {
       expect(siteResolver.getByHost.calledWith('bar.net')).to.be.true;
 
       //expect(finalRes).to.deep.equal(res);
-
-      expect(mockNext).calledWith('/_site_foo/styleguide');
+      expect(mockNext).calledWith(
+        sinon.match({ pathname: '/_site_foo/styleguide' })
+      );
     });
 
     it('fallback default hostName is used', async () => {
@@ -367,7 +361,9 @@ describe('MultisiteMiddleware', () => {
 
       //expect(finalRes).to.deep.equal(res);
 
-      expect(mockNext).calledWith('/_site_foo/styleguide');
+      expect(mockNext).calledWith(
+        sinon.match({ pathname: '/_site_foo/styleguide' })
+      );
     });
 
     it('host header is used', async () => {
@@ -405,7 +401,9 @@ describe('MultisiteMiddleware', () => {
 
       //expect(finalRes).to.deep.equal(res);
 
-      expect(mockNext).calledWith('/_site_foo/styleguide');
+      expect(mockNext).calledWith(
+        sinon.match({ pathname: '/_site_foo/styleguide' })
+      );
     });
 
     it('custom response object is not provided', async () => {
@@ -443,12 +441,14 @@ describe('MultisiteMiddleware', () => {
 
       //expect(finalRes).to.deep.equal(res);
 
-      expect(mockNext).calledWith('/_site_foo/styleguide');
+      expect(mockNext).calledWith(
+        sinon.match({ pathname: '/_site_foo/styleguide' })
+      );
     });
 
     it('sc_site querystring parameter is provided', async () => {
       const context = createContext({
-        searchParams: { sc_site: 'qsFoo' },
+        url: new URL(hostname + '?sc_site=qsFoo'),
       });
 
       const res = createResponse();
@@ -486,7 +486,9 @@ describe('MultisiteMiddleware', () => {
 
       //expect(finalRes).to.deep.equal(res);
 
-      expect(mockNext).calledWith('/_site_qsFoo/styleguide');
+      expect(mockNext).calledWith(
+        sinon.match({ pathname: '/_site_qsFoo/styleguide' })
+      );
     });
 
     it('sc_site cookie is provided and its usage enabled', async () => {
@@ -529,7 +531,9 @@ describe('MultisiteMiddleware', () => {
 
       //expect(finalRes).to.deep.equal(res);
 
-      expect(mockNext).calledWith('/_site_foobar/styleguide');
+      expect(mockNext).calledWith(
+        sinon.match({ pathname: '/_site_foobar/styleguide' })
+      );
     });
 
     it('sc_site cookie is provided and its usage disabled', async () => {

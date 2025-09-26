@@ -88,7 +88,7 @@ export class MultisiteMiddleware extends MiddlewareBase {
       });
 
       // Set rewrite header
-      const response = await this.rewrite(rewritePath, next);
+      const response = await this.rewrite(rewritePath, context, next);
 
       // default site cookie attributes
       const defaultCookieAttributes = {

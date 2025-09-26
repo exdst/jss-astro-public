@@ -4,7 +4,6 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import { SitecoreAstroClient } from './sitecore-astro-client';
 import { DefaultRetryStrategy } from '@sitecore-content-sdk/core';
-import * as siteTools from '@sitecore-content-sdk/core/site';
 import { SITE_PREFIX } from '@sitecore-content-sdk/core/site';
 import {
   layoutData,
@@ -183,10 +182,6 @@ describe('SitecoreClient', () => {
     it('should get site name correctly with string path', () => {
       const path = '/some/path';
       const siteInfo = { name: 'default-site', hostName: '*', language: 'en' };
-
-      sandbox
-        .stub(siteTools, 'getSiteRewriteData')
-        .returns({ siteName: 'default-site' });
 
       const result = sitecoreClient.getSiteNameFromPath(path);
 

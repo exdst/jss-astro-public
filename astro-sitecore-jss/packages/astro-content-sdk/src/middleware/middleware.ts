@@ -164,10 +164,13 @@ export abstract class MiddlewareBase extends Middleware {
    */
   protected async rewrite(
     rewritePath: string,
+    context: APIContext,
     next: MiddlewareNext,
     skipHeader?: boolean
   ): Promise<Response> {
-    const response = await next(rewritePath);
+    const url = new URL(context.url);
+    url.pathname = rewritePath;
+    const response = await next(url);
 
     // Share rewrite path with following executed middlewares
     if (!skipHeader) {
