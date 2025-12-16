@@ -46,7 +46,7 @@
     "@types/sinon": "^17.0.4",
     "@types/sinon-chai": "^4.0.0",
     "@types/url-parse": "1.4.11",
-    "astro": "^5.12.8",
+    "astro": "^5.16.6",
     "chai": "^4.4.1",
     "chai-spies": "^1.1.0",
     "chai-string": "^1.6.0",
