@@ -68,6 +68,23 @@ export const extractPath = (params: Record<string, string | undefined>) => {
     : params.path ?? '/';
 };
 
+export const removeLanguageFromPath = (path: string, languages: string[]): string => {
+  const segments = path.split("/");
+
+  const langs = languages.map(lang => lang.toLowerCase());
+
+  if (segments.length > 0 && langs.includes(segments[0].toLowerCase())) {
+    // E.g. /en/About
+    segments.splice(0, 1);
+  } else if (segments.length > 1 && langs.includes(segments[1].toLowerCase())) {
+    // if path contains _site_ segment before language
+    // E.g. /_site_Basic/en/About
+    segments.splice(1, 1);
+  }
+
+  return segments.join("/") || "/";
+};
+
 /**
  * "class" property will be transformed into or appended to "className" instead.
  * @param {string} otherAttrs all other props included on the image component
