@@ -8,7 +8,7 @@ import sinon, { spy } from 'sinon';
 import { debug } from '@sitecore-content-sdk/core';
 
 import { MultisiteMiddleware } from './multisite-middleware';
-import { SiteResolver } from '@sitecore-content-sdk/core/site';
+import { SiteInfo, SiteResolver } from '@sitecore-content-sdk/core/site';
 import { APIContext, AstroCookieSetOptions } from 'astro';
 
 use(sinonChai);
@@ -74,6 +74,7 @@ describe('MultisiteMiddleware', () => {
         ...props?.cookies,
         ...props.cookieValues,
       },
+      locals: props.locals || {},
       url: props.url || new URL(hostname),
       currentLocale: props.currentLocale,
       preferredLocale: props.preferredLocale,
@@ -160,11 +161,9 @@ describe('MultisiteMiddleware', () => {
           },
         });
 
-        const mockNext = async () => {
-          return {} as Response;
-        };
+        const mockNext = async () => res;
 
-        const finalRes = await middleware.handle(context, res, mockNext);
+        const finalRes = await middleware.handle(context, mockNext);
         const isDisabledGlobally = middleware['config'].enabled === false;
 
         if (!isDisabledGlobally) {
@@ -207,6 +206,31 @@ describe('MultisiteMiddleware', () => {
         await test('/crazypath/luna', middleware);
       });
     });
+
+    describe('disabled in chain', () => {
+      it('should skip if skipMiddleware local variable is true', async () => {
+        const { middleware } = createMiddleware();
+        const res = createResponse();
+
+        const context = createContext({
+          locals: {
+            skipMiddleware: true,
+          },
+        });
+
+        const mockNext = async () => res;
+
+        const finalRes = await middleware.handle(context, mockNext);
+
+        validateDebugLog(
+          'skipped (multisite middleware is disabled by one of the previous middlewares)'
+        );
+
+        expect(finalRes).to.deep.equal(res);
+
+        debugSpy.resetHistory();
+      });
+    });
   });
 
   describe('preview', () => {
@@ -222,10 +246,10 @@ describe('MultisiteMiddleware', () => {
       });
 
       const mockNext = async () => {
-        return {} as Response;
+        return res;
       };
 
-      const finalRes = await middleware.handle(context, res, mockNext);
+      const finalRes = await middleware.handle(context, mockNext);
 
       validateDebugLog('skipped (preview)');
 
@@ -251,7 +275,7 @@ describe('MultisiteMiddleware', () => {
         config: { ...defaultConfig, useCookieResolution: () => true },
       });
 
-      const finalRes = await middleware.handle(context, res, mockNext);
+      const finalRes = await middleware.handle(context, mockNext);
 
       validateDebugLog('multisite middleware start: %o', {
         pathname: '/styleguide',
@@ -298,7 +322,7 @@ describe('MultisiteMiddleware', () => {
         config: { ...defaultConfig, defaultHostname: 'bar.net' },
       });
 
-      const finalRes = await middleware.handle(context, res, mockNext);
+      const finalRes = await middleware.handle(context, mockNext);
 
       validateDebugLog('multisite middleware start: %o', {
         pathname: '/styleguide',
@@ -339,7 +363,7 @@ describe('MultisiteMiddleware', () => {
 
       const { middleware, siteResolver } = createMiddleware();
 
-      const finalRes = await middleware.handle(context, res, mockNext);
+      const finalRes = await middleware.handle(context, mockNext);
 
       validateDebugLog('multisite middleware start: %o', {
         pathname: '/styleguide',
@@ -379,7 +403,7 @@ describe('MultisiteMiddleware', () => {
 
       const { middleware, siteResolver } = createMiddleware();
 
-      const finalRes = await middleware.handle(context, res, mockNext);
+      const finalRes = await middleware.handle(context, mockNext);
 
       validateDebugLog('multisite middleware start: %o', {
         pathname: '/styleguide',
@@ -419,7 +443,7 @@ describe('MultisiteMiddleware', () => {
 
       const { middleware, siteResolver } = createMiddleware({});
 
-      const finalRes = await middleware.handle(context, res, mockNext);
+      const finalRes = await middleware.handle(context, mockNext);
 
       validateDebugLog('multisite middleware start: %o', {
         pathname: '/styleguide',
@@ -463,7 +487,7 @@ describe('MultisiteMiddleware', () => {
         useCookieResolution: () => true,
       });
 
-      const finalRes = await middleware.handle(context, res, mockNext);
+      const finalRes = await middleware.handle(context, mockNext);
 
       validateDebugLog('multisite middleware start: %o', {
         pathname: '/styleguide',
@@ -508,7 +532,7 @@ describe('MultisiteMiddleware', () => {
         config: { ...defaultConfig, useCookieResolution: () => true },
       });
 
-      const finalRes = await middleware.handle(context, res, mockNext);
+      const finalRes = await middleware.handle(context, mockNext);
 
       validateDebugLog('multisite middleware start: %o', {
         pathname: '/styleguide',
@@ -551,7 +575,7 @@ describe('MultisiteMiddleware', () => {
 
       const { middleware, siteResolver } = createMiddleware();
 
-      const finalRes = await middleware.handle(context, res, mockNext);
+      const finalRes = await middleware.handle(context, mockNext);
 
       validateDebugLog('multisite middleware start: %o', {
         pathname: '/styleguide',
@@ -573,7 +597,9 @@ describe('MultisiteMiddleware', () => {
 
       //expect(finalRes).to.deep.equal(res);
 
-      expect(mockNext).calledWith('/_site_foo/styleguide');
+      expect(mockNext).calledWith(
+        sinon.match({ pathname: '/_site_foo/styleguide' })
+      );
     });
   });
 
@@ -581,7 +607,7 @@ describe('MultisiteMiddleware', () => {
     const context = createContext();
     const res = createResponse();
 
-    let errorSpy;
+    let errorSpy: sinon.SinonSpy<[message?: any, ...optionalParams: any[]], void>;
 
     before(() => {
       errorSpy = spy(console, 'log');
@@ -599,7 +625,7 @@ describe('MultisiteMiddleware', () => {
       const error = new Error('Custom error');
 
       class SampleSiteResolver extends SiteResolver {
-        constructor(sites) {
+        constructor(sites: SiteInfo[]) {
           super(sites);
         }
 
@@ -611,13 +637,9 @@ describe('MultisiteMiddleware', () => {
       const middleware = new MultisiteMiddleware({ ...defaultConfig });
       middleware['siteResolver'] = new SampleSiteResolver([]);
 
-      const mockNext = sinon.stub().returns(
-        createResponse({
-          headers: [],
-        })
-      );
+      const mockNext = sinon.stub().returns(res);
 
-      const finalRes = await middleware.handle(context, res, mockNext);
+      const finalRes = await middleware.handle(context, mockNext);
 
       expect(errorSpy.getCall(0).calledWith('Multisite middleware failed:')).to
         .be.true;

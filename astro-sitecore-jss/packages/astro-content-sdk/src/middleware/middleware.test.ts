@@ -5,14 +5,12 @@ import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
 import chaiString from 'chai-string';
 import {
-  defineMiddleware,
-  Middleware,
   MiddlewareBase,
   REWRITE_HEADER_NAME,
 } from './middleware';
 import { SiteResolver } from '../site';
 import { COOKIE_NAME_PRERENDER_DATA } from '../editing';
-import { APIContext, AstroCookieSetOptions, RewritePayload } from 'astro';
+import { APIContext, AstroCookieSetOptions, MiddlewareHandler, RewritePayload } from 'astro';
 
 use(sinonChai);
 const expect = chai.use(chaiString).expect;
@@ -63,6 +61,7 @@ const createContext = (props: any = {}) => {
       ...props?.cookies,
       ...props.cookieValues,
     },
+    locals: props.locals || {},
     url: props?.url,
     currentLocale: props.currentLocale,
     preferredLocale: props.preferredLocale,
@@ -96,9 +95,7 @@ const createResponse = (props: any = {}) => {
 
 describe('MiddlewareBase', () => {
   class SampleMiddleware extends MiddlewareBase {
-    handle() {
-      return Promise.resolve({} as Response);
-    }
+    handle: MiddlewareHandler = () => {};
   }
 
   describe('defaultHostname', () => {
@@ -255,6 +252,55 @@ describe('MiddlewareBase', () => {
             url: {
               pathname: 'foo',
             },
+          }),
+          createResponse()
+        )
+      ).to.equal(true);
+    });
+  });
+
+  describe('disabled in chain', () => {
+    it('should return false if skipMiddleware local variable is not set or false', () => {
+      const middleware = new SampleMiddleware({ sites: [] });
+
+      expect(
+        middleware['disabledInChain'](
+          createContext({
+            url: {
+              pathname: '/api/layout/render',
+            },
+            locals: {
+              skipMiddleware: false
+            }
+          }),
+          createResponse()
+        )
+      ).to.equal(false);
+
+      expect(
+        middleware['disabledInChain'](
+          createContext({
+            url: {
+              pathname: '/api/layout/render',
+            },
+          }),
+          createResponse()
+        )
+      ).to.equal(false);
+    });
+
+    it('should return true if skipMiddleware local variable is true', () => {
+      const middleware = new SampleMiddleware({ sites: [] });
+
+      expect(
+        middleware['disabledInChain'](
+          createContext({
+            url: {
+              pathname: '/api/layout/render',
+            },
+            locals: {
+              skipMiddleware: true
+            }
           }),
           createResponse()
         )
@@ -462,89 +508,5 @@ describe('MiddlewareBase', () => {
       expect(response.headers.get(REWRITE_HEADER_NAME)).to.be.undefined;
       expect(response.url.toString()).to.endWith('/new');
     });
-  });
-});
-
-describe('defineMiddleware', () => {
-  it('should execute middlewares', async () => {
-    type CustomResponse = {
-      params: string[];
-    } & Response;
-
-    class SampleMiddleware extends MiddlewareBase {
-      handle(_: APIContext, res: CustomResponse): Promise<Response> {
-        res.params.push('m1');
-        return Promise.resolve(res);
-      }
-    }
-
-    const middleware1 = new SampleMiddleware({
-      sites: [],
-    });
-    const middleware2: Middleware = {
-      handle: (_, res) => {
-        (res as CustomResponse).params.push('m2');
-        return Promise.resolve(res);
-      },
-    };
-    const middleware3: Middleware = {
-      handle: (_, res) => {
-        (res as CustomResponse).params.push('m3');
-        return Promise.resolve(res);
-      },
-    };
-
-    const context = {} as APIContext;
-    const res = {
-      params: [],
-    } as unknown as Response;
-    const mockNext = async () => res;
-
-    const result = await defineMiddleware(
-      middleware2,
-      middleware1,
-      middleware3
-    ).exec(context, mockNext);
-
-    expect(result).to.deep.equal({
-      params: ['m2', 'm1', 'm3'],
-    });
-  });
-
-  it('should execute middlewares with empty response', async () => {
-    class SampleMiddleware extends MiddlewareBase {
-      handle(_: APIContext, res: Response) {
-        res.headers.append('m1', 'true');
-        return Promise.resolve(res);
-      }
-    }
-
-    const middleware1 = new SampleMiddleware({ sites: [] });
-    const middleware2: Middleware = {
-      handle: (_, res) => {
-        res.headers.append('m2', 'true');
-        return Promise.resolve(res);
-      },
-    };
-    const middleware3: Middleware = {
-      handle: (_, res) => {
-        res.headers.append('m3', 'true');
-        return Promise.resolve(res);
-      },
-    };
-
-    const context = {} as APIContext;
-    const res = createResponse();
-    const mockNext = async () => res;
-
-    const result = await defineMiddleware(
-      middleware2,
-      middleware1,
-      middleware3
-    ).exec(context, mockNext);
-
-    expect(result.headers.get('m1')).to.equal('true');
-    expect(result.headers.get('m2')).to.equal('true');
-    expect(result.headers.get('m3')).to.equal('true');
   });
 });

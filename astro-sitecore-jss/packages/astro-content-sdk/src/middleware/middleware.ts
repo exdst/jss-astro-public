@@ -3,13 +3,13 @@
   SiteInfo,
   SiteResolver,
 } from '@sitecore-content-sdk/core/site';
-import { debug, GraphQLRequestClientFactory } from '@sitecore-content-sdk/core';
+import { GraphQLRequestClientFactory } from '@sitecore-content-sdk/core';
 import {
   createGraphQLClientFactory,
   GraphQLClientOptions,
 } from '@sitecore-content-sdk/core/client';
 import { COOKIE_NAME_PRERENDER_DATA } from '../editing';
-import { APIContext, MiddlewareNext } from 'astro';
+import { APIContext, MiddlewareHandler, MiddlewareNext } from 'astro';
 import * as cookie from 'cookie';
 
 export const REWRITE_HEADER_NAME = 'x-sc-rewrite';
@@ -18,9 +18,8 @@ export type MiddlewareBaseConfig = {
   /**
    * function, determines if middleware execution should be skipped, based on cookie, header, or other considerations
    * @param {APIContext} context the Astro context
-   * @param {Response} res response object from middleware handler
    */
-  skip?: (context: APIContext, res: Response) => boolean;
+  skip?: (context: APIContext) => boolean;
   /**
    * Fallback hostname in case `host` header is not present
    * @default localhost
@@ -43,15 +42,9 @@ export type MiddlewareBaseConfig = {
 export abstract class Middleware {
   /**
    * Handler method to execute middleware logic
-   * @param {APIContext} context context
-   * @param {Response} res response
-   * @param {MiddlewareNext} next MiddlewareNext
+   * @param {MiddlewareHandler} handler MiddlewareHandler
    */
-  abstract handle(
-    context: APIContext,
-    res: Response,
-    next: MiddlewareNext
-  ): Promise<Response>;
+  abstract handle: MiddlewareHandler;
 }
 
 /**
@@ -76,14 +69,18 @@ export abstract class MiddlewareBase extends Middleware {
     return !!context.cookies.get(COOKIE_NAME_PRERENDER_DATA);
   }
 
-  protected disabled(context: APIContext, res: Response) {
+  protected disabled(context: APIContext) {
     const { pathname } = context.url;
 
     return (
       pathname.startsWith('/api/') || // Ignore API calls
       pathname.startsWith('/sitecore/') || // Ignore Sitecore API calls
-      (this.config.skip && this.config.skip(context, res))
+      (this.config.skip && this.config.skip(context))
     );
+  }
+
+  protected disabledInChain(context: APIContext) {
+    return context.locals.skipMiddleware || false; // Skip if disabled in one of the previous middlewares in chain
   }
 
   /**
@@ -180,35 +177,3 @@ export abstract class MiddlewareBase extends Middleware {
     return response;
   }
 }
-
-/**
- * Define a middleware with a list of middlewares
- * @param {Middleware[]} middlewares List of middlewares to execute
- */
-export const defineMiddleware = (...middlewares: Middleware[]) => {
-  return {
-    /**
-     * Execute all middlewares
-     * @param {APIContext} context the Astro context
-     * @param {MiddlewareNext} next the middleware object
-     * @param {NextResponse} [res] response
-     */
-    exec: async (context: APIContext, next: MiddlewareNext, res?: Response) => {
-      const response = res || next();
-
-      debug.common('middleware start');
-
-      const start = Date.now();
-
-      const middlewareResponse = await middlewares.reduce(
-        (p, middleware) =>
-          p.then((res) => middleware.handle(context, res, next)),
-        Promise.resolve(response)
-      );
-
-      debug.common('middleware end in %dms', Date.now() - start);
-
-      return middlewareResponse;
-    },
-  };
-};

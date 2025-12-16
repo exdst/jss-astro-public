@@ -4,7 +4,7 @@ import { debug } from '@sitecore-content-sdk/core';
 import { MiddlewareBase, MiddlewareBaseConfig } from './middleware';
 import { SitecoreConfig } from '../config';
 import { PREVIEW_KEY } from '@sitecore-content-sdk/core/editing';
-import { APIContext, MiddlewareNext } from 'astro';
+import { APIContext, MiddlewareHandler, MiddlewareNext } from 'astro';
 import * as cookie from 'cookie';
 
 export type CookieAttributes = {
@@ -36,11 +36,17 @@ export class MultisiteMiddleware extends MiddlewareBase {
     super(config);
   }
 
-  handle = async (context: APIContext, res: Response, next: MiddlewareNext): Promise<Response> => {
+  handle: MiddlewareHandler = async (context: APIContext, next: MiddlewareNext) => {
     if (!this.config.enabled) {
       debug.multisite('skipped (multisite middleware is disabled globally)');
-      return res;
+      return next();
     }
+
+    if (this.disabledInChain(context)) {
+      debug.multisite('skipped (multisite middleware is disabled by one of the previous middlewares)');
+      return next();
+    }
+
     try {
       const pathname = context.url.pathname;
       const language = this.getLanguage(context);
@@ -53,16 +59,16 @@ export class MultisiteMiddleware extends MiddlewareBase {
         hostname,
       });
 
-      if (this.disabled(context, res)) {
+      if (this.disabled(context)) {
         debug.multisite('skipped (multisite middleware is disabled)');
 
-        return res;
+        return next();
       }
 
       if (this.isPreview(context)) {
         debug.multisite('skipped (preview)');
 
-        return res;
+        return next();
       }
 
       let siteName: string;
@@ -118,12 +124,12 @@ export class MultisiteMiddleware extends MiddlewareBase {
     } catch (error) {
       console.log('Multisite middleware failed:');
       console.log(error);
-      return res;
+      return next();
     }
   };
 
-  protected disabled(context: APIContext, res: Response): boolean | undefined {
+  protected disabled(context: APIContext): boolean | undefined {
     // ignore files
-    return context.url.pathname.includes('.') || super.disabled(context, res);
+    return context.url.pathname.includes('.') || super.disabled(context);
   }
 }
