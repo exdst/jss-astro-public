@@ -1,4 +1,4 @@
-﻿import chalk from 'chalk';
+﻿//import chalk from 'chalk';
 import {
   LayoutServiceData,
   ComponentRendering,
@@ -55,7 +55,7 @@ export class ComponentPropsService {
     //context: NextContext;
     requests?: ComponentPropsRequest[];
   }): Promise<ComponentPropsRequest[]> {
-    const { placeholders = {}, components, layoutData } = params;
+    const { placeholders = {}, layoutData } = params;
 
     // Will be called on first round
     if (!params.requests) {
@@ -73,7 +73,7 @@ export class ComponentPropsService {
       if (fetchFunc) {
         params.requests &&
           params.requests.push({
-            fetch: fetchFunc,
+            //fetch: fetchFunc,
             rendering: r,
             layoutData: layoutData,
             //context,
@@ -114,24 +114,25 @@ export class ComponentPropsService {
         return;
       }
 
-      return req
-        .fetch(req.rendering, req.layoutData /*, req.context*/)
-        .then((result) => {
-          // Set component specific data in componentProps store
-          componentProps[uid] = result;
-        })
-        .catch((error) => {
-          const errLog = `Error during preload data for component ${
-            req.rendering.componentName
-          } (${uid}): ${error.message || error}`;
 
-          console.error(chalk.red(errLog));
+      // return req
+      //   .fetch(req.rendering, req.layoutData /*, req.context*/)
+      //   .then((result) => {
+      //     // Set component specific data in componentProps store
+      //     componentProps[uid] = result;
+      //   })
+      //   .catch((error) => {
+      //     const errLog = `Error during preload data for component ${
+      //       req.rendering.componentName
+      //     } (${uid}): ${error.message || error}`;
 
-          componentProps[uid] = {
-            error: error.message || errLog,
-            componentName: req.rendering.componentName,
-          };
-        });
+      //     console.error(chalk.red(errLog));
+
+      //     componentProps[uid] = {
+      //       error: error.message || errLog,
+      //       componentName: req.rendering.componentName,
+      //     };
+      //   });
     });
 
     await Promise.all(promises);
@@ -167,16 +168,16 @@ export class ComponentPropsService {
     return allComponentRenderings;
   }
 
-  private async getModule(
-    components: ComponentMap<AstroContentSdkComponent>,
-    componentName: string
-  ) {
-    const component = components.get(componentName);
+  // private async getModule(
+  //   components: ComponentMap<AstroContentSdkComponent>,
+  //   componentName: string
+  // ) {
+  //   const component = components.get(componentName);
 
-    if (!component) return null;
+  //   if (!component) return null;
 
-    //const module = component.dynamicModule ? await component?.dynamicModule?.() : component;
-    const module = component;
-    return module as AstroContentSdkComponent;
-  }
+  //   //const module = component.dynamicModule ? await component?.dynamicModule?.() : component;
+  //   const module = component;
+  //   return module as AstroContentSdkComponent;
+  // }
 }
