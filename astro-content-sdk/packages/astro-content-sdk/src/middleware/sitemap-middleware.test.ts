@@ -1,4 +1,5 @@
-﻿import * as chai from 'chai';
+﻿/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
+import * as chai from 'chai';
 import { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
@@ -38,10 +39,7 @@ describe('SitemapMiddleware', () => {
       getByName: sandbox.stub(),
     };
 
-    middleware = new SitemapMiddleware(
-      sitecoreClientStub as unknown as SitecoreClient,
-      sites
-    );
+    middleware = new SitemapMiddleware(sitecoreClientStub as unknown as SitecoreClient, sites);
     (middleware as any).siteResolver = siteResolverStub;
     siteResolverStub.getByHost.callsFake((hostName) =>
       sites.find((site) => site.hostName === hostName)
@@ -76,9 +74,7 @@ describe('SitemapMiddleware', () => {
         siteName: siteName,
       });
 
-      expect(res.headers.get('Content-Type')).to.equal(
-        'text/xml;charset=utf-8'
-      );
+      expect(res.headers.get('Content-Type')).to.equal('text/xml;charset=utf-8');
 
       const body = await res.text();
       expect(body).to.deep.equal(xmlContent);

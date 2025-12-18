@@ -1,4 +1,4 @@
-﻿//import chalk from 'chalk';
+﻿// import chalk from 'chalk';
 import {
   LayoutServiceData,
   ComponentRendering,
@@ -12,15 +12,15 @@ import {
 
 export type FetchComponentPropsArguments = {
   layoutData: LayoutServiceData;
-  //context: NextContext;
+  // context: NextContext;
   components: ComponentMap<AstroContentSdkComponent>;
 };
 
 export type ComponentPropsRequest = {
-  //fetch: ComponentPropsFetchFunction;
+  // fetch: ComponentPropsFetchFunction;
   layoutData: LayoutServiceData;
   rendering: ComponentRendering;
-  //context: NextContext;
+  // context: NextContext;
 };
 
 export class ComponentPropsService {
@@ -32,7 +32,7 @@ export class ComponentPropsService {
       placeholders: layoutData.sitecore.route?.placeholders,
       components,
       layoutData,
-      //context,
+      // context,
     });
     return await this.execRequests(requests);
   }
@@ -44,7 +44,6 @@ export class ComponentPropsService {
    * @param {PlaceholdersData} [params.placeholders]
    * @param {ComponentMap} params.components
    * @param {LayoutServiceData} params.layoutData
-   * @param {NextContext} params.context
    * @param {ComponentPropsRequest[]} params.requests
    * @returns {ComponentPropsRequest[]} array of requests
    */
@@ -52,7 +51,7 @@ export class ComponentPropsService {
     placeholders?: PlaceholdersData;
     components: ComponentMap<AstroContentSdkComponent>;
     layoutData: LayoutServiceData;
-    //context: NextContext;
+    // context: NextContext;
     requests?: ComponentPropsRequest[];
   }): Promise<ComponentPropsRequest[]> {
     const { placeholders = {}, layoutData } = params;
@@ -65,7 +64,7 @@ export class ComponentPropsService {
     const renderings = this.flatRenderings(placeholders);
 
     const actions = renderings.map(async (r) => {
-      //const fetchFunc = (await this.getModule(components, r.componentName))
+      // const fetchFunc = (await this.getModule(components, r.componentName))
       //  ?.getComponentServerProps;
 
       const fetchFunc = undefined;
@@ -73,10 +72,10 @@ export class ComponentPropsService {
       if (fetchFunc) {
         params.requests &&
           params.requests.push({
-            //fetch: fetchFunc,
+            // fetch: fetchFunc,
             rendering: r,
             layoutData: layoutData,
-            //context,
+            // context,
           });
       }
 

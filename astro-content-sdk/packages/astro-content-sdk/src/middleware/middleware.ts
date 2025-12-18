@@ -156,6 +156,7 @@ export abstract class MiddlewareBase extends Middleware {
   /**
    * Create a rewrite response
    * @param {string} rewritePath the destionation path
+   * @param {APIContext} context the middleware context
    * @param {MiddlewareNext} next the middleware object to execute rewrite
    * @param {boolean} [skipHeader] don't write 'x-sc-rewrite' header
    */

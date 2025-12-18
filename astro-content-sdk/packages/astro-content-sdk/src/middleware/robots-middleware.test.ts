@@ -25,10 +25,7 @@ describe('RobotsMiddleware', () => {
     language: 'en',
   };
 
-  const sites = [
-    mockSiteInfo,
-    { name: 'test-site-two', hostName: 'localhost', language: 'da' },
-  ];
+  const sites = [mockSiteInfo, { name: 'test-site-two', hostName: 'localhost', language: 'da' }];
 
   beforeEach(() => {
     sitecoreClientStub = sandbox.createStubInstance(SitecoreClient);
@@ -43,10 +40,7 @@ describe('RobotsMiddleware', () => {
       },
     });
 
-    middleware = new RobotsMiddleware(
-      sitecoreClientStub as unknown as SitecoreClient,
-      sites
-    );
+    middleware = new RobotsMiddleware(sitecoreClientStub as unknown as SitecoreClient, sites);
     (middleware as any).siteResolver = siteResolverStub;
     siteResolverStub.getByHost.callsFake((hostName) =>
       sites.find((site) => site.hostName === hostName)
@@ -110,9 +104,7 @@ describe('RobotsMiddleware', () => {
 
     const res = await middleware.getHandler()(req as Request);
 
-    expect(sitecoreClientStub.getRobots).to.have.been.calledWith(
-      'test-site-two'
-    );
+    expect(sitecoreClientStub.getRobots).to.have.been.calledWith('test-site-two');
 
     const body = await res.text();
     expect(res.status).to.equal(200);

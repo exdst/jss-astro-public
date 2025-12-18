@@ -145,4 +145,14 @@ export default defineConfig([
       '@typescript-eslint/no-non-null-assertion': 'off',
     },
   },
+
+  // Jest test files: enable Jest globals (describe, it, beforeEach, etc.)
+  {
+    files: ['**/*.test.{js,jsx,ts,tsx}', '**/__tests__/**/*.{js,jsx,ts,tsx}'],
+    languageOptions: {
+      globals: {
+        ...globals.jest
+      },
+    },
+  },
 ]);

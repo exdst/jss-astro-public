@@ -102,7 +102,7 @@ export class SitecoreAstroClient extends SitecoreClient {
    */
   async getComponentData(
     layoutData: LayoutServiceData,
-    //context: GetServerSidePropsContext | GetStaticPropsContext,
+    // context: GetServerSidePropsContext | GetStaticPropsContext,
     components: ComponentMap<AstroContentSdkComponent>
   ): Promise<ComponentPropsCollection> {
     let componentProps: ComponentPropsCollection = {};
@@ -110,7 +110,7 @@ export class SitecoreAstroClient extends SitecoreClient {
     // Retrieve component props using side-effects defined on components level
     componentProps = await this.componentPropsService.fetchComponentProps({
       layoutData: layoutData,
-      //context,
+      // context,
       components,
     });
 

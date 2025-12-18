@@ -53,7 +53,7 @@ const astroMapTemplate = (
 
   components.forEach((component) => {
     wildcardImports.push(
-      `import ${component.moduleName} from '${component.path}.astro';`
+      `import ${component.moduleName} from '${component.importPath}.astro';`
     );
     componentMapEntries.push(
       `['${component.moduleName}', ${component.moduleName}]`

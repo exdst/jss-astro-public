@@ -1,13 +1,11 @@
 ﻿/* eslint-disable dot-notation */
+/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import * as chai from 'chai';
 import { use } from 'chai';
 import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
 import chaiString from 'chai-string';
-import {
-  MiddlewareBase,
-  REWRITE_HEADER_NAME,
-} from './middleware';
+import { MiddlewareBase, REWRITE_HEADER_NAME } from './middleware';
 import { SiteResolver } from '../site';
 import { COOKIE_NAME_PRERENDER_DATA } from '../editing';
 import { APIContext, AstroCookieSetOptions, MiddlewareHandler, RewritePayload } from 'astro';
@@ -65,6 +63,7 @@ const createContext = (props: any = {}) => {
     url: props?.url,
     currentLocale: props.currentLocale,
     preferredLocale: props.preferredLocale,
+    // eslint-disable-next-line no-unused-vars
     rewrite: (_) => props.response,
   } as APIContext;
 
@@ -270,8 +269,8 @@ describe('MiddlewareBase', () => {
               pathname: '/api/layout/render',
             },
             locals: {
-              skipMiddleware: false
-            }
+              skipMiddleware: false,
+            },
           }),
           createResponse()
         )
@@ -299,8 +298,8 @@ describe('MiddlewareBase', () => {
               pathname: '/api/layout/render',
             },
             locals: {
-              skipMiddleware: true
-            }
+              skipMiddleware: true,
+            },
           }),
           createResponse()
         )
@@ -403,6 +402,7 @@ describe('MiddlewareBase', () => {
 
     it('should get default site info when site cookie is provided', () => {
       class MockSiteResolver extends SiteResolver {
+        // eslint-disable-next-line no-unused-vars
         getByName = sinon.stub().callsFake((_siteName: string) => undefined);
       }
 
@@ -498,12 +498,7 @@ describe('MiddlewareBase', () => {
         });
       };
 
-      const response = await middleware['rewrite'](
-        '/new',
-        context,
-        mockNext,
-        true
-      );
+      const response = await middleware['rewrite']('/new', context, mockNext, true);
 
       expect(response.headers.get(REWRITE_HEADER_NAME)).to.be.undefined;
       expect(response.url.toString()).to.endWith('/new');

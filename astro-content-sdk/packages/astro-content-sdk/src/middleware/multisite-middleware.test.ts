@@ -78,6 +78,7 @@ describe('MultisiteMiddleware', () => {
       url: props.url || new URL(hostname),
       currentLocale: props.currentLocale,
       preferredLocale: props.preferredLocale,
+      // eslint-disable-next-line no-unused-vars
       rewrite: (_) => props.response,
     } as APIContext;
 
@@ -263,8 +264,6 @@ describe('MultisiteMiddleware', () => {
         cookieValues: { sc_site: 'foobar', sc_preview: 'true' },
       });
 
-      const res = createResponse();
-
       const mockNext = sinon.stub().returns(
         createResponse({
           headers: [],
@@ -296,8 +295,6 @@ describe('MultisiteMiddleware', () => {
       expect(siteResolver.getByHost.called).to.be.false;
       expect(siteResolver.getByName.called).to.be.false;
 
-      //expect(finalRes).to.deep.equal(res);
-
       expect(mockNext).calledWith(
         sinon.match({ pathname: '/_site_foobar/styleguide' })
       );
@@ -309,8 +306,6 @@ describe('MultisiteMiddleware', () => {
       const context = createContext({
         headerValues: { host: undefined },
       });
-
-      const res = createResponse();
 
       const mockNext = sinon.stub().returns(
         createResponse({
@@ -342,7 +337,6 @@ describe('MultisiteMiddleware', () => {
 
       expect(siteResolver.getByHost.calledWith('bar.net')).to.be.true;
 
-      //expect(finalRes).to.deep.equal(res);
       expect(mockNext).calledWith(
         sinon.match({ pathname: '/_site_foo/styleguide' })
       );
@@ -352,8 +346,6 @@ describe('MultisiteMiddleware', () => {
       const context = createContext({
         headerValues: { host: undefined },
       });
-
-      const res = createResponse();
 
       const mockNext = sinon.stub().returns(
         createResponse({
@@ -383,8 +375,6 @@ describe('MultisiteMiddleware', () => {
 
       expect(siteResolver.getByHost).to.be.calledWith('localhost');
 
-      //expect(finalRes).to.deep.equal(res);
-
       expect(mockNext).calledWith(
         sinon.match({ pathname: '/_site_foo/styleguide' })
       );
@@ -392,8 +382,6 @@ describe('MultisiteMiddleware', () => {
 
     it('host header is used', async () => {
       const context = createContext();
-
-      const res = createResponse();
 
       const mockNext = sinon.stub().returns(
         createResponse({
@@ -423,8 +411,6 @@ describe('MultisiteMiddleware', () => {
 
       expect(siteResolver.getByHost).to.be.calledWith('foo.net');
 
-      //expect(finalRes).to.deep.equal(res);
-
       expect(mockNext).calledWith(
         sinon.match({ pathname: '/_site_foo/styleguide' })
       );
@@ -432,8 +418,6 @@ describe('MultisiteMiddleware', () => {
 
     it('custom response object is not provided', async () => {
       const context = createContext();
-
-      const res = createResponse();
 
       const mockNext = sinon.stub().returns(
         createResponse({
@@ -463,8 +447,6 @@ describe('MultisiteMiddleware', () => {
 
       expect(siteResolver.getByHost).to.be.calledWith('foo.net');
 
-      //expect(finalRes).to.deep.equal(res);
-
       expect(mockNext).calledWith(
         sinon.match({ pathname: '/_site_foo/styleguide' })
       );
@@ -474,8 +456,6 @@ describe('MultisiteMiddleware', () => {
       const context = createContext({
         url: new URL(hostname + '?sc_site=qsFoo'),
       });
-
-      const res = createResponse();
 
       const mockNext = sinon.stub().returns(
         createResponse({
@@ -508,8 +488,6 @@ describe('MultisiteMiddleware', () => {
       expect(siteResolver.getByHost.called).to.be.false;
       expect(siteResolver.getByName.called).to.be.false;
 
-      //expect(finalRes).to.deep.equal(res);
-
       expect(mockNext).calledWith(
         sinon.match({ pathname: '/_site_qsFoo/styleguide' })
       );
@@ -519,8 +497,6 @@ describe('MultisiteMiddleware', () => {
       const context = createContext({
         cookieValues: { sc_site: 'foobar' },
       });
-
-      const res = createResponse();
 
       const mockNext = sinon.stub().returns(
         createResponse({
@@ -553,8 +529,6 @@ describe('MultisiteMiddleware', () => {
       expect(siteResolver.getByHost.called).to.be.false;
       expect(siteResolver.getByName.called).to.be.false;
 
-      //expect(finalRes).to.deep.equal(res);
-
       expect(mockNext).calledWith(
         sinon.match({ pathname: '/_site_foobar/styleguide' })
       );
@@ -564,8 +538,6 @@ describe('MultisiteMiddleware', () => {
       const context = createContext({
         cookieValues: { sc_site: 'foobar' },
       });
-
-      const res = createResponse();
 
       const mockNext = sinon.stub().returns(
         createResponse({
@@ -594,8 +566,6 @@ describe('MultisiteMiddleware', () => {
       });
 
       expect(siteResolver.getByHost.calledWith('foo.net')).to.be.true;
-
-      //expect(finalRes).to.deep.equal(res);
 
       expect(mockNext).calledWith(
         sinon.match({ pathname: '/_site_foo/styleguide' })

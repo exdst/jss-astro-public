@@ -27,9 +27,7 @@ export const addQueryToUrl = (baseUrl: string, query?: Query): string => {
   const params = new URLSearchParams();
 
   if (query) {
-    for (const key in query) {
-      const value = query[key];
-
+    Object.entries(query).forEach(([key, value]) => {
       if (Array.isArray(value)) {
         value.forEach((item) => {
           params.append(key, item);
@@ -37,7 +35,7 @@ export const addQueryToUrl = (baseUrl: string, query?: Query): string => {
       } else {
         params.append(key, value);
       }
-    }
+    });
 
     params.forEach((value, key) => {
       url.searchParams.append(key, value);
