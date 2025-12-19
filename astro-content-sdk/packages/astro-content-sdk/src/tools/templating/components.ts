@@ -34,7 +34,8 @@ export function getComponentList(
           const name = filePath.match(componentNamePattern)![2];
           console.debug(`Registering Content SDK component ${name}`);
           return {
-            path: filePath.match(componentPathPattern)![1].replace(/\\/g, '/'), // use forward slashes for consistency
+            filePath,
+            importPath: filePath.match(componentPathPattern)![1].replace(/\\/g, '/'), // use forward slashes for consistency
             componentName: name,
             moduleName: name.replace(/[^\w]+/g, ''),
           };

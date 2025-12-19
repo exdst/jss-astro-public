@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions, @typescript-eslint/no-unused-expressions */
 import { expect } from 'chai';
 import sinon from 'sinon';
 import proxyquire from 'proxyquire';
@@ -53,8 +54,7 @@ describe('defineConfig', () => {
 
     describe('environment variable is set', () => {
       before(() => {
-        process.env.NEXT_PUBLIC_SITECORE_EDGE_CONTEXT_ID =
-          'next-public-sitecore-edge-context-id';
+        process.env.NEXT_PUBLIC_SITECORE_EDGE_CONTEXT_ID = 'next-public-sitecore-edge-context-id';
       });
 
       after(() => {
@@ -104,15 +104,12 @@ describe('defineConfig', () => {
           },
         });
         const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
-        expect(resultConfig.api?.edge?.clientContextId).to.equal(
-          'clien-context-id'
-        );
+        expect(resultConfig.api?.edge?.clientContextId).to.equal('clien-context-id');
       });
     });
     describe('environment variable is set', () => {
       before(() => {
-        process.env.PUBLIC_SITECORE_EDGE_CONTEXT_ID =
-          'next-public-sitecore-edge-context-id';
+        process.env.PUBLIC_SITECORE_EDGE_CONTEXT_ID = 'next-public-sitecore-edge-context-id';
       });
 
       after(() => {
@@ -130,9 +127,7 @@ describe('defineConfig', () => {
           defaultLanguage: 'en',
         });
         const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
-        expect(resultConfig.api?.edge?.clientContextId).to.equal(
-          'custom-client-context-id'
-        );
+        expect(resultConfig.api?.edge?.clientContextId).to.equal('custom-client-context-id');
       });
 
       it('should use the env var for client-side contextId only', () => {
@@ -198,9 +193,7 @@ describe('defineConfig', () => {
           defaultLanguage: 'en',
         });
         const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
-        expect(resultConfig.api?.edge?.edgeUrl).to.equal(
-          'next-public-sitecore-edgeUrl'
-        );
+        expect(resultConfig.api?.edge?.edgeUrl).to.equal('next-public-sitecore-edgeUrl');
       });
     });
   });
@@ -249,12 +242,8 @@ describe('defineConfig', () => {
       it('should use the env vars if present', () => {
         defineConfigModule.defineConfig(defaultConfig());
         const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
-        expect(resultConfig.api?.local?.apiKey).to.equal(
-          'next-public-sitecore-api-key'
-        );
-        expect(resultConfig.api?.local?.apiHost).to.equal(
-          'next-public-sitecore-api-host'
-        );
+        expect(resultConfig.api?.local?.apiKey).to.equal('next-public-sitecore-api-key');
+        expect(resultConfig.api?.local?.apiHost).to.equal('next-public-sitecore-api-host');
       });
     });
   });
@@ -298,9 +287,7 @@ describe('defineConfig', () => {
       it('should use the env var if config value not present', () => {
         defineConfigModule.defineConfig(defaultConfig());
         const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
-        expect(resultConfig.defaultSite).to.equal(
-          'next-public-sitecore-site-name'
-        );
+        expect(resultConfig.defaultSite).to.equal('next-public-sitecore-site-name');
       });
     });
   });
@@ -497,6 +484,42 @@ describe('defineConfig', () => {
         });
         const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
         expect(resultConfig.generateStaticPaths).to.equal(false);
+      });
+    });
+
+    describe('sitecoreInternalEditingHostUrl', () => {
+      describe('environment variable is not set', () => {
+        it('should default to undefined', () => {
+          defineConfigModule.defineConfig(defaultConfig());
+          const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
+          expect(resultConfig.sitecoreInternalEditingHostUrl).to.be.undefined;
+        });
+
+        it('should use the value from the config', () => {
+          defineConfigModule.defineConfig({
+            sitecoreInternalEditingHostUrl: 'http://localhost:3000',
+            ...defaultConfig(),
+          });
+          const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
+          expect(resultConfig.sitecoreInternalEditingHostUrl).to.equal('http://localhost:3000');
+        });
+      });
+
+      describe('environment variable is set', () => {
+        afterEach(() => {
+          delete process.env.SITECORE_INTERNAL_EDITING_HOST_URL;
+        });
+
+        it('should return set value', () => {
+          process.env.SITECORE_INTERNAL_EDITING_HOST_URL = 'http://localhost:3000';
+
+          defineConfigModule.defineConfig({
+            generateStaticPaths: true,
+            ...defaultConfig(),
+          });
+          const resultConfig = defineConfigCoreStub.getCalls()[0].args[0];
+          expect(resultConfig.sitecoreInternalEditingHostUrl).to.equal('http://localhost:3000');
+        });
       });
     });
   });
