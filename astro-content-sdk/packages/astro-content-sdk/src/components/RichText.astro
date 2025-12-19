@@ -50,6 +50,7 @@ const attrs = (function () {
           DefaultEmptyFieldEditingComponentText
         }
         emptyFieldEditingComponent={emptyFieldEditingComponent}
+        {...attrs}
       >
         {!isEmptyField && <Tag {...attrs} set:html={field.value} />}
       </WithEmptyFieldEditingComponent>

@@ -1,3 +1,12 @@
 ---
+export interface EmptyFieldEditingComponentTextProps {
+  [key: string]: unknown;
+  tag?: string;
+}
+
+const props = Astro.props as EmptyFieldEditingComponentTextProps;
+
+const Tag = props.tag || 'span';
 ---
-<span>[No text in field]</span>
+
+<Tag {...props} set:html="[No text in field]" />

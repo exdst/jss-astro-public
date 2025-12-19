@@ -96,6 +96,7 @@ const attrs = { ...anchorAttrs, ...otherProps };
           DefaultEmptyFieldEditingComponentText
         }
         emptyFieldEditingComponent={emptyFieldEditingComponent}
+        {...otherProps}
       >
         {!isEmptyField && link && <a {...attrs} set:html={finalChildren} />}
       </WithEmptyFieldEditingComponent>

@@ -146,6 +146,7 @@ console.log("Attrs", attrs);
           DefaultEmptyFieldEditingComponentImage
         }
         emptyFieldEditingComponent={emptyFieldEditingComponent}
+        {...otherProps}
       >
         {!isEmptyField && img && attrs && <img {...attrs} />}
       </WithEmptyFieldEditingComponent>

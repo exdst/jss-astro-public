@@ -24,26 +24,33 @@ const getEmptyFieldEditingComponent = (
 ): AstroContentSdkComponent | null => {
   const { editable = true } = props;
   if (props.field?.metadata && editable && isFieldValueEmpty(props.field)) {
-    return (
-      props.emptyFieldEditingComponent ||
-      props.defaultEmptyFieldEditingComponent
-    );
+    return props.emptyFieldEditingComponent || props.defaultEmptyFieldEditingComponent;
   }
 
   return null;
 };
 
-const { field, editable = true } = Astro.props as FieldComponentProps;
+const props = Astro.props as FieldComponentProps;
+const { editable = true } = props;
 
-const isEmptyEditableField =
-  field?.metadata && editable && isFieldValueEmpty(field);
+const isEmptyEditableField = props.field?.metadata && editable && isFieldValueEmpty(props.field);
 
-const EmptyComponent = getEmptyFieldEditingComponent(
-  Astro.props as FieldComponentProps
-);
+const EmptyComponent = getEmptyFieldEditingComponent(props);
+
+let { defaultEmptyFieldEditingComponent, emptyFieldEditingComponent, ...resolvedProps } = props;
+
+// If no custom empty field editing component is provided, we can omit unnecessary props
+// to do not insert them to html
+if (!props.emptyFieldEditingComponent) {
+  resolvedProps = {
+    ...resolvedProps,
+    editable: undefined,
+    field: undefined,
+  };
+}
 ---
 
 <>
-  {isEmptyEditableField && EmptyComponent && <EmptyComponent />}
+  {isEmptyEditableField && EmptyComponent && <EmptyComponent {...resolvedProps} />}
   {!isEmptyEditableField && <slot />}
 </>
