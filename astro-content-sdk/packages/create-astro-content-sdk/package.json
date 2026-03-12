@@ -1,6 +1,6 @@
 {
   "name": "@exdst-sitecore-content-sdk/create-astro",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "type": "module",
   "license": "Apache-2.0",
   "author": {
@@ -13,6 +13,9 @@
   },
   "bugs": {
     "url": "https://github.com/exdst/jss-astro-public/issues"
+  },
+  "scripts": {
+    "build": "echo 'no build step'"
   },
   "description": "",
     "publishConfig": {
