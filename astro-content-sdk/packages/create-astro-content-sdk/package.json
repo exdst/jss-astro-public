@@ -1,0 +1,22 @@
+{
+  "name": "@exdst-sitecore-content-sdk/create-astro",
+  "version": "0.0.3",
+  "type": "module",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "EXDST",
+    "url": "https://exdst.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/exdst/jss-astro-public"
+  },
+  "bugs": {
+    "url": "https://github.com/exdst/jss-astro-public/issues"
+  },
+  "description": "",
+    "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}
