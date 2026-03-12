@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Read(//c/source/jss-astro-public/astro-content-sdk/**)",
-      "Bash(npm install:*)",
-      "Bash(cd \"C:\\\\source\\\\jss-astro-public\\\\astro-content-sdk\\\\packages\\\\astro-content-sdk\" && npm run build)"
-    ]
-  }
-}

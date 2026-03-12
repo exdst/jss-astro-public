@@ -16,12 +16,10 @@
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
-    "build": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig-esm.json",
+    "typecheck": "tsc -p tsconfig.json",
     "copy:astro": "ts-node ./src/scripts/copy-astro-components.ts",
-    "clean": "del-cli dist types",
     "lint": "eslint \"./src/**/*.ts\"",
     "test": "mocha \"./src/**/*.test.ts\"",
-    "prepublishOnly": "npm run build",
     "coverage": "nyc npm test",
     "generate-docs": "npx typedoc --plugin typedoc-plugin-markdown --outputFileStrategy Members --parametersFormat table --readme none --out ../../ref-docs/core --entryPoints src/index.ts --entryPoints src/config/index.ts --entryPoints src/client/index.ts --entryPoints src/i18n/index.ts --entryPoints src/layout/index.ts --entryPoints src/media/index.ts --entryPoints src/personalize/index.ts --entryPoints src/site/index.ts --entryPoints src/tracking/index.ts --entryPoints src/utils/index.ts --entryPoints src/editing/index.ts --entryPoints src/tools/index.ts --githubPages false"
   },
@@ -61,7 +59,6 @@
     "chai": "^4.4.1",
     "chai-spies": "^1.1.0",
     "chai-string": "^1.6.0",
-    "del-cli": "^6.0.0",
     "eslint": "^9.32.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "2.32.0",
