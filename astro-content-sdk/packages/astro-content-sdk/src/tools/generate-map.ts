@@ -1,8 +1,7 @@
 import {
-  ComponentFile,
   GenerateMapArgs,
   GenerateMapFunction,
-  ComponentImport,
+  ComponentMapTemplate,
 } from '@sitecore-content-sdk/core/tools';
 import path from 'path';
 import fs from 'fs';
@@ -17,47 +16,33 @@ export const generateMap: GenerateMapFunction = ({
   destination = '.sitecore',
   exclude,
   componentImports,
-  mapTemplate = astroMapTemplate,
+  mapTemplate = buildAstroMapContent,
 }: GenerateMapArgs) => {
   const components = getComponentList(paths, exclude);
 
-  const componentMapContent = mapTemplate(components, componentImports);
+  const content = (mapTemplate as ComponentMapTemplate)(components, componentImports);
 
-  const componentMapFile = path.join(
-    process.cwd(),
-    destination,
-    'component-map.ts'
-  );
+  const componentMapFile = path.join(process.cwd(), destination, 'component-map.ts');
 
   try {
-    fs.writeFileSync(componentMapFile, componentMapContent, {
+    fs.writeFileSync(componentMapFile, content, {
       encoding: 'utf8',
     });
   } catch (error) {
-    console.error(
-      `Component Map generation failed. Error writing to file ${destination}:`,
-      error
-    );
+    console.error(`Component Map generation failed. Error writing to file ${destination}:`, error);
     throw error;
   }
 };
 
-const astroMapTemplate = (
-  components: ComponentFile[],
-  componentImports?: ComponentImport[]
-): string => {
+const buildAstroMapContent: ComponentMapTemplate = (components, componentImports): string => {
   const wildcardImports: string[] = [];
   const namedImports: string[] = [];
 
   const componentMapEntries: string[] = [];
 
   components.forEach((component) => {
-    wildcardImports.push(
-      `import ${component.moduleName} from '${component.importPath}.astro';`
-    );
-    componentMapEntries.push(
-      `['${component.moduleName}', ${component.moduleName}]`
-    );
+    wildcardImports.push(`import ${component.moduleName} from '${component.importPath}.astro';`);
+    componentMapEntries.push(`['${component.moduleName}', ${component.moduleName}]`);
   });
 
   componentImports?.forEach((packageEntry) => {
@@ -74,9 +59,7 @@ const astroMapTemplate = (
       wildcardImports.push(
         `import ${packageEntry.importName} from '${packageEntry.importInfo.importFrom}';`
       );
-      componentMapEntries.push(
-        `['${packageEntry.importName}', ${packageEntry.importName}]`
-      );
+      componentMapEntries.push(`['${packageEntry.importName}', ${packageEntry.importName}]`);
     }
   });
 

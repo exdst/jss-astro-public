@@ -67,7 +67,7 @@ export class ComponentPropsService {
       // const fetchFunc = (await this.getModule(components, r.componentName))
       //  ?.getComponentServerProps;
 
-      const fetchFunc = undefined;
+      const fetchFunc = ""; // getModule
 
       if (fetchFunc) {
         params.requests &&

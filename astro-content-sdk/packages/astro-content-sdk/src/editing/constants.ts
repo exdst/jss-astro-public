@@ -6,5 +6,3 @@ export const QUERY_PARAM_VERCEL_SET_BYPASS_COOKIE = 'x-vercel-set-bypass-cookie'
  * Note these are in lowercase format to match expected `IncomingHttpHeaders`.
  */
 export const EDITING_PASS_THROUGH_HEADERS = ['authorization', 'cookie'];
-
-export const COOKIE_NAME_PRERENDER_DATA = "_preview_data";

@@ -7,7 +7,7 @@ import sinon from 'sinon';
 import chaiString from 'chai-string';
 import { MiddlewareBase, REWRITE_HEADER_NAME } from './middleware';
 import { SiteResolver } from '../site';
-import { COOKIE_NAME_PRERENDER_DATA } from '../editing';
+import { PreviewCookies } from '../editing';
 import { APIContext, AstroCookieSetOptions, MiddlewareHandler, RewritePayload } from 'astro';
 
 use(sinonChai);
@@ -119,7 +119,7 @@ describe('MiddlewareBase', () => {
       const middleware = new SampleMiddleware({ sites: [] });
       const context = createContext({
         cookieValues: {
-          [COOKIE_NAME_PRERENDER_DATA]: 'value',
+          [PreviewCookies.PREVIEW_DATA]: 'value',
         },
       });
 

@@ -1,7 +1,1 @@
-export {
-  enforceCors,
-  getEditingSecret,
-  extractPath,
-  removeLanguageFromPath,
-  addClassName,
-} from './utils';
+export { getEditingSecret, extractPath, removeLanguageFromPath, addClassName } from './utils';

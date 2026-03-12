@@ -4,12 +4,10 @@
 } from '@sitecore-content-sdk/core/editing';
 import { debug } from '@sitecore-content-sdk/core';
 import { Metadata } from '@sitecore-content-sdk/core/editing';
+import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/utils';
 import { EditMode } from '@sitecore-content-sdk/core/layout';
-import { enforceCors, getEditingSecret } from '../utils';
-import {
-  AstroContentSdkComponent,
-  ComponentMap,
-} from '../sharedTypes/component-props';
+import { getEditingSecret } from '../utils';
+import { AstroContentSdkComponent, ComponentMap } from '../sharedTypes/component-props';
 
 export type EditingConfigMiddlewareConfig = {
   /**
@@ -47,7 +45,13 @@ export class EditingConfigMiddleware {
     const _res = new Response();
     _res.headers.append('content-type', 'application/json; charset=utf-8');
 
-    if (!enforceCors(_req, _res, EDITING_ALLOWED_ORIGINS)) {
+    const corsHeaders = getEnforcedCorsHeaders({
+      requestMethod: _req.method,
+      headers: _req.headers,
+      allowedOrigins: EDITING_ALLOWED_ORIGINS,
+    });
+
+    if (!corsHeaders) {
       debug.editing(
         'invalid origin host - set allowed origins in JSS_ALLOWED_ORIGINS environment variable'
       );
@@ -62,12 +66,12 @@ export class EditingConfigMiddleware {
       );
     }
 
+    Object.keys(corsHeaders).forEach((key) => {
+      _res.headers.append(key, corsHeaders[key]);
+    });
+
     if (secret !== getEditingSecret()) {
-      debug.editing(
-        'invalid editing secret - sent "%s" expected "%s"',
-        secret,
-        getEditingSecret()
-      );
+      debug.editing('invalid editing secret - sent "%s" expected "%s"', secret, getEditingSecret());
 
       return new Response(
         JSON.stringify({

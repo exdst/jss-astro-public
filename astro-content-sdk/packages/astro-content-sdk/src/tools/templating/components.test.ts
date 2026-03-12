@@ -44,7 +44,7 @@ describe('components', () => {
         },
       ] as ComponentFile[];
 
-      const result = getComponentList(['src/test-data/components/*.astro']);
+      const result = getComponentList(['src/test-data/components/*.astro'], ['**/*.test.*'], false);
       expect(result).to.deep.equal(items);
     });
 
@@ -82,7 +82,7 @@ describe('components', () => {
         },
       ] as ComponentFile[];
 
-      const result = getComponentList(['src/test-data/components']);
+      const result = getComponentList(['src/test-data/components'], ['**/*.test.*'], false);
       expect(result).to.deep.equal(items);
     });
 
@@ -164,6 +164,53 @@ describe('components', () => {
     it('should return filtered results when "exclude" contains a glob pattern', () => {
       const exclude = ['**/components/**'];
       expect(getComponentList(['src/test-data/components/*.astro'], exclude)).to.be.empty;
+    });
+
+    it('should return variants in results when includeVariants is true', () => {
+      sandbox.stub(console, 'debug');
+
+      const items = [
+        {
+          importPath: 'src/test-data/components/Qux',
+          filePath: path.normalize('src/test-data/components/Qux.astro'),
+          componentName: 'Qux',
+          moduleName: 'Qux',
+        },
+        // variant component
+        {
+          importPath: 'src/test-data/components/Hero.variant',
+          filePath: path.normalize('src/test-data/components/Hero.variant.astro'),
+          componentName: 'Hero.variant',
+          moduleName: 'Herovariant',
+        },
+        {
+          importPath: 'src/test-data/components/Foo',
+          filePath: path.normalize('src/test-data/components/Foo.astro'),
+          componentName: 'Foo',
+          moduleName: 'Foo',
+        },
+        {
+          importPath: 'src/test-data/components/Baz',
+          filePath: path.normalize('src/test-data/components/Baz.astro'),
+          componentName: 'Baz',
+          moduleName: 'Baz',
+        },
+        {
+          importPath: 'src/test-data/components/Bar',
+          filePath: path.normalize('src/test-data/components/Bar.astro'),
+          componentName: 'Bar',
+          moduleName: 'Bar',
+        },
+        {
+          importPath: 'src/test-data/components/folded/Folded',
+          filePath: path.normalize('src/test-data/components/folded/Folded.astro'),
+          componentName: 'Folded',
+          moduleName: 'Folded',
+        },
+      ] as ComponentFile[];
+
+      const result = getComponentList(['src/test-data/components'], ['**/*.test.*'], true);
+      expect(result).to.deep.equal(items);
     });
 
     it('should return filtered results when "exclude" contains an exact path', () => {

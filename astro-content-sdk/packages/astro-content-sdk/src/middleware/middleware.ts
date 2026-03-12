@@ -1,14 +1,10 @@
-﻿import {
-  SITE_KEY,
-  SiteInfo,
-  SiteResolver,
-} from '@sitecore-content-sdk/core/site';
+﻿import { SITE_KEY, SiteInfo, SiteResolver } from '@sitecore-content-sdk/core/site';
 import { GraphQLRequestClientFactory } from '@sitecore-content-sdk/core';
 import {
   createGraphQLClientFactory,
   GraphQLClientOptions,
 } from '@sitecore-content-sdk/core/client';
-import { COOKIE_NAME_PRERENDER_DATA } from '../editing';
+import { PreviewCookies } from '../editing';
 import { APIContext, MiddlewareHandler, MiddlewareNext } from 'astro';
 import * as cookie from 'cookie';
 
@@ -66,7 +62,7 @@ export abstract class MiddlewareBase extends Middleware {
    * @returns {boolean} is preview
    */
   protected isPreview(context: APIContext) {
-    return !!context.cookies.get(COOKIE_NAME_PRERENDER_DATA);
+    return !!context.cookies.get(PreviewCookies.PREVIEW_DATA);
   }
 
   protected disabled(context: APIContext) {
@@ -101,12 +97,7 @@ export abstract class MiddlewareBase extends Middleware {
    * @returns {string} language
    */
   protected getLanguage(context: APIContext) {
-    return (
-      context.currentLocale ||
-      context.preferredLocale ||
-      this.config.defaultLanguage ||
-      'en'
-    );
+    return context.currentLocale || context.preferredLocale || this.config.defaultLanguage || 'en';
   }
 
   /**
@@ -126,9 +117,7 @@ export abstract class MiddlewareBase extends Middleware {
    * @returns {SiteInfo} site information
    */
   protected getSite(context: APIContext, res?: Response): SiteInfo {
-    const siteNameCookie = cookie.parse(res?.headers.get('Set-Cookie') || '')[
-      SITE_KEY
-    ];
+    const siteNameCookie = cookie.parse(res?.headers.get('Set-Cookie') || '')[SITE_KEY];
     const hostname = this.getHostHeader(context) || this.defaultHostname;
 
     if (siteNameCookie) {
@@ -147,9 +136,7 @@ export abstract class MiddlewareBase extends Middleware {
     return this.siteResolver.getByHost(hostname);
   }
 
-  protected getClientFactory(
-    graphQLOptions: GraphQLClientOptions
-  ): GraphQLRequestClientFactory {
+  protected getClientFactory(graphQLOptions: GraphQLClientOptions): GraphQLRequestClientFactory {
     return createGraphQLClientFactory(graphQLOptions);
   }
 

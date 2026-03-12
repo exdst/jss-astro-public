@@ -22,8 +22,7 @@ export type CookieAttributes = {
   sameSite?: true | false | 'lax' | 'strict' | 'none' | undefined;
 };
 
-export type MultisiteMiddlewareConfig = MiddlewareBaseConfig &
-  SitecoreConfig['multisite'];
+export type MultisiteMiddlewareConfig = MiddlewareBaseConfig & SitecoreConfig['multisite'];
 
 /**
  * Middleware / handler for multisite support
@@ -37,13 +36,10 @@ export class MultisiteMiddleware extends MiddlewareBase {
   }
 
   handle: MiddlewareHandler = async (context: APIContext, next: MiddlewareNext) => {
-    if (!this.config.enabled) {
-      debug.multisite('skipped (multisite middleware is disabled globally)');
-      return next();
-    }
-
     if (this.disabledInChain(context)) {
-      debug.multisite('skipped (multisite middleware is disabled by one of the previous middlewares)');
+      debug.multisite(
+        'skipped (multisite middleware is disabled by one of the previous middlewares)'
+      );
       return next();
     }
 
@@ -59,29 +55,39 @@ export class MultisiteMiddleware extends MiddlewareBase {
         hostname,
       });
 
-      if (this.disabled(context)) {
-        debug.multisite('skipped (multisite middleware is disabled)');
-
-        return next();
-      }
-
       if (this.isPreview(context)) {
         debug.multisite('skipped (preview)');
 
         return next();
       }
 
-      let siteName: string;
-
+      // Site name preservation is required for Sitecore Preview mode to support navigation between pages
       const isSitecorePreview = context.cookies.get(PREVIEW_KEY)?.value;
 
+      if (!isSitecorePreview) {
+        if (!this.config.enabled) {
+          debug.multisite('skipped (multisite middleware is disabled globally)');
+          return next();
+        }
+
+        if (this.disabled(context)) {
+          debug.multisite('skipped (multisite middleware is disabled)');
+
+          return next();
+        }
+      }
+
+      let siteName: string;
+
       if (isSitecorePreview) {
-        // This cookie is required to be set in the Sitecore Preview mode
+        // This cookie is required to be set in the Sitecore Preview mode to support navigation
+        // and preserve the site name
         siteName = context.cookies.get(SITE_KEY)?.value!;
       } else {
         // Site name can be forced by query string parameter or cookie
         siteName =
           context.url.searchParams.get(SITE_KEY) ||
+          context.url.searchParams.get('site') ||
           (this.config.useCookieResolution &&
             this.config.useCookieResolution(context.request) &&
             context.cookies.get(SITE_KEY)?.value) ||
@@ -89,9 +95,7 @@ export class MultisiteMiddleware extends MiddlewareBase {
       }
 
       // Rewrite to site specific path
-      const rewritePath = getSiteRewrite(pathname, {
-        siteName,
-      });
+      const rewritePath = this.getSiteRewrite(pathname, siteName);
 
       // Set rewrite header
       const response = await this.rewrite(rewritePath, context, next);
@@ -109,16 +113,12 @@ export class MultisiteMiddleware extends MiddlewareBase {
         cookie.serialize(SITE_KEY, siteName, defaultCookieAttributes)
       );
 
-      debug.multisite(
-        'multisite middleware end in %dms: %o',
-        Date.now() - startTimestamp,
-        {
-          rewritePath,
-          siteName,
-          headers: this.extractDebugHeaders(response.headers),
-          cookies: response.headers.get('Set-Cookie'),
-        }
-      );
+      debug.multisite('multisite middleware end in %dms: %o', Date.now() - startTimestamp, {
+        rewritePath,
+        siteName,
+        headers: this.extractDebugHeaders(response.headers),
+        cookies: response.headers.get('Set-Cookie'),
+      });
 
       return response;
     } catch (error) {
@@ -131,5 +131,17 @@ export class MultisiteMiddleware extends MiddlewareBase {
   protected disabled(context: APIContext): boolean | undefined {
     // ignore files
     return context.url.pathname.includes('.') || super.disabled(context);
+  }
+
+  /**
+   * Generates a site-specific rewrite path based on the provided pathname and site name.
+   * @param {string} pathname - The pathname to be rewritten.
+   * @param {string} siteName - The name of the site.
+   * @returns The rewritten path as a string.
+   */
+  protected getSiteRewrite(pathname: string, siteName: string): string {
+    return getSiteRewrite(pathname, {
+      siteName,
+    });
   }
 }

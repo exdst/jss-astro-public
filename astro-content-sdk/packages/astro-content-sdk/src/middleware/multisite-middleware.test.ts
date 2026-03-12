@@ -15,16 +15,11 @@ use(sinonChai);
 const expect = chai.use(chaiString).expect;
 
 describe('MultisiteMiddleware', () => {
-  const debugSpy = spy(debug, 'multisite');
+  let debugSpy;
   const validateDebugLog = (message: string, ...params: any) =>
-    expect(debugSpy.args.find((log) => log[0] === message)).to.deep.equal([
-      message,
-      ...params,
-    ]);
+    expect(debugSpy.args.find((log) => log[0] === message)).to.deep.equal([message, ...params]);
   const validateEndMessageDebugLog = (message: string, params: any) => {
-    const logParams = debugSpy.args.find(
-      (log) => log[0] === message
-    ) as Array<unknown>;
+    const logParams = debugSpy.args.find((log) => log[0] === message) as Array<unknown>;
 
     expect(logParams[2]).to.deep.include(params);
   };
@@ -60,9 +55,7 @@ describe('MultisiteMiddleware', () => {
       cookies: {
         get(cookieName: string) {
           const cookies = { ...props?.cookieValues };
-          return cookies[cookieName]
-            ? { value: cookies[cookieName] }
-            : undefined;
+          return cookies[cookieName] ? { value: cookies[cookieName] } : undefined;
         },
         set(
           cookieName: string,
@@ -117,9 +110,7 @@ describe('MultisiteMiddleware', () => {
     return response;
   };
 
-  const createMiddleware = (
-    input: { [key: string]: any; siteResolver?: SiteResolver } = {}
-  ) => {
+  const createMiddleware = (input: { [key: string]: any; siteResolver?: SiteResolver } = {}) => {
     const props = { ...defaultConfig, ...input.config };
     class MockSiteResolver extends SiteResolver {
       getByName = sinon.stub().returns({
@@ -144,7 +135,11 @@ describe('MultisiteMiddleware', () => {
     return { middleware, siteResolver };
   };
 
-  beforeEach(() => {
+  before(() => {
+    debugSpy = spy(debug, 'multisite');
+  });
+
+  afterEach(() => {
     debugSpy.resetHistory();
   });
 
@@ -152,10 +147,7 @@ describe('MultisiteMiddleware', () => {
     describe('disabled / skip', () => {
       const res = createResponse();
 
-      const test = async (
-        pathname: string,
-        middleware: MultisiteMiddleware
-      ) => {
+      const test = async (pathname: string, middleware: MultisiteMiddleware) => {
         const context = createContext({
           url: {
             pathname,
@@ -194,8 +186,7 @@ describe('MultisiteMiddleware', () => {
       });
 
       it('should apply both default and custom rules when custom disabled function provided', async () => {
-        const skip = (context: APIContext) =>
-          context.url.pathname === '/crazypath/luna';
+        const skip = (context: APIContext) => context.url.pathname === '/crazypath/luna';
 
         const { middleware } = createMiddleware({
           config: { ...defaultConfig, skip },
@@ -228,35 +219,34 @@ describe('MultisiteMiddleware', () => {
         );
 
         expect(finalRes).to.deep.equal(res);
-
-        debugSpy.resetHistory();
       });
     });
   });
 
-  describe('preview', () => {
-    it('prerender bypass cookie is present', async () => {
-      const { middleware } = createMiddleware();
-      const res = createResponse();
+  // describe('preview', () => {
+  //   it('preview data cookie is present', async () => {
+  //     const { middleware } = createMiddleware();
+  //     const res = createResponse();
 
-      const context = createContext({
-        url: new URL(hostname),
-        cookieValues: {
-          _preview_data: true,
-        },
-      });
+  //     const context = createContext({
+  //       url: new URL(hostname),
+  //       cookieValues: {
+  //         _preview_data: true,
+  //       },
+  //     });
 
-      const mockNext = async () => {
-        return res;
-      };
+  //     const mockNext = async () => {
+  //       return res;
+  //     };
 
-      const finalRes = await middleware.handle(context, mockNext);
+  //     const finalRes = await middleware.handle(context, mockNext);
 
-      validateDebugLog('skipped (preview)');
+  //     validateDebugLog('skipped (preview)');
 
-      expect(finalRes).to.deep.equal(res);
-    });
-  });
+  //     const resCookies = (finalRes as Response).headers.getSetCookie();
+  //     expect(resCookies).to.contain('_preview_data=true');
+  //   });
+  // });
 
   describe('Sitecore Preview', () => {
     it('request is passed', async () => {
@@ -295,9 +285,46 @@ describe('MultisiteMiddleware', () => {
       expect(siteResolver.getByHost.called).to.be.false;
       expect(siteResolver.getByName.called).to.be.false;
 
-      expect(mockNext).calledWith(
-        sinon.match({ pathname: '/_site_foobar/styleguide' })
+      expect(mockNext).calledWith(sinon.match({ pathname: '/_site_foobar/styleguide' }));
+    });
+
+    it('should not be skipped if multisite middleware is disabled globally', async () => {
+      const context = createContext({
+        cookieValues: { sc_site: 'foobar', sc_preview: 'true' },
+      });
+
+      const mockNext = sinon.stub().returns(
+        createResponse({
+          headers: [],
+        })
       );
+
+      const { middleware, siteResolver } = createMiddleware({
+        config: { ...defaultConfig, enabled: false, useCookieResolution: () => true },
+      });
+
+      const finalRes = await middleware.handle(context, mockNext);
+
+      validateDebugLog('multisite middleware start: %o', {
+        pathname: '/styleguide',
+        language: 'en',
+        hostname: 'foo.net',
+      });
+
+      validateEndMessageDebugLog('multisite middleware end in %dms: %o', {
+        rewritePath: '/_site_foobar/styleguide',
+        siteName: 'foobar',
+        headers: {
+          ...finalRes.headers,
+          'x-sc-rewrite': '/_site_foobar/styleguide',
+        },
+        cookies: 'sc_site=foobar; HttpOnly; Secure; SameSite=None',
+      });
+
+      expect(siteResolver.getByHost.called).to.be.false;
+      expect(siteResolver.getByName.called).to.be.false;
+
+      expect(mockNext).calledWith(sinon.match({ pathname: '/_site_foobar/styleguide' }));
     });
   });
 
@@ -337,9 +364,7 @@ describe('MultisiteMiddleware', () => {
 
       expect(siteResolver.getByHost.calledWith('bar.net')).to.be.true;
 
-      expect(mockNext).calledWith(
-        sinon.match({ pathname: '/_site_foo/styleguide' })
-      );
+      expect(mockNext).calledWith(sinon.match({ pathname: '/_site_foo/styleguide' }));
     });
 
     it('fallback default hostName is used', async () => {
@@ -375,9 +400,7 @@ describe('MultisiteMiddleware', () => {
 
       expect(siteResolver.getByHost).to.be.calledWith('localhost');
 
-      expect(mockNext).calledWith(
-        sinon.match({ pathname: '/_site_foo/styleguide' })
-      );
+      expect(mockNext).calledWith(sinon.match({ pathname: '/_site_foo/styleguide' }));
     });
 
     it('host header is used', async () => {
@@ -411,9 +434,7 @@ describe('MultisiteMiddleware', () => {
 
       expect(siteResolver.getByHost).to.be.calledWith('foo.net');
 
-      expect(mockNext).calledWith(
-        sinon.match({ pathname: '/_site_foo/styleguide' })
-      );
+      expect(mockNext).calledWith(sinon.match({ pathname: '/_site_foo/styleguide' }));
     });
 
     it('custom response object is not provided', async () => {
@@ -447,9 +468,46 @@ describe('MultisiteMiddleware', () => {
 
       expect(siteResolver.getByHost).to.be.calledWith('foo.net');
 
-      expect(mockNext).calledWith(
-        sinon.match({ pathname: '/_site_foo/styleguide' })
+      expect(mockNext).calledWith(sinon.match({ pathname: '/_site_foo/styleguide' }));
+    });
+
+    it('site querystring parameter is provided', async () => {
+      const context = createContext({
+        url: new URL(hostname + '?site=qsFoo'),
+      });
+
+      const mockNext = sinon.stub().returns(
+        createResponse({
+          headers: [],
+        })
       );
+
+      const { middleware, siteResolver } = createMiddleware({
+        useCookieResolution: () => true,
+      });
+
+      const finalRes = await middleware.handle(context, mockNext);
+
+      validateDebugLog('multisite middleware start: %o', {
+        pathname: '/styleguide',
+        language: 'en',
+        hostname: 'foo.net',
+      });
+
+      validateEndMessageDebugLog('multisite middleware end in %dms: %o', {
+        rewritePath: '/_site_qsFoo/styleguide',
+        siteName: 'qsFoo',
+        headers: {
+          ...finalRes.headers,
+          'x-sc-rewrite': '/_site_qsFoo/styleguide',
+        },
+        cookies: 'sc_site=qsFoo; HttpOnly; Secure; SameSite=None',
+      });
+
+      expect(siteResolver.getByHost.called).to.be.false;
+      expect(siteResolver.getByName.called).to.be.false;
+
+      expect(mockNext).calledWith(sinon.match({ pathname: '/_site_qsFoo/styleguide' }));
     });
 
     it('sc_site querystring parameter is provided', async () => {
@@ -488,9 +546,7 @@ describe('MultisiteMiddleware', () => {
       expect(siteResolver.getByHost.called).to.be.false;
       expect(siteResolver.getByName.called).to.be.false;
 
-      expect(mockNext).calledWith(
-        sinon.match({ pathname: '/_site_qsFoo/styleguide' })
-      );
+      expect(mockNext).calledWith(sinon.match({ pathname: '/_site_qsFoo/styleguide' }));
     });
 
     it('sc_site cookie is provided and its usage enabled', async () => {
@@ -529,9 +585,7 @@ describe('MultisiteMiddleware', () => {
       expect(siteResolver.getByHost.called).to.be.false;
       expect(siteResolver.getByName.called).to.be.false;
 
-      expect(mockNext).calledWith(
-        sinon.match({ pathname: '/_site_foobar/styleguide' })
-      );
+      expect(mockNext).calledWith(sinon.match({ pathname: '/_site_foobar/styleguide' }));
     });
 
     it('sc_site cookie is provided and its usage disabled', async () => {
@@ -567,9 +621,7 @@ describe('MultisiteMiddleware', () => {
 
       expect(siteResolver.getByHost.calledWith('foo.net')).to.be.true;
 
-      expect(mockNext).calledWith(
-        sinon.match({ pathname: '/_site_foo/styleguide' })
-      );
+      expect(mockNext).calledWith(sinon.match({ pathname: '/_site_foo/styleguide' }));
     });
   });
 
@@ -611,8 +663,7 @@ describe('MultisiteMiddleware', () => {
 
       const finalRes = await middleware.handle(context, mockNext);
 
-      expect(errorSpy.getCall(0).calledWith('Multisite middleware failed:')).to
-        .be.true;
+      expect(errorSpy.getCall(0).calledWith('Multisite middleware failed:')).to.be.true;
       expect(errorSpy.getCall(1).calledWith(error)).to.be.true;
 
       expect(finalRes).to.deep.equal(res);

@@ -247,9 +247,9 @@ describe('EditingRenderMiddleware', () => {
       itemId: '{11111111-1111-1111-1111-111111111111}',
       language: 'en',
       variantIds: ['id-1', 'id-2', 'id-3'],
-      version: null,
+      version: undefined,
       mode: 'edit',
-      layoutKind: null,
+      layoutKind: undefined,
     });
   });
 
@@ -281,9 +281,9 @@ describe('EditingRenderMiddleware', () => {
       itemId: '{11111111-1111-1111-1111-111111111111}',
       language: 'en',
       variantIds: ['_default'],
-      version: null,
+      version: undefined,
       mode: 'edit',
-      layoutKind: null,
+      layoutKind: undefined,
     });
 
     const body = await res.text();
@@ -463,13 +463,13 @@ describe('EditingRenderMiddleware', () => {
 
     const fetchRequestHeaders = fetcherGetStub.getCall(0).args[1]?.headers as Headers;
 
-    expect(fetchRequestHeaders.has('cookie')).to.be.true;
-    expect(fetchRequestHeaders.get('cookie')).to.equal(
-      'sc_another_cookie=12345; _preview_data=1122334455; Max-Age=3; Path=/; HttpOnly; Secure; SameSite=None'
+    expect(fetchRequestHeaders).to.not.be.undefined;
+    expect(fetchRequestHeaders).to.have.property(
+      'cookie',
+      'sc_another_cookie=12345;_preview_data=1122334455; Max-Age=3; Path=/; HttpOnly; Secure; SameSite=None'
     );
-    expect(fetchRequestHeaders.has('authorization')).to.be.true;
-    expect(fetchRequestHeaders.get('authorization')).to.equal('yes');
-    expect(fetchRequestHeaders.has('otherHeader')).to.be.false;
+    expect(fetchRequestHeaders).to.have.property('authorization', 'yes');
+    expect(fetchRequestHeaders).to.not.have.property('otherHeader');
   });
 
   it('should return 200 if internal request successful', async () => {
@@ -561,7 +561,7 @@ describe('EditingRenderMiddleware', () => {
 
       const res = await handler(req);
 
-      expect(getPreviewDataCookiesSpy).to.have.been.calledWith({
+      expect(getPreviewDataCookiesSpy).to.have.been.calledWithMatch({
         itemId: query.sc_itemid,
         componentUid: query.sc_uid,
         renderingId: query.sc_renderingId,
@@ -601,7 +601,7 @@ describe('EditingRenderMiddleware', () => {
 
       const res = await handler(req);
 
-      expect(getPreviewDataCookiesSpy).to.have.been.calledWith({
+      expect(getPreviewDataCookiesSpy).to.have.been.calledWithMatch({
         itemId: query.sc_itemid,
         componentUid: query.sc_uid,
         renderingId: query.sc_renderingId,

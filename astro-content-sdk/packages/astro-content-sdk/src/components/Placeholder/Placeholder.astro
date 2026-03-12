@@ -1,47 +1,24 @@
 ---
-import {
-  PlaceholderProps,
-  getPlaceholderDataFromRenderingData,
-  getComponentsForRenderingData,
-} from './PlaceholderCommon.astro';
 import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
-import ErrorBoundary from './ErrorBoundary.astro';
+import ErrorBoundary from '../ErrorBoundary.astro';
 import PlaceholderMetadata from './PlaceholderMetadata.astro';
-import { useSitecore } from '../context';
-import { AstroContentSdkComponent } from '../sharedTypes/component-props';
-import RenderWrapper from './RenderWrapper.astro';
+import { useSitecore } from '../../context';
+import RenderWrapper from '../RenderWrapper.astro';
 import EmptyPlaceholder from './EmptyPlaceholder.astro';
+import { PlaceholderProps } from './models';
+import { getPlaceholderRenderings } from './placeholder-utils';
+import { getComponentsForRenderingData } from './PlaceholderUtils.astro';
 
-export interface PlaceholderComponentProps extends PlaceholderProps {
-  /**
-   * Render HTML or an Astro component when the placeholder contains no content components.
-   */
-  renderEmpty?: string | AstroContentSdkComponent;
-
-  /**
-   * Render HTML or an Astro component wrapped around the placeholder and components.
-   * For HTML wrapper use ${component} string placeholder to set where the placeholder and components should be rendered.
-   */
-  render?: string | AstroContentSdkComponent;
-
-  /**
-   * Render HTML or an Astro component wrapped around each non-system component added to the placeholder.
-   * For HTML wrapper use ${component} string placeholder to set where the component should be rendered.
-   * Mutually exclusive with `render`.
-   */
-  renderEach?: string | AstroContentSdkComponent;
-}
-
-const props = Astro.props as PlaceholderComponentProps;
+const props = Astro.props as PlaceholderProps;
 
 const { page } = useSitecore();
-const childProps: PlaceholderComponentProps = { ...props, page };
+const childProps: PlaceholderProps = { ...props, page };
 
 delete childProps.componentMap;
 
 const renderingData = childProps.rendering;
 
-const placeholderData = getPlaceholderDataFromRenderingData(
+const placeholderData = getPlaceholderRenderings(
   renderingData,
   childProps.name,
   childProps.page.mode.isEditing
@@ -71,14 +48,14 @@ const components = getComponentsForRenderingData(placeholderData, childProps);
                 rendering={childProps.rendering as ComponentRendering}
               >
                 {components.map((component) => {
-                  const Component = component.component;
+                  const Component = component.component.component;
 
                   return (
                     <RenderWrapper wrapper={childProps.renderEach}>
                       <PlaceholderMetadata
                         rendering={component.rendering as ComponentRendering}
                       >
-                        {!component.isEmpty && (
+                        {!component.component.isEmpty && (
                           <ErrorBoundary
                             errorComponent={childProps.errorComponent}
                             {...component.props}
@@ -86,7 +63,7 @@ const components = getComponentsForRenderingData(placeholderData, childProps);
                             <Component {...component.props} />
                           </ErrorBoundary>
                         )}
-                        {component.isEmpty && (
+                        {component.component.isEmpty && (
                           <Component {...component.props} />
                         )}
                       </PlaceholderMetadata>
@@ -97,7 +74,7 @@ const components = getComponentsForRenderingData(placeholderData, childProps);
             ) : (
               <>
                 {components.map((component) => {
-                  const Component = component.component;
+                  const Component = component.component.component;
                   return (
                     <RenderWrapper
                       wrapper={

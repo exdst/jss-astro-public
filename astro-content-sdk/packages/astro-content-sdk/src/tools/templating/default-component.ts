@@ -13,7 +13,7 @@ import { COMPONENT_FILE_EXTENSION } from './constants';
 const generateTemplate = (componentName: string): string => {
   return `
   ---
-  import { Field } from "@astro-sitecore-jss/astro-sitecore-jss";
+  import { Field } from "@astro-sitecore-jss/astro-content-sdk";
   
   interface Fields {
     Title: Field<string>;
