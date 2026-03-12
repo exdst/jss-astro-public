@@ -2,6 +2,9 @@ name: Publish @exdst-sitecore-content-sdk/astro to NPM
 on:
   release:
     types: [created]
+permissions:
+  id-token: write  # Required for OIDC
+  contents: read
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,5 +19,3 @@ jobs:
       - name: Publish package on NPM 📦
         working-directory: ./astro-content-sdk/packages/astro-content-sdk
         run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
