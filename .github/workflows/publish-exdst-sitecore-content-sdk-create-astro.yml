@@ -1,27 +1,22 @@
-name: Publish @exdst-sitecore-content-sdk/create-astro-content-sdk to NPM
+name: Publish @exdst-sitecore-content-sdk/create-astro to NPM
 on:
   release:
     types: [created]
 permissions:
-  id-token: write  # Required for OIDC
+  id-token: write
   contents: read
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup Node
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: '22.x'
+          node-version: '22'
           registry-url: 'https://registry.npmjs.org'
-      - name: Install dependencies
+      - run: npm ci
         working-directory: ./astro-content-sdk/packages/create-astro-content-sdk
-        run: npm install
-      - name: Build package
+      - run: npm run build --if-present
         working-directory: ./astro-content-sdk/packages/create-astro-content-sdk
-        run: npm run build
-      - name: Publish package on NPM 📦
+      - run: npm publish
         working-directory: ./astro-content-sdk/packages/create-astro-content-sdk
-        run: npm publish --provenance --access public
