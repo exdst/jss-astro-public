@@ -18,4 +18,4 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - name: Publish package on NPM 📦
         working-directory: ./astro-content-sdk/packages/astro-content-sdk
-        run: npm publish
+        run: npm publish --provenance --access public

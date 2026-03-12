@@ -18,4 +18,4 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - name: Publish package on NPM 📦
         working-directory: ./astro-sitecore-jss/packages/astro-sitecore-jss
-        run: npm publish
+        run: npm publish --provenance --access public

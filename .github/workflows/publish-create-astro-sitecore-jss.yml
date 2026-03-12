@@ -24,4 +24,4 @@ jobs:
         run: npm run build
       - name: Publish package on NPM 📦
         working-directory: ./astro-sitecore-jss/packages/create-astro-sitecore-jss
-        run: npm publish
+        run: npm publish --provenance --access public

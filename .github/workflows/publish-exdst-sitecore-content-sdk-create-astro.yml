@@ -24,4 +24,4 @@ jobs:
         run: npm run build
       - name: Publish package on NPM 📦
         working-directory: ./astro-content-sdk/packages/create-astro-content-sdk
-        run: npm publish
+        run: npm publish --provenance --access public
