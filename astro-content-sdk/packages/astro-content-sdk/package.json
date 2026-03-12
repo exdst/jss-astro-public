@@ -1,8 +1,15 @@
 {
-  "name": "@astro-sitecore-content-sdk/astro",
+  "name": "@exdst-sitecore-content-sdk/astro",
   "version": "0.0.1",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src",
+    "index.ts",
+    "readme.md"
+  ],
   "sideEffects": false,
   "publishConfig": {
     "access": "public",
@@ -90,17 +97,5 @@
     "nanostores": "^0.10.3",
     "url-parse": "^1.5.10"
   },
-  "description": "",
-  "types": "types/index.d.ts",
-  "gitHead": "2f4820efddf4454eeee58ed1b2cc251969efdf5b",
-  "files": [
-    "dist",
-    "types",
-    "src/components",
-    "src/enhancers",
-    "src/utils/*.ts",
-    "context.ts",
-    "/*.js",
-    "/*.d.ts"
-  ]
+  "description": ""
 }
