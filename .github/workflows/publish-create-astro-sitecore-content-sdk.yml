@@ -1,0 +1,26 @@
+name: Publish create-astro-sitecore-constent-sdk to NPM
+on:
+  release:
+    types: [created]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18.x'
+          registry-url: 'https://registry.npmjs.org'
+      - name: Install dependencies
+        working-directory: ./astro-content-sdk/packages/create-astro-content-sdk
+        run: npm install
+      - name: Build package
+        working-directory: ./astro-content-sdk/packages/create-astro-content-sdk
+        run: npm run build
+      - name: Publish package on NPM 📦
+        working-directory: ./astro-content-sdk/packages/create-astro-content-sdk
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
