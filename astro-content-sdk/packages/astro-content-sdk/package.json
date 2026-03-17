@@ -1,6 +1,6 @@
 {
   "name": "@exdst-sitecore-content-sdk/astro",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
@@ -87,7 +87,7 @@
     "@sitecore-cloudsdk/events": "^0.5.1"
   },
   "dependencies": {
-    "@sitecore-content-sdk/core": "1.2.1",
+    "@sitecore-content-sdk/core": "1.5.1",
     "chalk": "^4.1.2",
     "cookie": "^1.0.2",
     "debug": "^4.4.0",
