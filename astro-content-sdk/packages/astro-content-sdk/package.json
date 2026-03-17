@@ -1,12 +1,13 @@
 {
   "name": "@exdst-sitecore-content-sdk/astro",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
     "./context": "./src/context.ts",
     "./editing": "./src/editing/index.ts",
-    "./utils": "./src/utils/index.ts"
+    "./utils": "./src/utils/index.ts",
+    "./client": "./src/client/index.ts"
   },
   "files": [
     "src",
