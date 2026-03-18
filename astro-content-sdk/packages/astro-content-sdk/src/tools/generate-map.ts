@@ -9,7 +9,8 @@ import { getComponentList } from './templating/components';
 
 /**
  * Generate and write componentMap.ts file based on provided params.
- * @param {GenerateMapArgs} param0 params for generateMap
+ * @param {GenerateMapArgs} param - the parameters for the generateMap function.
+ * @public
  */
 export const generateMap: GenerateMapFunction = ({
   paths,
@@ -64,7 +65,7 @@ const buildAstroMapContent: ComponentMapTemplate = (components, componentImports
   });
 
   return `//@ts-nocheck
-import { AstroContentSdkComponent } from '@astro-sitecore-jss/astro-content-sdk';
+import { AstroContentSdkComponent } from '@exdst-sitecore-content-sdk/astro';
 
 // Components imported from the app itself
 ${wildcardImports.join('\n')}

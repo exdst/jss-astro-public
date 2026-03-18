@@ -26,19 +26,17 @@ export const getPlaceholderRenderings = (
    * For Metadata EditMode, we need to keep the raw placeholder name in place.
    */
   if (rendering?.placeholders) {
-    Object.keys(rendering.placeholders).forEach((placeholder) => {
-      const patternPlaceholder = isDynamicPlaceholder(placeholder)
-        ? getDynamicPlaceholderPattern(placeholder)
+    Object.entries(rendering.placeholders).forEach(([key, value]) => {
+      const patternPlaceholder = isDynamicPlaceholder(key)
+        ? getDynamicPlaceholderPattern(key)
         : null;
 
       if (patternPlaceholder && patternPlaceholder.test(phName)) {
         if (isEditing) {
-          phName = placeholder;
+          phName = key;
         } else {
-          // @ts-ignore
-          rendering.placeholders[phName] = rendering.placeholders[placeholder];
-          // @ts-ignore
-          delete rendering.placeholders[placeholder];
+          rendering.placeholders![phName] = value;
+          delete rendering.placeholders![key];
         }
       }
     });
@@ -68,7 +66,7 @@ export const getPlaceholderRenderings = (
  * @returns {object} converted SXA params
  */
 export const getSXAParams = (rendering: ComponentRendering) => {
-  if (!rendering.params) return {};
+  if (!rendering.params) return { styles: '' };
 
   const { GridParameters, Styles } = rendering.params;
 

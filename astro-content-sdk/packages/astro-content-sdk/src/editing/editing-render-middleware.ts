@@ -2,6 +2,7 @@
 import {
   QUERY_PARAM_EDITING_SECRET,
   EDITING_ALLOWED_ORIGINS,
+  INVALID_SECRET_HTML_MESSAGE,
 } from '@sitecore-content-sdk/core/editing';
 import { getEditingSecret } from '../utils';
 import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/utils';
@@ -24,6 +25,7 @@ import * as cookie from 'cookie';
 
 /**
  * Configuration for the Editing Render Middleware.
+ * @public
  */
 export type EditingRenderMiddlewareConfig = {
   /**
@@ -43,6 +45,7 @@ export type EditingRenderMiddlewareConfig = {
 /**
  * Middleware / handler for use in the editing render API route (e.g. '/api/editing/render')
  * which is required for Sitecore editing support.
+ * @public
  */
 export class EditingRenderMiddleware extends RenderMiddlewareBase {
   private dataFetcher: NativeDataFetcher;
@@ -132,7 +135,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
 
       return new Response(
         JSON.stringify({
-          html: '<html><body>Missing or invalid secret</body></html>',
+          html: INVALID_SECRET_HTML_MESSAGE,
         }),
         {
           status: 401,

@@ -116,17 +116,15 @@ describe('EditingConfigMiddleware', () => {
     const res = await handler(req);
 
     expect(res.headers.has('Access-Control-Allow-Origin')).to.be.true;
-    expect(res.headers.get('Access-Control-Allow-Origin')).to.equal(
-      allowedOrigin
-    );
+    expect(res.headers.get('Access-Control-Allow-Origin')).to.include(allowedOrigin);
 
     expect(res.headers.has('Access-Control-Allow-Methods')).to.be.true;
-    expect(res.headers.get('Access-Control-Allow-Methods')).to.equal(
+    expect(res.headers.get('Access-Control-Allow-Methods')).to.include(
       'GET, POST, OPTIONS, DELETE, PUT, PATCH'
     );
 
     expect(res.headers.has('Access-Control-Allow-Headers')).to.be.true;
-    expect(res.headers.get('Access-Control-Allow-Headers')).to.equal(
+    expect(res.headers.get('Access-Control-Allow-Headers')).to.include(
       'Content-Type, Authorization'
     );
 

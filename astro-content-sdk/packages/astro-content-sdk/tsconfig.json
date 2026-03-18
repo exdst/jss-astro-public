@@ -15,7 +15,6 @@
     "types",
     "typings",
     "dist",
-    "context.d.ts",
     "config.d.ts",
     "middleware.d.ts",
     "editing.d.ts",
@@ -27,6 +26,7 @@
     "src/tests/*",
     "src/test-data/*",
     "**/*.test.ts",
-    "tests"
+    "tests",
+    "api"
   ]
 }

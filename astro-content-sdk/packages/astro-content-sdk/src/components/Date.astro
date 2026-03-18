@@ -8,6 +8,10 @@ import WithFieldMetadata from '../enhancers/WithFieldMetadata.astro';
 import WithEmptyFieldEditingComponent from '../enhancers/WithEmptyFieldEditingComponent.astro';
 import DefaultEmptyFieldEditingComponentText from './DefaultEmptyFieldEditingComponentText.astro';
 
+/**
+ * The props for the DateField component.
+ * @public
+ */
 export interface DateFieldProps extends EditableFieldProps {
   /** The date field data. */
   [htmlAttributes: string]: unknown;

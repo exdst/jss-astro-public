@@ -8,6 +8,10 @@ export type ComponentProps = {
   rendering: ComponentRendering;
 };
 
+/**
+ * The interface for the Placeholder component props.
+ * @public
+ */
 export interface PlaceholderProps {
   [key: string]: unknown;
   /** Name of the placeholder to render. */

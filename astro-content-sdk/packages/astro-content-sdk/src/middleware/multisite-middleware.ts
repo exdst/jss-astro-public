@@ -22,10 +22,15 @@ export type CookieAttributes = {
   sameSite?: true | false | 'lax' | 'strict' | 'none' | undefined;
 };
 
+/**
+ * The interface for the MultisiteMiddleware configuration.
+ * @public
+ */
 export type MultisiteMiddlewareConfig = MiddlewareBaseConfig & SitecoreConfig['multisite'];
 
 /**
  * Middleware / handler for multisite support
+ * @public
  */
 export class MultisiteMiddleware extends MiddlewareBase {
   /**
@@ -66,8 +71,12 @@ export class MultisiteMiddleware extends MiddlewareBase {
 
       if (!isSitecorePreview) {
         if (!this.config.enabled) {
-          debug.multisite('skipped (multisite middleware is disabled globally)');
-          return next();
+          this.shouldWarnWhenDisabled(context);
+
+          if (this.shouldSkipWhenDisabled()) {
+            debug.multisite('skipped (multisite middleware is disabled globally)');
+            return next();
+          }
         }
 
         if (this.disabled(context)) {
@@ -131,6 +140,25 @@ export class MultisiteMiddleware extends MiddlewareBase {
   protected disabled(context: APIContext): boolean | undefined {
     // ignore files
     return context.url.pathname.includes('.') || super.disabled(context);
+  }
+
+  /**
+   * Called when multisite is disabled. Override this method in subclasses to show router-specific warnings.
+   * @param {APIContext} context context
+   */
+  // eslint-disable-next-line no-unused-vars
+  // @ts-ignore
+  protected shouldWarnWhenDisabled(context: APIContext): void {
+    // Base implementation does nothing - subclasses can override to show warnings
+  }
+
+  /**
+   * Determines if middleware should be skipped when multisite is disabled.
+   * Override in subclasses to provide router-specific behavior.
+   * @returns {boolean} true if middleware should be skipped when disabled
+   */
+  protected shouldSkipWhenDisabled(): boolean {
+    return true; // Base class skips when disabled
   }
 
   /**

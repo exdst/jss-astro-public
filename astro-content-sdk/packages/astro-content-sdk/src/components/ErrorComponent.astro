@@ -1,0 +1,15 @@
+---
+/**
+ * Simple error component applying basic error styling.
+ * Use either the `message` prop or slot content, but not both.
+ */
+interface ErrorComponentProps {
+  message?: string;
+}
+
+const { message } = Astro.props as ErrorComponentProps;
+---
+
+<div class="sc-content-sdk-placeholder-error">
+  {message ? message : <slot />}
+</div>

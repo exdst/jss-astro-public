@@ -68,6 +68,7 @@ export const mapEditingParams = (query: {
 
 /**
  * Preview cookies enum
+ * @public
  */
 export enum PreviewCookies {
   PREVIEW_DATA = '_preview_data',
@@ -127,6 +128,7 @@ export const getRequiredEditingParamsList = (mode: EditingRenderQueryParams['mod
  * Gets query parameters that should be passed along to subsequent requests (e.g. for deployment protection bypass)
  * @param {object} query URLSearchParams object from incoming URL
  * @returns object of approved query parameters
+ * @internal
  */
 export const getQueryParamsForPropagation = (
   query: Partial<{ [key: string]: string | string[] }>
@@ -149,6 +151,7 @@ export const getQueryParamsForPropagation = (
  * Get headers that should be passed along to subsequent requests
  * @param {IncomingHttpHeaders | Headers} headers Incoming HTTP Headers
  * @returns Object of approved headers
+ * @internal
  */
 export const getHeadersForPropagation = (
   headers: IncomingHttpHeaders | Headers
@@ -229,6 +232,7 @@ export const getEditingRequestHtml = async (
  * @param {object} data preview data to check
  * @returns true if the data is EditingPreviewData
  * @see EditingPreviewData
+ * @public
  */
 export const isDesignLibraryPreviewData = (
   data: unknown

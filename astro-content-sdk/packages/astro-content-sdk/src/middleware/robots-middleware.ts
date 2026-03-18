@@ -3,6 +3,7 @@ import { SiteInfo, SiteResolver } from '../site';
 
 /**
  * Middleware for handling robots.txt requests.
+ * @public
  */
 export class RobotsMiddleware {
   private client: SitecoreClient;

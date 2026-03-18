@@ -8,10 +8,18 @@ import WithEmptyFieldEditingComponent from '../enhancers/WithEmptyFieldEditingCo
 import WithFieldMetadata from '../enhancers/WithFieldMetadata.astro';
 import DefaultEmptyFieldEditingComponentText from './DefaultEmptyFieldEditingComponentText.astro';
 
+/**
+ * The interface for the RichText field.
+ * @public
+ */
 export interface RichTextField extends FieldMetadata {
   value?: string;
 }
 
+/**
+ * The interface for the RichText component props.
+ * @public
+ */
 export interface RichTextProps extends EditableFieldProps {
   [htmlAttributes: string]: unknown;
   /** The text field data. */

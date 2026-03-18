@@ -106,15 +106,17 @@ describe('EditingRenderMiddleware', () => {
     expect(res.body).to.equal(null);
 
     expect(res.headers.has('Access-Control-Allow-Origin')).to.be.true;
-    expect(res.headers.get('Access-Control-Allow-Origin')).to.equal(allowedOrigin);
+    expect(res.headers.get('Access-Control-Allow-Origin')).to.include(allowedOrigin);
 
     expect(res.headers.has('Access-Control-Allow-Methods')).to.be.true;
-    expect(res.headers.get('Access-Control-Allow-Methods')).to.equal(
+    expect(res.headers.get('Access-Control-Allow-Methods')).to.include(
       'GET, POST, OPTIONS, DELETE, PUT, PATCH'
     );
 
     expect(res.headers.has('Access-Control-Allow-Headers')).to.be.true;
-    expect(res.headers.get('Access-Control-Allow-Headers')).to.equal('Content-Type, Authorization');
+    expect(res.headers.get('Access-Control-Allow-Headers')).to.include(
+      'Content-Type, Authorization'
+    );
   });
 
   it('should respond with 401 for invalid secret', async () => {

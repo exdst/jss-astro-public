@@ -7,6 +7,7 @@ import { SiteInfo, SiteResolver } from '../site';
 /**
  * Middleware for handling sitemap requests.
  * Encapsulates all HTTP-related logic for sitemap generation and delivery.
+ * @public
  */
 export class SitemapMiddleware {
   private client: SitecoreClient;

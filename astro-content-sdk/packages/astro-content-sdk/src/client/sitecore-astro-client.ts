@@ -24,6 +24,10 @@ import {
   normalizePersonalizedRewrite,
 } from '@sitecore-content-sdk/core/personalize';
 
+/**
+ * The SitecoreAstroClient class extends the SitecoreClient class to provide additional functionality for Astro.
+ * @public
+ */
 export class SitecoreAstroClient extends SitecoreClient {
   protected componentPropsService: ComponentPropsService;
   constructor(protected initOptions: SitecoreClientInit) {

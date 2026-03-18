@@ -10,15 +10,27 @@ import WithFieldMetadata from '../enhancers/WithFieldMetadata.astro';
 import WithEmptyFieldEditingComponent from '../enhancers/WithEmptyFieldEditingComponent.astro';
 import DefaultEmptyFieldEditingComponentImage from './DefaultEmptyFieldEditingComponentImage.astro';
 
+/**
+ * The interface for the Image field value.
+ * @public
+ */
 export interface ImageFieldValue {
   [attributeName: string]: unknown;
   src?: string;
 }
 
+/**
+ * The interface for the Image field.
+ * @public
+ */
 export interface ImageField {
   value?: ImageFieldValue;
 }
 
+/**
+ * The interface for the Image size parameters.
+ * @public
+ */
 export interface ImageSizeParameters {
   [attr: string]: string | number | undefined;
   /** Fixed width of the image */
@@ -57,6 +69,10 @@ export interface BaseImageProps {
   mediaUrlPrefix?: RegExp;
 }
 
+/**
+ * The interface for the Image component props.
+ * @public
+ */
 export interface ImageProps extends BaseImageProps, EditableFieldProps {
   srcSet?: ImageSizeParameters[];
 }

@@ -23,6 +23,10 @@ export type ComponentPropsRequest = {
   // context: NextContext;
 };
 
+/**
+ * The service for fetching component props.
+ * @public
+ */
 export class ComponentPropsService {
   async fetchComponentProps(
     params: FetchComponentPropsArguments
@@ -67,7 +71,7 @@ export class ComponentPropsService {
       // const fetchFunc = (await this.getModule(components, r.componentName))
       //  ?.getComponentServerProps;
 
-      const fetchFunc = ""; // getModule
+      const fetchFunc = ''; // getModule
 
       if (fetchFunc) {
         params.requests &&
@@ -112,7 +116,6 @@ export class ComponentPropsService {
         );
         return;
       }
-
 
       // return req
       //   .fetch(req.rendering, req.layoutData /*, req.context*/)
