@@ -1,6 +1,6 @@
 {
   "name": "@exdst-sitecore-content-sdk/astro",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
@@ -10,8 +10,8 @@
     "./utils": "./src/utils/index.ts",
     "./client": "./src/client/index.ts",
     "./config": "./src/config/index.ts",
-    "./components/*": "./src/components/*",
-    "./components/Placeholder": "./src/components/index.ts"
+    "./components/Placeholder": "./src/components/Placeholder/index.ts"
+
     
   },
   "files": [
