@@ -794,7 +794,7 @@ __metadata:
   resolution: "@exdst-sitecore-content-sdk/astro@workspace:packages/astro-content-sdk"
   dependencies:
     "@sitecore-cloudsdk/events": ^0.5.1
-    "@sitecore-content-sdk/core": 1.4.1
+    "@sitecore-content-sdk/core": 1.5.1
     "@stylistic/eslint-plugin": ^5.2.2
     "@types/chai": ^5.2.2
     "@types/chai-spies": ^1.0.6
@@ -3087,9 +3087,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sitecore-content-sdk/core@npm:1.4.1":
-  version: 1.4.1
-  resolution: "@sitecore-content-sdk/core@npm:1.4.1"
+"@sitecore-content-sdk/core@npm:1.5.1":
+  version: 1.5.1
+  resolution: "@sitecore-content-sdk/core@npm:1.5.1"
   dependencies:
     chalk: ^4.1.2
     debug: ^4.4.0
@@ -3101,7 +3101,7 @@ __metadata:
     url-parse: ^1.5.10
   peerDependencies:
     "@sitecore-cloudsdk/events": ^0.5.1
-  checksum: 82f11ea6c0991ed496691cf9dc458cc94286307f0dc3ea5678a0e37fb0bf778838c866e43dbba44cefdd117ff931d660608b6fc6e3fd701be1a51f83522ec3ee
+  checksum: ed1c1461ae9a3fbb8730ce0f308bd9c7137dd41e1546cea630c081469c6cd0af1b9641ab2cc007193fcfa6c2d05cfbedc87765434c51b540eee10fa19766ba6b
   languageName: node
   linkType: hard
 
