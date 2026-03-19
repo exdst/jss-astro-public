@@ -257,18 +257,22 @@ export const isDesignLibraryPreviewData = (
  * @param {Request} req
  */
 export const resolveServerUrl = (req: Request) => {
-  const internalHostUrl = process.env.SITECORE_INTERNAL_EDITING_HOST_URL;
+  const internalHostUrl =
+    import.meta.env?.SITECORE_INTERNAL_EDITING_HOST_URL ||
+    process.env.SITECORE_INTERNAL_EDITING_HOST_URL;
   if (internalHostUrl) {
     return internalHostUrl;
   }
 
   // in xmc deployment we always use localhost:3000
-  if (process.env.SITECORE) {
+  if (import.meta.env?.SITECORE || process.env.SITECORE) {
     return 'http://localhost:3000';
   }
 
   // to preserve auth headers, use https if we're in our 3 main hosting options
-  const useHttps = (process.env.VERCEL || process.env.NETLIFY) !== undefined;
+  const useHttps =
+    (import.meta.env?.VERCEL || process.env.VERCEL ||
+     import.meta.env?.NETLIFY || process.env.NETLIFY) !== undefined;
   // use https for requests with auth but also support unsecured http rendering hosts
   return `${useHttps ? 'https' : 'http'}://${req.headers.get('host') ?? undefined}`;
 };

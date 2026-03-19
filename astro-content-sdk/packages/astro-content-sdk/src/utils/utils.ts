@@ -1,5 +1,5 @@
 export const getEditingSecret = (): string => {
-  const secret = process.env.SITECORE_EDITING_SECRET;
+  const secret = import.meta.env?.SITECORE_EDITING_SECRET || process.env.SITECORE_EDITING_SECRET;
 
   if (!secret || secret.length === 0) {
     throw new Error('The SITECORE_EDITING_SECRET environment variable is missing or invalid.');

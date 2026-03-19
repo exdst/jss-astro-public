@@ -22,42 +22,58 @@ export const getAstroFallbackConfig = (
         contextId: config?.api?.edge?.contextId || '',
         clientContextId:
           config?.api?.edge?.clientContextId ||
+          import.meta.env?.PUBLIC_SITECORE_EDGE_CONTEXT_ID ||
           process.env.PUBLIC_SITECORE_EDGE_CONTEXT_ID,
         edgeUrl:
-          config?.api?.edge?.edgeUrl || process.env.PUBLIC_SITECORE_EDGE_URL,
+          config?.api?.edge?.edgeUrl ||
+          import.meta.env?.PUBLIC_SITECORE_EDGE_URL ||
+          process.env.PUBLIC_SITECORE_EDGE_URL,
       },
       local: {
         ...config?.api?.local,
         apiKey:
           config?.api?.local?.apiKey ||
+          import.meta.env?.PUBLIC_SITECORE_API_KEY ||
           process.env.PUBLIC_SITECORE_API_KEY ||
           '',
         apiHost:
           config?.api?.local?.apiHost ||
+          import.meta.env?.PUBLIC_SITECORE_API_HOST ||
           process.env.PUBLIC_SITECORE_API_HOST ||
           '',
       },
     },
     defaultSite:
-      config?.defaultSite || process.env.PUBLIC_DEFAULT_SITE_NAME || '',
+      config?.defaultSite ||
+      import.meta.env?.PUBLIC_DEFAULT_SITE_NAME ||
+      process.env.PUBLIC_DEFAULT_SITE_NAME ||
+      '',
     defaultLanguage:
-      config?.defaultLanguage || process.env.PUBLIC_DEFAULT_LANGUAGE || 'en',
+      config?.defaultLanguage ||
+      import.meta.env?.PUBLIC_DEFAULT_LANGUAGE ||
+      process.env.PUBLIC_DEFAULT_LANGUAGE ||
+      'en',
     multisite: {
       ...config?.multisite,
       useCookieResolution:
         config?.multisite?.useCookieResolution ??
-        (() => process.env.VERCEL_ENV === 'preview'),
+        (() => (import.meta.env?.VERCEL_ENV || process.env.VERCEL_ENV) === 'preview'),
     },
     personalize: {
       ...config?.personalize,
-      scope: config?.personalize?.scope || process.env.PUBLIC_PERSONALIZE_SCOPE,
+      scope:
+        config?.personalize?.scope ||
+        import.meta.env?.PUBLIC_PERSONALIZE_SCOPE ||
+        process.env.PUBLIC_PERSONALIZE_SCOPE,
     },
     generateStaticPaths:
-      process.env.GENERATE_STATIC_PATHS !== undefined
-        ? process.env.GENERATE_STATIC_PATHS.toLowerCase() === 'true'
+      (import.meta.env?.GENERATE_STATIC_PATHS ?? process.env.GENERATE_STATIC_PATHS) !== undefined
+        ? (import.meta.env?.GENERATE_STATIC_PATHS || process.env.GENERATE_STATIC_PATHS).toLowerCase() === 'true'
         : config?.generateStaticPaths ?? true,
     sitecoreInternalEditingHostUrl:
-      config?.sitecoreInternalEditingHostUrl || process.env.SITECORE_INTERNAL_EDITING_HOST_URL,
+      config?.sitecoreInternalEditingHostUrl ||
+      import.meta.env?.SITECORE_INTERNAL_EDITING_HOST_URL ||
+      process.env.SITECORE_INTERNAL_EDITING_HOST_URL,
   };
 };
 
