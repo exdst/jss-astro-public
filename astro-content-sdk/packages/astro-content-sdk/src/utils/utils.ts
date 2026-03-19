@@ -12,7 +12,7 @@ export const getEditingSecret = (): string => {
 
 /**
  * Extracts the path from the Astro context parameters.
- * @param params - The Astro context parameters.
+ * @param {Record<string, string | undefined>} params - The Astro context parameters.
  * @returns The extracted path.
  * @public
  */
@@ -27,8 +27,8 @@ export const extractPath = (params: Record<string, string | undefined>) => {
 /**
  * Removes a leading language segment from a given path.
  * Handles paths with or without a preceding `_site_` segment (e.g. `/en/About`, `/_site_Basic/en/About`).
- * @param path - The path that may contain a language segment.
- * @param languages - The list of supported language codes to strip from the path.
+ * @param {string} path - The path that may contain a language segment.
+ * @param {string[]} languages - The list of supported language codes to strip from the path.
  * @returns The path without the leading language segment, defaulting to `'/'` when empty.
  * @public
  */

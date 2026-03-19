@@ -95,8 +95,12 @@ const attrs: {
       >
         {!isEmptyField && (
           <>
-            {(tag || !encode) && <Tag {...attrs} set:html={output} />}
-            {(!tag || encode) && <Fragment {...attrs} set:html={output} />}
+            {(field?.metadata || tag || !encode) && (
+              <Tag {...attrs} set:html={output} />
+            )}
+            {!field?.metadata && (!tag || encode) && (
+              <Fragment {...attrs} set:html={output} />
+            )}
           </>
         )}
       </WithEmptyFieldEditingComponent>

@@ -60,6 +60,9 @@ describe('SitecoreClient', () => {
   let restComponentServiceStub = {
     fetchComponentData: sandbox.stub(),
   };
+  let sitePathServiceStub = {
+    fetchSiteRoutes: sandbox.stub(),
+  };
 
   beforeEach(() => {
     layoutServiceStub = {
@@ -78,6 +81,9 @@ describe('SitecoreClient', () => {
     restComponentServiceStub = {
       fetchComponentData: sandbox.stub(),
     };
+    sitePathServiceStub = {
+      fetchSiteRoutes: sandbox.stub(),
+    };
 
     sitecoreClient = new SitecoreAstroClient(defaultInitOptions);
 
@@ -86,6 +92,7 @@ describe('SitecoreClient', () => {
     (sitecoreClient as any).errorPagesService = errorPagesServiceStub;
     (sitecoreClient as any).editingService = editingServiceStub;
     (sitecoreClient as any).componentService = restComponentServiceStub;
+    (sitecoreClient as any).sitePathService = sitePathServiceStub;
   });
 
   describe('getPage', () => {
@@ -227,6 +234,29 @@ describe('SitecoreClient', () => {
       expect(result).to.equal(expectedPath);
     });
   });
+
+  describe('getPagePaths', () => {
+    it('should return static paths without site prefixes', async () => {
+      const paths = [
+        { params: { path: ['_site_site-one', 'home'] }, locale: 'en' },
+        { params: { path: ['_site_site-one', 'about'] }, locale: 'en' },
+        { params: { path: ['_site_site-two', 'home'] }, locale: 'de-DE' },
+      ];
+
+      const expectedPaths = [
+        { params: { path: ['home'] }, locale: 'en' },
+        { params: { path: ['about'] }, locale: 'en' },
+        { params: { path: ['home'] }, locale: 'de-DE' },
+      ];
+
+      sitePathServiceStub.fetchSiteRoutes.resolves(structuredClone(paths));
+
+      const result = await sitecoreClient.getPagePaths(['site-one'], ['en'], undefined);
+
+      expect(result).to.deep.equal(expectedPaths);
+    });
+  });
+
   /*
   describe('getComponentData', () => {
     it('should return componentData when component has getComponentsProps method', async () => {

@@ -42,6 +42,9 @@ export interface SitecoreDictionarytProps {
 
 /**
  * Writes page data, API config, and optional component map into {@link SitecoreContext}.
+ * @param {Page} props.page - The page data.
+ * @param {SitecoreConfig['api']} props.api - The API configuration.
+ * @param {ComponentMap} [props.componentMap] - Component map.
  * @internal
  */
 export const updateSitecoreContext = ({ page, api, componentMap }: SitecoreContextProps) => {
@@ -52,6 +55,8 @@ export const updateSitecoreContext = ({ page, api, componentMap }: SitecoreConte
 
 /**
  * Writes dictionary phrases into {@link SitecoreContext} for {@link useDictionary}.
+ * @param {SitecoreDictionarytProps} props
+ * @param {DictionaryPhrases} props.dictionary
  * @internal
  */
 export const updateSitecoreDictionary = ({ dictionary }: SitecoreDictionarytProps) => {

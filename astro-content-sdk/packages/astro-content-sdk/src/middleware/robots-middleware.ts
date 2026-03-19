@@ -22,7 +22,10 @@ export class RobotsMiddleware {
     const _res = new Response();
     _res.headers.append('content-type', 'text/plain');
 
-    const hostName = _req.headers.get('host')?.split(':')[0] || 'localhost';
+    const hostName =
+      _req.headers.get('x-forwarded-host') ||
+      _req.headers.get('host')?.split(':')[0] ||
+      'localhost';
     const site = this.siteResolver.getByHost(hostName);
 
     try {

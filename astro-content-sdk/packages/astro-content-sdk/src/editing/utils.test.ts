@@ -793,6 +793,19 @@ describe('editing/utils', () => {
 
       expect(result).to.equal('http://localhost:3000');
     });
+
+    it('should use x-forwarded-host header when present', () => {
+      const req = mockRequest({
+        headers: {
+          'x-forwarded-host': 'proxy.example.com',
+          host: 'internal-host.local',
+        },
+      });
+
+      const result = resolveServerUrl(req);
+
+      expect(result).to.equal('http://proxy.example.com');
+    });
   });
 
   describe('getCSPHeader', () => {

@@ -55,6 +55,7 @@ import { SitecoreConfig as SitecoreConfig_2 } from '@sitecore-content-sdk/core/c
 import { SitecoreConfigInput as SitecoreConfigInput_2 } from '@sitecore-content-sdk/core/config';
 import { SiteInfo } from '@sitecore-content-sdk/core/site';
 import { SiteResolver } from '@sitecore-content-sdk/core/site';
+import { StaticPath } from '@sitecore-content-sdk/core';
 
 // @public
 export const addClassName: (otherAttrs: {
@@ -259,22 +260,23 @@ export class RobotsMiddleware {
 
 // @public
 export class SitecoreClient extends SitecoreClient_2 {
-    constructor(initOptions: SitecoreClientInit);
+    constructor(initOptions: SitecoreAstroClientInit);
     // Warning: (ae-forgotten-export) The symbol "ComponentPropsService" needs to be exported by the entry point api-surface.d.ts
     //
     // (undocumented)
     protected componentPropsService: ComponentPropsService;
-    // Warning: (ae-forgotten-export) The symbol "ComponentPropsCollection" needs to be exported by the entry point api-surface.d.ts
-    getComponentData(layoutData: LayoutServiceData, components: ComponentMap<AstroContentSdkComponent>): Promise<ComponentPropsCollection>;
     // (undocumented)
     protected getComponentPropsService(): ComponentPropsService;
     // (undocumented)
     getPage(path: string | string[], pageOptions: PageOptions, options?: FetchOptions): Promise<Page | null>;
+    getPagePaths(sites: string[], languages?: string[], fetchOptions?: FetchOptions): Promise<StaticPath[]>;
     // Warning: (ae-forgotten-export) The symbol "PreviewData" needs to be exported by the entry point api-surface.d.ts
     getPreview(previewData: PreviewData, fetchOptions?: FetchOptions): Promise<Page | null>;
     getSiteNameFromPath(path: string | string[]): string;
+    // Warning: (ae-forgotten-export) The symbol "SitecoreAstroClientInit" needs to be exported by the entry point api-surface.d.ts
+    //
     // (undocumented)
-    protected initOptions: SitecoreClientInit;
+    protected initOptions: SitecoreAstroClientInit;
     parsePath(path: string | string[]): string;
 }
 

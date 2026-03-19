@@ -29,7 +29,7 @@ export class SitemapMiddleware {
     const idMatch = segments[1].match(/(\d+)(?=\.xml$)/);
     const id = idMatch ? idMatch[1] : '';
 
-    const reqHost = _req.headers.get('host') || '';
+    const reqHost = _req.headers.get('x-forwarded-host') || _req.headers.get('host') || '';
     const reqProtocol = _req.headers.get('x-forwarded-proto') || 'https';
     const site = this.siteResolver.getByHost(reqHost);
 

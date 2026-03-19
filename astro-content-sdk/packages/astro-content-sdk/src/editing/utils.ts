@@ -273,8 +273,11 @@ export const resolveServerUrl = (req: Request) => {
 
   // to preserve auth headers, use https if we're in our 3 main hosting options
   const useHttps = (process.env.VERCEL || process.env.NETLIFY) !== undefined;
+
+  const host = req.headers.get('x-forwarded-host') || req.headers.get('host');
+
   // use https for requests with auth but also support unsecured http rendering hosts
-  return `${useHttps ? 'https' : 'http'}://${req.headers.get('host') ?? undefined}`;
+  return `${useHttps ? 'https' : 'http'}://${host || undefined}`;
 };
 
 /**

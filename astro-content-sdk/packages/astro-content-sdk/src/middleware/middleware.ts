@@ -111,7 +111,10 @@ export abstract class MiddlewareBase extends Middleware {
    * @param {APIContext} context Astro context
    */
   protected getHostHeader(context: APIContext) {
-    return context.request.headers.get('host')?.split(':')[0];
+    return (
+      context.request.headers.get('x-forwarded-host') ||
+      context.request.headers.get('host')?.split(':')[0]
+    );
   }
 
   /**
