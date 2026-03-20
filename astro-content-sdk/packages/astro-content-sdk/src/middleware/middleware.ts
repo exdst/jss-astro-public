@@ -1,9 +1,9 @@
-﻿import { SITE_KEY, SiteInfo, SiteResolver } from '@sitecore-content-sdk/core/site';
+﻿import { SITE_KEY, SiteInfo, SiteResolver } from '@sitecore-content-sdk/content/site';
 import { GraphQLRequestClientFactory } from '@sitecore-content-sdk/core';
 import {
   createGraphQLClientFactory,
   GraphQLClientOptions,
-} from '@sitecore-content-sdk/core/client';
+} from '@sitecore-content-sdk/content/client';
 import { PreviewCookies } from '../editing';
 import { APIContext, MiddlewareHandler, MiddlewareNext } from 'astro';
 import * as cookie from 'cookie';

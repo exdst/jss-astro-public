@@ -45,5 +45,5 @@
   "resolutions": {
     "@rushstack/eslint-patch": "1.12.0"
   },
-  "packageManager": "yarn@3.1.0"
+  "packageManager": "yarn@4.12.0"
 }

@@ -1,5 +1,8 @@
-import { SitecoreClient } from '@sitecore-content-sdk/core/client';
+import { SitecoreClient } from '@sitecore-content-sdk/content/client';
+import { constants } from '@sitecore-content-sdk/core';
 import { SiteInfo, SiteResolver } from '../site';
+
+const { ERROR_MESSAGES } = constants;
 
 /**
  * Middleware for handling robots.txt requests.
@@ -42,7 +45,7 @@ export class RobotsMiddleware {
         headers: _res.headers,
       });
     } catch {
-      return new Response('Internal Server Error', {
+      return new Response(`Internal Server Error. ${ERROR_MESSAGES.CONTACT_SUPPORT}`, {
         status: 500,
         headers: _res.headers,
       });

@@ -1,10 +1,10 @@
 ---
-import { mediaApi } from '@sitecore-content-sdk/core/media';
+import { mediaApi } from '@sitecore-content-sdk/content/media';
 import { EditableFieldProps } from './sharedTypes';
 import {
   FieldMetadata,
   isFieldValueEmpty,
-} from '@sitecore-content-sdk/core/layout';
+} from '@sitecore-content-sdk/content/layout';
 import { addClassName } from '../utils';
 import WithFieldMetadata from '../enhancers/WithFieldMetadata.astro';
 import WithEmptyFieldEditingComponent from '../enhancers/WithEmptyFieldEditingComponent.astro';
@@ -148,8 +148,6 @@ const attrs = getImageAttrs(
   imageParams,
   mediaUrlPrefix
 );
-
-console.log("Attrs", attrs);
 ---
 
 {

@@ -2,7 +2,7 @@ import {
   GenerateMapArgs,
   GenerateMapFunction,
   ComponentMapTemplate,
-} from '@sitecore-content-sdk/core/tools';
+} from '@sitecore-content-sdk/content/tools';
 import path from 'path';
 import fs from 'fs';
 import { getComponentList } from './templating/components';

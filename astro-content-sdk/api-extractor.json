@@ -71,6 +71,9 @@
       "tsdoc-html-tag-missing-greater-than": {
         "logLevel": "none"
       },
+      "tsdoc-html-tag-missing-equals": {
+        "logLevel": "none"
+      },
       "tsdoc-at-sign-in-word": {
         "logLevel": "none"
       }

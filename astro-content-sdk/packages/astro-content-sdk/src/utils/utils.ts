@@ -7,7 +7,7 @@ export const getEditingSecret = (): string => {
   if (!secret || secret.length === 0) {
     throw new Error('The SITECORE_EDITING_SECRET environment variable is missing or invalid.');
   }
-  return secret.toLowerCase();
+  return secret;
 };
 
 /**

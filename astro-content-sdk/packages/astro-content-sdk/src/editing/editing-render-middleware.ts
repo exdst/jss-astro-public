@@ -1,13 +1,14 @@
-﻿import { debug, NativeDataFetcher } from '@sitecore-content-sdk/core';
+﻿import { NativeDataFetcher } from '@sitecore-content-sdk/core';
 import {
   QUERY_PARAM_EDITING_SECRET,
   EDITING_ALLOWED_ORIGINS,
   INVALID_SECRET_HTML_MESSAGE,
-} from '@sitecore-content-sdk/core/editing';
+} from '@sitecore-content-sdk/content/editing';
 import { getEditingSecret } from '../utils';
-import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/utils';
-import { LayoutServicePageState } from '@sitecore-content-sdk/core/layout';
+import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/tools';
+import { LayoutServicePageState } from '@sitecore-content-sdk/content/layout';
 import { RenderMiddlewareBase } from './render-middleware';
+import debug from '../debug';
 import {
   cleanupPreviewCookies,
   getCSPHeader,
@@ -20,7 +21,9 @@ import {
   mapEditingParams,
   PreviewCookies,
   resolveServerUrl,
+  getAllowedQueryParams,
 } from './utils';
+import type { AllowedQueryParams } from './types';
 import * as cookie from 'cookie';
 
 /**
@@ -40,6 +43,12 @@ export type EditingRenderMiddlewareConfig = {
    * The internal host URL for the application, used for server-side requests for page rendering during editing.
    */
   sitecoreInternalEditingHostUrl?: string;
+  /**
+   * Query string parameters to allow and include in the preview data.
+   * - Array: each item is a parameter name (string) or an object `{ name, required? }`.
+   * - Function: receives the request's query parameter names and returns the list of allowed parameters.
+   */
+  allowedQueryParams?: AllowedQueryParams;
 };
 
 /**
@@ -88,7 +97,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
 
   private handler = async (_req: Request): Promise<Response> => {
     const { method, headers } = _req;
-    const url = new URL(_req.url.toLowerCase());
+    const url = new URL(_req.url);
     const query = getEditingRenderQueryParams(url.searchParams);
 
     debug.editing('editing render middleware start: %o', {
@@ -147,7 +156,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
     if (_req.method === 'OPTIONS') {
       debug.editing('preflight request');
 
-      // CORS headers are set by enforceCors
+      // CORS headers are set by getEnforcedCorsHeaders
       return new Response(null, {
         status: 204,
         headers: _res.headers,
@@ -178,15 +187,24 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
 
     const missingQueryParams = requiredQueryParams.filter((param) => !query[param]);
 
+    const { allowedQueryParams, missingAllowedParams } = getAllowedQueryParams(
+      query,
+      this.config?.allowedQueryParams
+    );
+
     // Validate query parameters
-    if (missingQueryParams.length) {
-      debug.editing('missing required query parameters: %o', missingQueryParams);
+    if (missingQueryParams.length || missingAllowedParams.length) {
+      debug.editing('missing required query parameters: %o', [
+        ...missingQueryParams,
+        ...missingAllowedParams,
+      ]);
 
       return new Response(
         JSON.stringify({
-          html: `<html><body>Missing required query parameters: ${missingQueryParams.join(
-            ', '
-          )}</body></html>`,
+          html: `<html><body>Missing required query parameters: ${[
+            ...missingQueryParams,
+            ...missingAllowedParams,
+          ].join(', ')}</body></html>`,
         }),
         {
           status: 400,
@@ -199,6 +217,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
 
     const previewDataCookies = this.getPreviewDataCookies({
       ...previewDataParams,
+      ...allowedQueryParams,
       variantIds: previewDataParams.variantIds?.split(','),
     });
     _res.headers.append('Set-Cookie', previewDataCookies);

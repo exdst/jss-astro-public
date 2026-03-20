@@ -20,7 +20,7 @@
     "api-extractor:verify": "api-extractor run"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=24"
   },
   "author": {
     "name": "EXDST",
@@ -35,7 +35,8 @@
     "url": "https://github.com/exdst/jss-astro-public/issues"
   },
   "devDependencies": {
-    "@sitecore-cloudsdk/events": "^0.5.1",
+    "@sitecore-content-sdk/analytics-core": "^2.0.0",
+    "@sitecore-content-sdk/events": "^2.0.0",
     "@stylistic/eslint-plugin": "^5.2.2",
     "@types/chai": "^5.2.2",
     "@types/chai-spies": "^1.0.6",
@@ -44,7 +45,7 @@
     "@types/jsdom": "^21.1.7",
     "@types/memory-cache": "^0.2.6",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^22.15.14",
+    "@types/node": "^24.10.4",
     "@types/proxyquire": "^1.3.31",
     "@types/sinon": "^17.0.4",
     "@types/sinon-chai": "^4.0.0",
@@ -77,10 +78,11 @@
     "typescript": "~5.8.3"
   },
   "peerDependencies": {
-    "@sitecore-cloudsdk/events": "^0.5.1"
+    "@sitecore-content-sdk/events": "^2.0.0"
   },
   "dependencies": {
-    "@sitecore-content-sdk/core": "1.5.1",
+    "@sitecore-content-sdk/content": "^2.0.0",
+    "@sitecore-content-sdk/core": "^2.0.0",
     "chalk": "^4.1.2",
     "cookie": "^1.0.2",
     "debug": "^4.4.0",

@@ -5,62 +5,73 @@
 ```ts
 
 import { APIContext } from 'astro';
-import { ComponentFields } from '@sitecore-content-sdk/core/layout';
-import { ComponentFile } from '@sitecore-content-sdk/core/tools';
-import { ComponentParams } from '@sitecore-content-sdk/core/layout';
-import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
-import { createGraphQLClientFactory } from '@sitecore-content-sdk/core/client';
-import { debug as debug_2 } from '@sitecore-content-sdk/core';
-import { DeepRequired } from '@sitecore-content-sdk/core/config';
-import { DefaultRetryStrategy } from '@sitecore-content-sdk/core/client';
-import { DesignLibraryRenderPreviewData } from '@sitecore-content-sdk/core/editing';
-import { DictionaryPhrases } from '@sitecore-content-sdk/core/types/i18n';
-import { ErrorPage } from '@sitecore-content-sdk/core/client';
-import { FetchOptions } from '@sitecore-content-sdk/core/client';
-import { Field } from '@sitecore-content-sdk/core/layout';
-import { GenerateMapFunction } from '@sitecore-content-sdk/core/tools';
-import { generateMetadata } from '@sitecore-content-sdk/core/tools';
-import { generateSites } from '@sitecore-content-sdk/core/tools';
-import { getEdgeProxyContentUrl } from '@sitecore-content-sdk/core/client';
-import { GraphQLClientError } from '@sitecore-content-sdk/core/client';
-import { GraphQLClientOptions } from '@sitecore-content-sdk/core/client';
-import { GraphQLRequestClient } from '@sitecore-content-sdk/core/client';
-import { GraphQLRequestClientFactory } from '@sitecore-content-sdk/core/client';
+import { ComponentFields } from '@sitecore-content-sdk/content/layout';
+import { ComponentFile } from '@sitecore-content-sdk/content/tools';
+import { ComponentParams } from '@sitecore-content-sdk/content/layout';
+import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
+import { createGraphQLClientFactory } from '@sitecore-content-sdk/content/client';
+import { DeepRequired } from '@sitecore-content-sdk/content/config';
+import { DefaultRetryStrategy } from '@sitecore-content-sdk/content/client';
+import { DesignLibraryRenderPreviewData } from '@sitecore-content-sdk/content/editing';
+import { DictionaryPhrases } from '@sitecore-content-sdk/content/types/i18n';
+import { ErrorPage } from '@sitecore-content-sdk/content/client';
+import { FetchOptions } from '@sitecore-content-sdk/content/client';
+import { Field } from '@sitecore-content-sdk/content/layout';
+import { GenerateMapFunction } from '@sitecore-content-sdk/content/tools';
+import { generateMetadata } from '@sitecore-content-sdk/core/node-tools';
+import { generateSites } from '@sitecore-content-sdk/content/node-tools';
+import { getEdgeProxyContentUrl } from '@sitecore-content-sdk/content/client';
+import { GraphQLClientError } from '@sitecore-content-sdk/content/client';
+import { GraphQLClientOptions } from '@sitecore-content-sdk/content/client';
+import { GraphQLRequestClient } from '@sitecore-content-sdk/content/client';
+import { GraphQLRequestClientFactory } from '@sitecore-content-sdk/content/client';
 import { GraphQLRequestClientFactory as GraphQLRequestClientFactory_2 } from '@sitecore-content-sdk/core';
-import { GraphQLRequestClientFactoryConfig } from '@sitecore-content-sdk/core/client';
-import { HTMLLink } from '@sitecore-content-sdk/core';
+import { GraphQLRequestClientFactoryConfig } from '@sitecore-content-sdk/content/client';
+import { HTMLLink } from '@sitecore-content-sdk/content';
 import { IncomingHttpHeaders } from 'http';
-import { LayoutServiceData } from '@sitecore-content-sdk/core/layout';
-import { Metadata } from '@sitecore-content-sdk/core/editing';
+import { LayoutServiceData } from '@sitecore-content-sdk/content/layout';
+import { Metadata } from '@sitecore-content-sdk/core/node-tools';
 import { MiddlewareHandler } from 'astro';
 import { MiddlewareNext } from 'astro';
-import { Page } from '@sitecore-content-sdk/core/client';
-import { PageMode } from '@sitecore-content-sdk/core/client';
-import { PageOptions } from '@sitecore-content-sdk/core/client';
-import { PersonalizeService } from '@sitecore-content-sdk/core/personalize';
-import { PersonalizeServiceConfig } from '@sitecore-content-sdk/core/personalize';
-import { PlaceholdersData } from '@sitecore-content-sdk/core/layout';
-import { REDIRECT_TYPE_301 } from '@sitecore-content-sdk/core/site';
-import { REDIRECT_TYPE_302 } from '@sitecore-content-sdk/core/site';
-import { REDIRECT_TYPE_SERVER_TRANSFER } from '@sitecore-content-sdk/core/site';
-import { RedirectInfo } from '@sitecore-content-sdk/core/site';
-import { RedirectsService } from '@sitecore-content-sdk/core/site';
-import { RedirectsServiceConfig } from '@sitecore-content-sdk/core/site';
-import { RetryStrategy } from '@sitecore-content-sdk/core/client';
-import { SitecoreCliConfig } from '@sitecore-content-sdk/core/config';
-import { SitecoreCliConfigInput } from '@sitecore-content-sdk/core/config';
-import { SitecoreClient as SitecoreClient_2 } from '@sitecore-content-sdk/core/client';
-import { SitecoreClientInit } from '@sitecore-content-sdk/core/client';
-import { SitecoreConfig as SitecoreConfig_2 } from '@sitecore-content-sdk/core/config';
-import { SitecoreConfigInput as SitecoreConfigInput_2 } from '@sitecore-content-sdk/core/config';
-import { SiteInfo } from '@sitecore-content-sdk/core/site';
-import { SiteResolver } from '@sitecore-content-sdk/core/site';
-import { StaticPath } from '@sitecore-content-sdk/core';
+import { Page } from '@sitecore-content-sdk/content/client';
+import { PageMode } from '@sitecore-content-sdk/content/client';
+import { PageOptions } from '@sitecore-content-sdk/content/client';
+import { PersonalizeService } from '@sitecore-content-sdk/content/personalize';
+import { PersonalizeServiceConfig } from '@sitecore-content-sdk/content/personalize';
+import { PlaceholdersData } from '@sitecore-content-sdk/content/layout';
+import { REDIRECT_TYPE_301 } from '@sitecore-content-sdk/content/site';
+import { REDIRECT_TYPE_302 } from '@sitecore-content-sdk/content/site';
+import { REDIRECT_TYPE_SERVER_TRANSFER } from '@sitecore-content-sdk/content/site';
+import { RedirectInfo } from '@sitecore-content-sdk/content/site';
+import { RedirectsService } from '@sitecore-content-sdk/content/site';
+import { RedirectsServiceConfig } from '@sitecore-content-sdk/content/site';
+import { RetryStrategy } from '@sitecore-content-sdk/content/client';
+import { SitecoreCliConfig } from '@sitecore-content-sdk/content/config';
+import { SitecoreCliConfigInput } from '@sitecore-content-sdk/content/config';
+import { SitecoreClient as SitecoreClient_2 } from '@sitecore-content-sdk/content/client';
+import { SitecoreClientInit } from '@sitecore-content-sdk/content/client';
+import { SitecoreConfig as SitecoreConfig_2 } from '@sitecore-content-sdk/content/config';
+import { SitecoreConfigInput as SitecoreConfigInput_2 } from '@sitecore-content-sdk/content/config';
+import { SiteInfo } from '@sitecore-content-sdk/content/site';
+import { SiteResolver } from '@sitecore-content-sdk/content/site';
+import { StaticPath } from '@sitecore-content-sdk/content';
 
 // @public
 export const addClassName: (otherAttrs: {
     [key: string]: unknown;
 }) => void;
+
+// @public
+export interface AllowedQueryParam {
+    name: string;
+    required?: boolean;
+}
+
+// @public
+export type AllowedQueryParams = Array<AllowedQueryParam | string> | AllowedQueryParamsResolver;
+
+// @public
+export type AllowedQueryParamsResolver = (queryParams: string[]) => Array<AllowedQueryParam | string>;
 
 // @public
 export type AstroContentSdkComponent = (_props: Record<string, any>) => any;
@@ -76,6 +87,8 @@ export { ComponentRendering }
 
 export { createGraphQLClientFactory }
 
+// @public
+const debug_2: Record<string, debug.Debugger>;
 export { debug_2 as debug }
 
 export { DefaultRetryStrategy }
@@ -114,6 +127,7 @@ export class EditingRenderMiddleware extends RenderMiddlewareBase {
 export type EditingRenderMiddlewareConfig = {
     resolvePageUrl?: (itemPath: string) => string;
     sitecoreInternalEditingHostUrl?: string;
+    allowedQueryParams?: AllowedQueryParams;
 };
 
 export { ErrorPage }

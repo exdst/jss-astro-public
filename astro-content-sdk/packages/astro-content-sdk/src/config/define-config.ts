@@ -3,16 +3,18 @@ import {
   DeepRequired,
   defineConfig as defineConfigCore,
   SitecoreConfigInput as SitecoreConfigInputCore,
-} from '@sitecore-content-sdk/core/config';
+} from '@sitecore-content-sdk/content/config';
+import { resolveEdgeUrl } from '@sitecore-content-sdk/core/tools';
+
+/** Env var for Edge hostname; exposed to the browser so client code can use it. */
+const PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME_ENV = 'PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME';
 
 /**
  * Provides default Astro initial values from env variables for SitecoreConfig
  * @param {SitecoreConfigInput} config optional override values to be written over default config settings
  * @returns default Astro input config
  */
-export const getAstroFallbackConfig = (
-  config?: SitecoreConfigInput
-): SitecoreConfigInput => {
+export const getAstroFallbackConfig = (config?: SitecoreConfigInput): SitecoreConfigInput => {
   return {
     ...config,
     api: {
@@ -21,32 +23,23 @@ export const getAstroFallbackConfig = (
         ...config?.api?.edge,
         contextId: config?.api?.edge?.contextId || '',
         clientContextId:
-          config?.api?.edge?.clientContextId ||
-          process.env.PUBLIC_SITECORE_EDGE_CONTEXT_ID,
-        edgeUrl:
-          config?.api?.edge?.edgeUrl || process.env.PUBLIC_SITECORE_EDGE_URL,
+          config?.api?.edge?.clientContextId || process.env.PUBLIC_SITECORE_EDGE_CONTEXT_ID,
+        edgeUrl: resolveEdgeUrl(
+          config?.api?.edge?.edgeUrl ?? process.env[PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME_ENV]
+        ),
       },
       local: {
         ...config?.api?.local,
-        apiKey:
-          config?.api?.local?.apiKey ||
-          process.env.PUBLIC_SITECORE_API_KEY ||
-          '',
-        apiHost:
-          config?.api?.local?.apiHost ||
-          process.env.PUBLIC_SITECORE_API_HOST ||
-          '',
+        apiKey: config?.api?.local?.apiKey || process.env.PUBLIC_SITECORE_API_KEY || '',
+        apiHost: config?.api?.local?.apiHost || process.env.PUBLIC_SITECORE_API_HOST || '',
       },
     },
-    defaultSite:
-      config?.defaultSite || process.env.PUBLIC_DEFAULT_SITE_NAME || '',
-    defaultLanguage:
-      config?.defaultLanguage || process.env.PUBLIC_DEFAULT_LANGUAGE || 'en',
+    defaultSite: config?.defaultSite || process.env.PUBLIC_DEFAULT_SITE_NAME || '',
+    defaultLanguage: config?.defaultLanguage || process.env.PUBLIC_DEFAULT_LANGUAGE || 'en',
     multisite: {
       ...config?.multisite,
       useCookieResolution:
-        config?.multisite?.useCookieResolution ??
-        (() => process.env.VERCEL_ENV === 'preview'),
+        config?.multisite?.useCookieResolution ?? (() => process.env.VERCEL_ENV === 'preview'),
     },
     personalize: {
       ...config?.personalize,

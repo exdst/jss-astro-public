@@ -1,19 +1,19 @@
-import { StaticPath } from '@sitecore-content-sdk/core';
+import { StaticPath } from '@sitecore-content-sdk/content';
 import {
   FetchOptions,
   Page,
   PageOptions,
   SitecoreClient,
   SitecoreClientInit,
-} from '@sitecore-content-sdk/core/client';
+} from '@sitecore-content-sdk/content/client';
 import { PreviewData } from '../sharedTypes/component-props';
 import { ComponentPropsService } from '../services/component-props-service';
-import { EditingPreviewData } from '@sitecore-content-sdk/core/editing';
-import { getSiteRewriteData, normalizeSiteRewrite } from '@sitecore-content-sdk/core/site';
+import { EditingPreviewData } from '@sitecore-content-sdk/content/editing';
+import { getSiteRewriteData, normalizeSiteRewrite } from '@sitecore-content-sdk/content/site';
 import {
   getPersonalizedRewriteData,
   normalizePersonalizedRewrite,
-} from '@sitecore-content-sdk/core/personalize';
+} from '@sitecore-content-sdk/content/personalize';
 import { SitecoreConfig } from '../config';
 
 /**
@@ -40,7 +40,7 @@ export class SitecoreAstroClient extends SitecoreClient {
    */
   getSiteNameFromPath(path: string | string[]) {
     const resolvedPath = super.parsePath(path);
-    // Get site name (from path rewritten in middleware)
+    // Get site name (from path rewritten in proxy)
     const siteData = getSiteRewriteData(resolvedPath, this.initOptions.defaultSite);
 
     return siteData.siteName;

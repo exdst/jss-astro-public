@@ -1,5 +1,5 @@
 import * as glob from 'glob';
-import { ComponentFile } from '@sitecore-content-sdk/core/tools';
+import { ComponentFile } from '@sitecore-content-sdk/content/tools';
 
 const componentNamePattern = /^[\/]*(.+[\/\\])*(.+)\.astro?$/;
 

@@ -4,8 +4,11 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import { SitemapMiddleware } from './sitemap-middleware';
-import { SitecoreClient } from '@sitecore-content-sdk/core/client';
+import { SitecoreClient } from '@sitecore-content-sdk/content/client';
+import { constants } from '@sitecore-content-sdk/core';
 import { mockRequest } from '../test-data/helpers';
+
+const { ERROR_MESSAGES } = constants;
 
 chai.use(sinonChai);
 
@@ -175,7 +178,7 @@ describe('SitemapMiddleware', () => {
 
       const body = await res.text();
       expect(res.status).to.equal(500);
-      expect(body).to.equal('Internal Server Error');
+      expect(body).to.equal(`Internal Server Error. ${ERROR_MESSAGES.CONTACT_SUPPORT}`);
     });
   });
 });

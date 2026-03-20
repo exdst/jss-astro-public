@@ -3,10 +3,11 @@ import {
   RouteData,
   isDynamicPlaceholder,
   getDynamicPlaceholderPattern,
-} from '@sitecore-content-sdk/core/layout';
+} from '@sitecore-content-sdk/content/layout';
+import { ChildComponentProps, PlaceholderProps } from './models';
 
 /**
- * Get the renderings for the specified placeholder from the rendering data.
+ * Get the renderings for the specified placeholder from the rendering layout data.
  * @param {ComponentRendering | RouteData } rendering rendering data
  * @param {string} name placeholder name
  * @param {boolean} isEditing whether components should be rendered in editing mode
@@ -76,3 +77,26 @@ export const getSXAParams = (rendering: ComponentRendering) => {
     }
   );
 };
+
+/**
+ * Merge specific placeholder props with component field and params content props.
+ * @param {PlaceholderProps} placeholderProps placeholder props
+ * @param {ComponentRendering} componentRendering component rendering
+ * @returns {ComponentProps} merged props
+ */
+export function getChildComponentProps<T extends PlaceholderProps>(
+  placeholderProps: T,
+  componentRendering: ComponentRendering
+): ChildComponentProps {
+  const fields = { ...(placeholderProps.fields || {}), ...(componentRendering.fields || {}) };
+  const params = { ...(placeholderProps.params || {}), ...(componentRendering.params || {}) };
+  return {
+    fields,
+    params: {
+      ...params,
+      // Provide SXA styles
+      ...getSXAParams(componentRendering),
+    },
+    rendering: componentRendering,
+  };
+}

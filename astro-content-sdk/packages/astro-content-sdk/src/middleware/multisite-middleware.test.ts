@@ -5,10 +5,10 @@ import { use } from 'chai';
 import chaiString from 'chai-string';
 import sinonChai from 'sinon-chai';
 import sinon, { spy } from 'sinon';
-import { debug } from '@sitecore-content-sdk/core';
+import debug from '../debug';
 
 import { MultisiteMiddleware } from './multisite-middleware';
-import { SiteInfo, SiteResolver } from '@sitecore-content-sdk/core/site';
+import { SiteInfo, SiteResolver } from '@sitecore-content-sdk/content/site';
 import { APIContext, AstroCookieSetOptions } from 'astro';
 
 use(sinonChai);

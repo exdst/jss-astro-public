@@ -3,7 +3,7 @@ import {
   LayoutServiceData,
   ComponentRendering,
   PlaceholdersData,
-} from '@sitecore-content-sdk/core/layout';
+} from '@sitecore-content-sdk/content/layout';
 import {
   AstroContentSdkComponent,
   ComponentMap,
@@ -156,9 +156,7 @@ export class ComponentPropsService {
    * @param {PlaceholdersData} placeholders placeholders
    * @returns {ComponentRendering[]} renderings
    */
-  protected flatRenderings(
-    placeholders: PlaceholdersData
-  ): ComponentRendering[] {
+  protected flatRenderings(placeholders: PlaceholdersData): ComponentRendering[] {
     const allComponentRenderings: ComponentRendering[] = [];
     const placeholdersArr = Object.values(placeholders);
 

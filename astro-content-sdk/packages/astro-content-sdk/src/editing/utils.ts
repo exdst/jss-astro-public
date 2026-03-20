@@ -6,9 +6,9 @@ import {
   LayoutKind,
   PREVIEW_KEY,
   QUERY_PARAM_EDITING_SECRET,
-} from '@sitecore-content-sdk/core/editing';
-import { DEFAULT_VARIANT } from '@sitecore-content-sdk/core/personalize';
-import { SITE_KEY } from '@sitecore-content-sdk/core/site';
+} from '@sitecore-content-sdk/content/editing';
+import { DEFAULT_VARIANT } from '@sitecore-content-sdk/content/personalize';
+import { SITE_KEY } from '@sitecore-content-sdk/content/site';
 import {
   EDITING_PASS_THROUGH_HEADERS,
   QUERY_PARAM_VERCEL_PROTECTION_BYPASS,
@@ -16,7 +16,8 @@ import {
 } from './constants';
 import { IncomingHttpHeaders } from 'http';
 import { NativeDataFetcher } from '@sitecore-content-sdk/core';
-import { getAllowedOriginsFromEnv } from '@sitecore-content-sdk/core/utils';
+import { getAllowedOriginsFromEnv } from '@sitecore-content-sdk/core/tools';
+import { AllowedQueryParams, GetAllowedQueryParamsResult } from './types';
 
 /**
  * Gets editing secret value from request
@@ -64,6 +65,46 @@ export const mapEditingParams = (query: {
         layoutKind: query.sc_layoutKind,
       };
   return params;
+};
+
+/**
+ * Parses the query parameters based on the provided allowed parameters or a resolver function, to extract additional parameters that should be allowed.
+ * @param {{ [key: string]: string | undefined }} queryParams Object of query parameters from incoming URL.
+ * @param {AllowedQueryParams} allowedParams Allowed parameters to map.
+ * @returns Object containing the list of missing required parameters and the allowed query parameters that were extracted.
+ * @internal
+ */
+export const getAllowedQueryParams = (
+  queryParams: { [key: string]: unknown },
+  allowedParams?: AllowedQueryParams
+): GetAllowedQueryParamsResult => {
+  const allowedQueryParamsList =
+    typeof allowedParams === 'function'
+      ? allowedParams(Object.keys(queryParams))
+      : Array.isArray(allowedParams)
+      ? allowedParams
+      : [];
+
+  if (!allowedQueryParamsList.length) return { missingAllowedParams: [], allowedQueryParams: {} };
+
+  return allowedQueryParamsList.reduce(
+    (acc, param) => {
+      const name = typeof param === 'string' ? param : param.name;
+      const required = typeof param === 'string' ? false : param.required;
+
+      const value = queryParams[name];
+      if (value !== undefined) {
+        acc.allowedQueryParams[name] = value;
+
+        return acc;
+      }
+
+      if (required) acc.missingAllowedParams.push(name);
+
+      return acc;
+    },
+    { missingAllowedParams: [], allowedQueryParams: {} } as GetAllowedQueryParamsResult
+  );
 };
 
 /**
@@ -296,20 +337,34 @@ export const getCSPHeader = () => {
  * @returns object with query params
  */
 export const getEditingRenderQueryParams = (query: URLSearchParams): EditingRenderQueryParams => {
-  const params = Object.fromEntries(query.entries());
+  const params: Record<string, string | string[]> = {};
+  query.forEach((_, key) => {
+    if (!(key in params)) {
+      const values = query.getAll(key);
+      params[key] = values.length === 1 ? values[0] : values;
+    }
+  });
+
+  const find = (key: string): string | undefined => {
+    const lowerKey = key.toLowerCase();
+    const match = Object.keys(params).find((k) => k.toLowerCase() === lowerKey);
+    if (!match) return undefined;
+    const value = params[match];
+    return Array.isArray(value) ? value[0] : value;
+  };
 
   return {
     ...params,
-    secret: params.secret ?? '',
-    sc_lang: params.sc_lang ?? '',
-    sc_itemid: params.sc_itemid ?? '',
-    sc_site: params.sc_site ?? '',
-    route: params.route ?? '',
-    mode: params.mode as EditingRenderQueryParams['mode'],
-    sc_layoutKind: params.sc_layoutkind as LayoutKind,
-    sc_variant: params.sc_variant ?? undefined,
-    sc_version: params.sc_version ?? undefined,
-    sc_renderingId: params.sc_renderingid ?? undefined,
-    dataSourceId: params.datasourceid ?? undefined,
+    secret: find('secret') ?? '',
+    sc_lang: find('sc_lang') ?? '',
+    sc_itemid: find('sc_itemid') ?? '',
+    sc_site: find('sc_site') ?? '',
+    route: find('route') ?? '',
+    mode: find('mode') as EditingRenderQueryParams['mode'],
+    sc_layoutKind: find('sc_layoutKind') as LayoutKind,
+    sc_variant: find('sc_variant') ?? undefined,
+    sc_version: find('sc_version') ?? undefined,
+    sc_renderingId: find('sc_renderingId') ?? undefined,
+    dataSourceId: find('dataSourceId') ?? undefined,
   };
 };

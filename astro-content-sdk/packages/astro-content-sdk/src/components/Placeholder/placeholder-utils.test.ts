@@ -3,8 +3,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { expect } from 'chai';
 import { createSandbox } from 'sinon';
-import { getPlaceholderRenderings, getSXAParams } from './placeholder-utils';
-import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
+import {
+  getChildComponentProps,
+  getPlaceholderRenderings,
+  getSXAParams,
+} from './placeholder-utils';
+import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
+import { PlaceholderProps } from './models';
 
 describe('placeholder-utils', () => {
   const sandbox = createSandbox();
@@ -157,6 +162,148 @@ describe('placeholder-utils', () => {
       const result = getSXAParams(rendering);
 
       expect(result).to.deep.equal({ styles: '' });
+    });
+  });
+
+  describe('getChildComponentProps', () => {
+    it('should merge placeholder and rendering fields', () => {
+      const placeholderProps: PlaceholderProps = {
+        name: 'test-placeholder',
+        rendering: { componentName: 'Test', uid: 'test-uid' },
+        page: {
+          layout: {},
+          locale: 'en',
+          mode: {
+            name: 'normal',
+            isNormal: true,
+            isPreview: false,
+            isEditing: false,
+            isDesignLibrary: false,
+            designLibrary: { isVariantGeneration: false },
+          },
+        },
+        fields: {
+          placeholderField: { value: 'placeholder-value' },
+          sharedField: { value: 'placeholder-shared-value' },
+        },
+      };
+
+      const componentRendering: ComponentRendering = {
+        componentName: 'TestComponent',
+        uid: 'test-uid',
+        fields: {
+          renderingField: { value: 'rendering-value' },
+          sharedField: { value: 'rendering-shared-value' },
+        },
+      };
+
+      const result = getChildComponentProps(placeholderProps, componentRendering);
+
+      expect(result.fields).to.deep.equal({
+        placeholderField: { value: 'placeholder-value' },
+        renderingField: { value: 'rendering-value' },
+        sharedField: { value: 'rendering-shared-value' }, // rendering should override placeholder
+      });
+      expect(result.rendering).to.equal(componentRendering);
+    });
+
+    it('should merge placeholder and rendering params', () => {
+      const placeholderProps: PlaceholderProps = {
+        name: 'test-placeholder',
+        rendering: { componentName: 'Test', uid: 'test-uid' },
+        page: {
+          layout: {},
+          locale: 'en',
+          mode: {
+            name: 'normal',
+            isNormal: true,
+            isPreview: false,
+            isEditing: false,
+            isDesignLibrary: false,
+            designLibrary: { isVariantGeneration: false },
+          },
+        },
+        params: {
+          placeholderParam: 'placeholder-param-value',
+          sharedParam: 'placeholder-shared-param',
+        },
+      };
+
+      const componentRendering: ComponentRendering = {
+        componentName: 'TestComponent',
+        uid: 'test-uid',
+        params: {
+          renderingParam: 'rendering-param-value',
+          sharedParam: 'rendering-shared-param',
+          GridParameters: 'col-lg-6',
+          Styles: 'custom-class',
+        },
+      };
+
+      const result = getChildComponentProps(placeholderProps, componentRendering);
+
+      expect(result.params).to.deep.equal({
+        placeholderParam: 'placeholder-param-value',
+        renderingParam: 'rendering-param-value',
+        sharedParam: 'rendering-shared-param', // rendering should override placeholder
+        GridParameters: 'col-lg-6',
+        Styles: 'custom-class',
+        styles: 'col-lg-6 custom-class', // SXA styles should be added
+      });
+      expect(result.rendering).to.equal(componentRendering);
+    });
+
+    it('should return minimal child component props object', () => {
+      const placeholderProps: PlaceholderProps = {
+        name: 'test-placeholder',
+        rendering: { componentName: 'Test', uid: 'test-uid' },
+        page: {
+          layout: {},
+          locale: 'en',
+          mode: {
+            name: 'normal',
+            isNormal: true,
+            isPreview: false,
+            isEditing: false,
+            isDesignLibrary: false,
+            designLibrary: { isVariantGeneration: false },
+          },
+        },
+        componentMap: new Map(),
+        customProp: 'custom-value',
+        // missingComponentComponent: MissingComponent,
+        // hiddenRenderingComponent: HiddenRendering,
+      };
+
+      const componentRendering: ComponentRendering = {
+        componentName: 'TestComponent',
+        uid: 'test-uid',
+        fields: {
+          testField: { value: 'test-value' },
+        },
+        params: {
+          testParam: 'test-param',
+        },
+      };
+
+      const result = getChildComponentProps(placeholderProps, componentRendering);
+
+      // getChildComponentProps returns only fields, params, and rendering
+      expect(result.rendering).to.equal(componentRendering);
+      expect(result.fields).to.deep.equal({
+        testField: { value: 'test-value' },
+      });
+      expect(result.params).to.deep.equal({
+        testParam: 'test-param',
+      });
+
+      // getChildComponentProps does not include these props
+      expect((result as any).key).to.be.undefined;
+      expect((result as any).customProp).to.be.undefined;
+      expect((result as any).componentMap).to.be.undefined;
+      expect((result as any).missingComponentComponent).to.be.undefined;
+      expect((result as any).hiddenRenderingComponent).to.be.undefined;
+      expect((result as any).name).to.be.undefined;
     });
   });
 });

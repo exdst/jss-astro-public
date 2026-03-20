@@ -6,12 +6,9 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import { SitecoreAstroClient } from './sitecore-astro-client';
 import { DefaultRetryStrategy } from '@sitecore-content-sdk/core';
-import { SITE_PREFIX } from '@sitecore-content-sdk/core/site';
-import {
-  layoutData,
-  componentsWithExperiencesArray,
-} from '../test-data/personalizeData';
-import { VARIANT_PREFIX } from '@sitecore-content-sdk/core/personalize';
+import { SITE_PREFIX } from '@sitecore-content-sdk/content/site';
+import { layoutData, componentsWithExperiencesArray } from '../test-data/personalizeData';
+import { VARIANT_PREFIX } from '@sitecore-content-sdk/content/personalize';
 
 chai.use(sinonChai);
 
@@ -154,13 +151,10 @@ describe('SitecoreClient', () => {
         locale,
       });
 
-      expect(layoutServiceStub.fetchLayoutData).to.be.calledWithMatch(
-        '/test/path',
-        {
-          locale,
-          site: 'mysite',
-        }
-      );
+      expect(layoutServiceStub.fetchLayoutData).to.be.calledWithMatch('/test/path', {
+        locale,
+        site: 'mysite',
+      });
     });
 
     it('should use site passed in page options over site parsed from path', async () => {
@@ -177,13 +171,10 @@ describe('SitecoreClient', () => {
         site: 'other-site',
       });
 
-      expect(layoutServiceStub.fetchLayoutData).to.be.calledWithMatch(
-        '/test/path',
-        {
-          locale,
-          site: 'other-site',
-        }
-      );
+      expect(layoutServiceStub.fetchLayoutData).to.be.calledWithMatch('/test/path', {
+        locale,
+        site: 'other-site',
+      });
     });
   });
 

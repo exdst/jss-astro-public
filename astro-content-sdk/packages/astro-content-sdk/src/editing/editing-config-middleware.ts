@@ -1,11 +1,11 @@
 ﻿import {
   EDITING_ALLOWED_ORIGINS,
   QUERY_PARAM_EDITING_SECRET,
-} from '@sitecore-content-sdk/core/editing';
-import { debug } from '@sitecore-content-sdk/core';
-import { Metadata } from '@sitecore-content-sdk/core/editing';
-import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/utils';
-import { EditMode } from '@sitecore-content-sdk/core/layout';
+} from '@sitecore-content-sdk/content/editing';
+import debug from '../debug';
+import { Metadata } from '@sitecore-content-sdk/core/node-tools';
+import { getEnforcedCorsHeaders } from '@sitecore-content-sdk/core/tools';
+import { EditMode } from '@sitecore-content-sdk/content/layout';
 import { getEditingSecret } from '../utils';
 import { AstroContentSdkComponent, ComponentMap } from '../sharedTypes/component-props';
 
@@ -44,7 +44,7 @@ export class EditingConfigMiddleware {
   }
 
   private handler = async (_req: Request): Promise<Response> => {
-    const url = new URL(_req.url.toLowerCase());
+    const url = new URL(_req.url);
     const secret = url.searchParams.get(QUERY_PARAM_EDITING_SECRET);
 
     const _res = new Response();
@@ -93,7 +93,6 @@ export class EditingConfigMiddleware {
     if (_req.method === 'OPTIONS') {
       debug.editing('preflight request');
 
-      // CORS headers are set by enforceCors
       return new Response(null, {
         status: 204,
         headers: _res.headers,

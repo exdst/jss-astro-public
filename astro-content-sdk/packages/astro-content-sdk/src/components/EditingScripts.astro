@@ -6,7 +6,7 @@
  */
 
 import { useSitecore } from '../context';
-import { getContentSdkPagesClientData, getDesignLibraryScriptLink } from '@sitecore-content-sdk/core/editing';
+import { getContentSdkPagesClientData, getDesignLibraryScriptLink } from '@sitecore-content-sdk/content/editing';
 
 const { page: { mode, layout }, api } = useSitecore();
 const { clientData, clientScripts } = layout.sitecore.context;
@@ -34,7 +34,7 @@ const contentSdkClientData = { ...clientData, ...getContentSdkPagesClientData() 
  { mode.isDesignLibrary && <script src={scriptUrl}></script> }
 
  { mode.isEditing && <>
-      {clientScripts?.map((src) => (
+      {clientScripts?.map((src: string) => (
         <script src={src} />
       ))}
       {Object.keys(contentSdkClientData).map((id) => (

@@ -1,9 +1,9 @@
-﻿/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
-import { getSiteRewrite, SITE_KEY } from '@sitecore-content-sdk/core/site';
-import { debug } from '@sitecore-content-sdk/core';
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
+import { getSiteRewrite, SITE_KEY } from '@sitecore-content-sdk/content/site';
+import debug from '../debug';
 import { MiddlewareBase, MiddlewareBaseConfig } from './middleware';
 import { SitecoreConfig } from '../config';
-import { PREVIEW_KEY } from '@sitecore-content-sdk/core/editing';
+import { PREVIEW_KEY } from '@sitecore-content-sdk/content/editing';
 import { APIContext, MiddlewareHandler, MiddlewareNext } from 'astro';
 import * as cookie from 'cookie';
 
@@ -146,9 +146,8 @@ export class MultisiteMiddleware extends MiddlewareBase {
    * Called when multisite is disabled. Override this method in subclasses to show router-specific warnings.
    * @param {APIContext} context context
    */
-  // eslint-disable-next-line no-unused-vars
-  // @ts-ignore
   protected shouldWarnWhenDisabled(context: APIContext): void {
+    void context;
     // Base implementation does nothing - subclasses can override to show warnings
   }
 
