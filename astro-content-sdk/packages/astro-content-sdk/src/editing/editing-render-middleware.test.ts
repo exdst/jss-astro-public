@@ -11,7 +11,7 @@ import {
 import { EditingRenderMiddleware } from './editing-render-middleware';
 import sinonChai from 'sinon-chai';
 import sinon from 'sinon';
-import { mockRequest as MockRequest, Query } from '../test-data/helpers';
+import { mockRequest as MockRequest, Query } from '../tests/helpers';
 import {
   QUERY_PARAM_VERCEL_PROTECTION_BYPASS,
   QUERY_PARAM_VERCEL_SET_BYPASS_COOKIE,
@@ -834,32 +834,42 @@ describe('EditingRenderMiddleware', () => {
     expect(res.status).to.equal(200);
   });
 
-  it('should respondWith 500 if rendered html empty', async () => {
-    const req = mockRequest({ query });
+  describe('error handling', () => {
+    beforeEach(() => {
+      sinon.stub(console, 'error');
+    });
 
-    const middleware = new EditingRenderMiddleware();
-    const handler = middleware.getHandler();
+    afterEach(() => {
+      sinon.restore();
+    });
 
-    sinon
-      .stub(middleware['dataFetcher'], 'get')
-      .resolves({ status: 200, statusText: 'success', data: '' });
+    it('should respondWith 500 if rendered html empty', async () => {
+      const req = mockRequest({ query });
 
-    const res = await handler(req);
+      const middleware = new EditingRenderMiddleware();
+      const handler = middleware.getHandler();
 
-    expect(res.status).to.equal(500);
-  });
+      sinon
+        .stub(middleware['dataFetcher'], 'get')
+        .resolves({ status: 200, statusText: 'success', data: '' });
 
-  it('should respondWith 500 if internal request fails', async () => {
-    const req = mockRequest({ query });
+      const res = await handler(req);
 
-    const middleware = new EditingRenderMiddleware();
-    const handler = middleware.getHandler();
+      expect(res.status).to.equal(500);
+    });
 
-    sinon.stub(middleware['dataFetcher'], 'get').throws(new Error('Request failed'));
+    it('should respondWith 500 if internal request fails', async () => {
+      const req = mockRequest({ query });
 
-    const res = await handler(req);
+      const middleware = new EditingRenderMiddleware();
+      const handler = middleware.getHandler();
 
-    expect(res.status).to.equal(500);
+      sinon.stub(middleware['dataFetcher'], 'get').throws(new Error('Request failed'));
+
+      const res = await handler(req);
+
+      expect(res.status).to.equal(500);
+    });
   });
 
   describe('Design Library handling', () => {

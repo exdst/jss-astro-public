@@ -1,4 +1,4 @@
-﻿/* eslint-disable no-unused-expressions */
+/* eslint-disable no-unused-expressions */
 /* eslint-disable dot-notation */
 import * as chai from 'chai';
 import { use } from 'chai';
@@ -629,44 +629,36 @@ describe('MultisiteMiddleware', () => {
     const context = createContext();
     const res = createResponse();
 
-    let errorSpy: sinon.SinonSpy<[message?: any, ...optionalParams: any[]], void>;
-
-    before(() => {
-      errorSpy = spy(console, 'log');
-    });
-
-    beforeEach(() => {
-      errorSpy.resetHistory();
-    });
-
-    after(() => {
-      errorSpy.restore();
-    });
-
     it('should handle error', async () => {
-      const error = new Error('Custom error');
+      const errorSpy = sinon.stub(console, 'log');
 
-      class SampleSiteResolver extends SiteResolver {
-        constructor(sites: SiteInfo[]) {
-          super(sites);
+      try {
+        const error = new Error('Custom error');
+
+        class SampleSiteResolver extends SiteResolver {
+          constructor(sites: SiteInfo[]) {
+            super(sites);
+          }
+
+          getByHost = () => {
+            throw error;
+          };
         }
 
-        getByHost = () => {
-          throw error;
-        };
+        const middleware = new MultisiteMiddleware({ ...defaultConfig });
+        middleware['siteResolver'] = new SampleSiteResolver([]);
+
+        const mockNext = sinon.stub().returns(res);
+
+        const finalRes = await middleware.handle(context, mockNext);
+
+        expect(errorSpy.getCall(0).calledWith('Multisite middleware failed:')).to.be.true;
+        expect(errorSpy.getCall(1).calledWith(error)).to.be.true;
+
+        expect(finalRes).to.deep.equal(res);
+      } finally {
+        errorSpy.restore();
       }
-
-      const middleware = new MultisiteMiddleware({ ...defaultConfig });
-      middleware['siteResolver'] = new SampleSiteResolver([]);
-
-      const mockNext = sinon.stub().returns(res);
-
-      const finalRes = await middleware.handle(context, mockNext);
-
-      expect(errorSpy.getCall(0).calledWith('Multisite middleware failed:')).to.be.true;
-      expect(errorSpy.getCall(1).calledWith(error)).to.be.true;
-
-      expect(finalRes).to.deep.equal(res);
     });
   });
 });

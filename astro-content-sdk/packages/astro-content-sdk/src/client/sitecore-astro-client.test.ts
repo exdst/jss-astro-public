@@ -7,7 +7,7 @@ import sinonChai from 'sinon-chai';
 import { SitecoreAstroClient } from './sitecore-astro-client';
 import { DefaultRetryStrategy } from '@sitecore-content-sdk/core';
 import { SITE_PREFIX } from '@sitecore-content-sdk/content/site';
-import { layoutData, componentsWithExperiencesArray } from '../test-data/personalizeData';
+import { layoutData, componentsWithExperiencesArray } from '../tests/personalizeData';
 import { VARIANT_PREFIX } from '@sitecore-content-sdk/content/personalize';
 
 chai.use(sinonChai);

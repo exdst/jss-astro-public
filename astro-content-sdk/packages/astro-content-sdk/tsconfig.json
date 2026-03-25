@@ -24,8 +24,8 @@
     "tools.d.ts",
     "config-cli.d.ts",
     "src/tests/*",
-    "src/test-data/*",
     "**/*.test.ts",
+    "**/*.astro.test.ts",
     "tests",
     "api"
   ]

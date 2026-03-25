@@ -29,7 +29,7 @@ import {
   QUERY_PARAM_VERCEL_PROTECTION_BYPASS,
   QUERY_PARAM_VERCEL_SET_BYPASS_COOKIE,
 } from './constants';
-import { mockRequest } from '../test-data/helpers';
+import { mockRequest } from '../tests/helpers';
 
 chai.use(sinonChai);
 

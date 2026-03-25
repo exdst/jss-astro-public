@@ -84,8 +84,8 @@ describe('placeholder-utils', () => {
       // Test non-editing mode - should replace dynamic placeholder
       const result = getPlaceholderRenderings(rendering, 'container-1', false);
       expect(result).to.deep.equal(expectedRenderings);
-      expect(rendering.placeholders['container-1']).to.deep.equal(expectedRenderings);
-      expect(rendering.placeholders['container-{*}']).to.be.undefined;
+      expect(rendering.placeholders?.['container-1']).to.deep.equal(expectedRenderings);
+      expect(rendering.placeholders?.['container-{*}']).to.be.undefined;
 
       // Reset rendering for editing mode test
       rendering.placeholders = {

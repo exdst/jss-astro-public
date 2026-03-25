@@ -5,7 +5,7 @@ import sinonChai from 'sinon-chai';
 import { RobotsMiddleware } from './robots-middleware';
 import { SitecoreClient } from '@sitecore-content-sdk/content/client';
 import { SiteInfo } from '@sitecore-content-sdk/content/site';
-import { mockRequest } from '../test-data/helpers';
+import { mockRequest } from '../tests/helpers';
 import { constants } from '@sitecore-content-sdk/core';
 
 const { ERROR_MESSAGES } = constants;

@@ -6,7 +6,7 @@ import sinonChai from 'sinon-chai';
 import { SitemapMiddleware } from './sitemap-middleware';
 import { SitecoreClient } from '@sitecore-content-sdk/content/client';
 import { constants } from '@sitecore-content-sdk/core';
-import { mockRequest } from '../test-data/helpers';
+import { mockRequest } from '../tests/helpers';
 
 const { ERROR_MESSAGES } = constants;
 

@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { EditingConfigMiddleware } from './editing-config-middleware';
 import { QUERY_PARAM_EDITING_SECRET } from '@sitecore-content-sdk/content/editing';
 import { AstroContentSdkComponent } from '../sharedTypes/component-props';
-import { mockRequest as MockRequest, Query } from '../test-data/helpers';
+import { mockRequest as MockRequest, Query } from '../tests/helpers';
 
 const allowedOrigin = 'https://allowed.com';
 
