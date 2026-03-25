@@ -3,16 +3,18 @@ import {
   DeepRequired,
   defineConfig as defineConfigCore,
   SitecoreConfigInput as SitecoreConfigInputCore,
-} from '@sitecore-content-sdk/core/config';
+} from '@sitecore-content-sdk/content/config';
+import { resolveEdgeUrl } from '@sitecore-content-sdk/core/tools';
+
+/** Env var for Edge hostname; exposed to the browser so client code can use it. */
+const PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME_ENV = 'PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME';
 
 /**
  * Provides default Astro initial values from env variables for SitecoreConfig
  * @param {SitecoreConfigInput} config optional override values to be written over default config settings
  * @returns default Astro input config
  */
-export const getAstroFallbackConfig = (
-  config?: SitecoreConfigInput
-): SitecoreConfigInput => {
+export const getAstroFallbackConfig = (config?: SitecoreConfigInput): SitecoreConfigInput => {
   return {
     ...config,
     api: {
@@ -24,10 +26,11 @@ export const getAstroFallbackConfig = (
           config?.api?.edge?.clientContextId ||
           import.meta.env?.PUBLIC_SITECORE_EDGE_CONTEXT_ID ||
           process.env.PUBLIC_SITECORE_EDGE_CONTEXT_ID,
-        edgeUrl:
-          config?.api?.edge?.edgeUrl ||
-          import.meta.env?.PUBLIC_SITECORE_EDGE_URL ||
-          process.env.PUBLIC_SITECORE_EDGE_URL,
+        edgeUrl: resolveEdgeUrl(
+          config?.api?.edge?.edgeUrl ??
+            import.meta.env?.PUBLIC_SITECORE_EDGE_URL ??
+            process.env[PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME_ENV]
+        ),
       },
       local: {
         ...config?.api?.local,
@@ -68,7 +71,9 @@ export const getAstroFallbackConfig = (
     },
     generateStaticPaths:
       (import.meta.env?.GENERATE_STATIC_PATHS ?? process.env.GENERATE_STATIC_PATHS) !== undefined
-        ? (import.meta.env?.GENERATE_STATIC_PATHS || process.env.GENERATE_STATIC_PATHS).toLowerCase() === 'true'
+        ? (
+            import.meta.env?.GENERATE_STATIC_PATHS || process.env.GENERATE_STATIC_PATHS
+          ).toLowerCase() === 'true'
         : config?.generateStaticPaths ?? true,
     sitecoreInternalEditingHostUrl:
       config?.sitecoreInternalEditingHostUrl ||
@@ -79,6 +84,7 @@ export const getAstroFallbackConfig = (
 
 /**
  * Type to be used as config input in sitecore.config
+ * @public
  */
 export type SitecoreConfigInput = SitecoreConfigInputCore & {
   /**
@@ -102,6 +108,7 @@ export type SitecoreConfigInput = SitecoreConfigInputCore & {
 
 /**
  * Final sitecore config type used at runtime Every property should be populated, either from sitecore.config or built-in fallback values
+ * @public
  */
 export type SitecoreConfig = DeepRequired<SitecoreConfigInput>;
 
@@ -109,6 +116,7 @@ export type SitecoreConfig = DeepRequired<SitecoreConfigInput>;
  * Accepts a SitecoreConfigInput object and returns full sitecore configuration
  * @param {SitecoreConfigInput} config override values to be written over default config settings
  * @returns {SitecoreConfig} full sitecore configuration to use in application
+ * @public
  */
 export const defineConfig = (config?: SitecoreConfigInput): SitecoreConfig => {
   return defineConfigCore(getAstroFallbackConfig(config)) as SitecoreConfig;

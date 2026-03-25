@@ -6,12 +6,9 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import { SitecoreAstroClient } from './sitecore-astro-client';
 import { DefaultRetryStrategy } from '@sitecore-content-sdk/core';
-import { SITE_PREFIX } from '@sitecore-content-sdk/core/site';
-import {
-  layoutData,
-  componentsWithExperiencesArray,
-} from '../test-data/personalizeData';
-import { VARIANT_PREFIX } from '@sitecore-content-sdk/core/personalize';
+import { SITE_PREFIX } from '@sitecore-content-sdk/content/site';
+import { layoutData, componentsWithExperiencesArray } from '../tests/personalizeData';
+import { VARIANT_PREFIX } from '@sitecore-content-sdk/content/personalize';
 
 chai.use(sinonChai);
 
@@ -60,6 +57,9 @@ describe('SitecoreClient', () => {
   let restComponentServiceStub = {
     fetchComponentData: sandbox.stub(),
   };
+  let sitePathServiceStub = {
+    fetchSiteRoutes: sandbox.stub(),
+  };
 
   beforeEach(() => {
     layoutServiceStub = {
@@ -78,6 +78,9 @@ describe('SitecoreClient', () => {
     restComponentServiceStub = {
       fetchComponentData: sandbox.stub(),
     };
+    sitePathServiceStub = {
+      fetchSiteRoutes: sandbox.stub(),
+    };
 
     sitecoreClient = new SitecoreAstroClient(defaultInitOptions);
 
@@ -86,6 +89,7 @@ describe('SitecoreClient', () => {
     (sitecoreClient as any).errorPagesService = errorPagesServiceStub;
     (sitecoreClient as any).editingService = editingServiceStub;
     (sitecoreClient as any).componentService = restComponentServiceStub;
+    (sitecoreClient as any).sitePathService = sitePathServiceStub;
   });
 
   describe('getPage', () => {
@@ -147,13 +151,10 @@ describe('SitecoreClient', () => {
         locale,
       });
 
-      expect(layoutServiceStub.fetchLayoutData).to.be.calledWithMatch(
-        '/test/path',
-        {
-          locale,
-          site: 'mysite',
-        }
-      );
+      expect(layoutServiceStub.fetchLayoutData).to.be.calledWithMatch('/test/path', {
+        locale,
+        site: 'mysite',
+      });
     });
 
     it('should use site passed in page options over site parsed from path', async () => {
@@ -170,13 +171,10 @@ describe('SitecoreClient', () => {
         site: 'other-site',
       });
 
-      expect(layoutServiceStub.fetchLayoutData).to.be.calledWithMatch(
-        '/test/path',
-        {
-          locale,
-          site: 'other-site',
-        }
-      );
+      expect(layoutServiceStub.fetchLayoutData).to.be.calledWithMatch('/test/path', {
+        locale,
+        site: 'other-site',
+      });
     });
   });
 
@@ -227,6 +225,29 @@ describe('SitecoreClient', () => {
       expect(result).to.equal(expectedPath);
     });
   });
+
+  describe('getPagePaths', () => {
+    it('should return static paths without site prefixes', async () => {
+      const paths = [
+        { params: { path: ['_site_site-one', 'home'] }, locale: 'en' },
+        { params: { path: ['_site_site-one', 'about'] }, locale: 'en' },
+        { params: { path: ['_site_site-two', 'home'] }, locale: 'de-DE' },
+      ];
+
+      const expectedPaths = [
+        { params: { path: ['home'] }, locale: 'en' },
+        { params: { path: ['about'] }, locale: 'en' },
+        { params: { path: ['home'] }, locale: 'de-DE' },
+      ];
+
+      sitePathServiceStub.fetchSiteRoutes.resolves(structuredClone(paths));
+
+      const result = await sitecoreClient.getPagePaths(['site-one'], ['en'], undefined);
+
+      expect(result).to.deep.equal(expectedPaths);
+    });
+  });
+
   /*
   describe('getComponentData', () => {
     it('should return componentData when component has getComponentsProps method', async () => {

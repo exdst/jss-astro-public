@@ -3,7 +3,7 @@ import {
   LayoutServiceData,
   ComponentRendering,
   PlaceholdersData,
-} from '@sitecore-content-sdk/core/layout';
+} from '@sitecore-content-sdk/content/layout';
 import {
   AstroContentSdkComponent,
   ComponentMap,
@@ -23,6 +23,10 @@ export type ComponentPropsRequest = {
   // context: NextContext;
 };
 
+/**
+ * The service for fetching component props.
+ * @public
+ */
 export class ComponentPropsService {
   async fetchComponentProps(
     params: FetchComponentPropsArguments
@@ -67,7 +71,7 @@ export class ComponentPropsService {
       // const fetchFunc = (await this.getModule(components, r.componentName))
       //  ?.getComponentServerProps;
 
-      const fetchFunc = ""; // getModule
+      const fetchFunc = ''; // getModule
 
       if (fetchFunc) {
         params.requests &&
@@ -113,7 +117,6 @@ export class ComponentPropsService {
         return;
       }
 
-
       // return req
       //   .fetch(req.rendering, req.layoutData /*, req.context*/)
       //   .then((result) => {
@@ -153,9 +156,7 @@ export class ComponentPropsService {
    * @param {PlaceholdersData} placeholders placeholders
    * @returns {ComponentRendering[]} renderings
    */
-  protected flatRenderings(
-    placeholders: PlaceholdersData
-  ): ComponentRendering[] {
+  protected flatRenderings(placeholders: PlaceholdersData): ComponentRendering[] {
     const allComponentRenderings: ComponentRendering[] = [];
     const placeholdersArr = Object.values(placeholders);
 

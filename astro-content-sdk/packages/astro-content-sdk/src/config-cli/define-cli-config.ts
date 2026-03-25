@@ -1,8 +1,5 @@
-import {
-  SitecoreCliConfigInput,
-  SitecoreCliConfig,
-} from '@sitecore-content-sdk/core/config';
-import { defineCliConfig as defineCliConfigCore } from '@sitecore-content-sdk/core/config-cli';
+import { SitecoreCliConfigInput, SitecoreCliConfig } from '@sitecore-content-sdk/content/config';
+import { defineCliConfig as defineCliConfigCore } from '@sitecore-content-sdk/content/config-cli';
 // import { byocTemplate } from '../tools/templating/byoc-component';
 import { defaultTemplate } from '../tools/templating/default-component';
 import { generateMap } from '../tools/generate-map';
@@ -12,10 +9,9 @@ import { generateMap } from '../tools/generate-map';
  * updated with the required default values.
  * @param {SitecoreCliConfigInput} cliConfig the cli configuration provided by the application
  * @returns {SitecoreCliConfig} full sitecore cli configuration to use with cli
+ * @public
  */
-export const defineCliConfig = (
-  cliConfig: SitecoreCliConfigInput
-): SitecoreCliConfig => {
+export const defineCliConfig = (cliConfig: SitecoreCliConfigInput): SitecoreCliConfig => {
   addDefaultScaffoldTemplates(cliConfig);
   addDefaultComponentMapGenerator(cliConfig);
   return defineCliConfigCore(cliConfig);

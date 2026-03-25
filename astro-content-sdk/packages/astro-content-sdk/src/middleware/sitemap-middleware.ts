@@ -1,12 +1,13 @@
-﻿import {
-  SitecoreClient,
-  SitemapXmlOptions,
-} from '@sitecore-content-sdk/core/client';
+﻿import { SitecoreClient, SitemapXmlOptions } from '@sitecore-content-sdk/content/client';
+import { constants } from '@sitecore-content-sdk/core';
 import { SiteInfo, SiteResolver } from '../site';
+
+const { ERROR_MESSAGES } = constants;
 
 /**
  * Middleware for handling sitemap requests.
  * Encapsulates all HTTP-related logic for sitemap generation and delivery.
+ * @public
  */
 export class SitemapMiddleware {
   private client: SitecoreClient;
@@ -28,7 +29,7 @@ export class SitemapMiddleware {
     const idMatch = segments[1].match(/(\d+)(?=\.xml$)/);
     const id = idMatch ? idMatch[1] : '';
 
-    const reqHost = _req.headers.get('host') || '';
+    const reqHost = _req.headers.get('x-forwarded-host') || _req.headers.get('host') || '';
     const reqProtocol = _req.headers.get('x-forwarded-proto') || 'https';
     const site = this.siteResolver.getByHost(reqHost);
 
@@ -56,7 +57,7 @@ export class SitemapMiddleware {
           },
         });
       } else {
-        return new Response('Internal Server Error', {
+        return new Response(`Internal Server Error. ${ERROR_MESSAGES.CONTACT_SUPPORT}`, {
           status: 500,
         });
       }

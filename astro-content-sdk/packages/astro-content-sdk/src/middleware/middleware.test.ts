@@ -343,6 +343,19 @@ describe('MiddlewareBase', () => {
 
       expect(middleware['getHostHeader'](context)).to.equal('bar.net');
     });
+
+    it('should return x-forwarded-host header when present', () => {
+      const middleware = new SampleMiddleware({ sites: [] });
+
+      const context = createContext({
+        headerValues: {
+          'x-forwarded-host': 'proxy.forwarded.com',
+          host: 'localhost:3000',
+        },
+      });
+
+      expect(middleware['getHostHeader'](context)).to.equal('proxy.forwarded.com');
+    });
   });
 
   describe('getLanguage', () => {

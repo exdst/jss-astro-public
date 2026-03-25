@@ -14,3 +14,5 @@ export {
   getHeadersForPropagation,
   PreviewCookies,
 } from './utils';
+
+export type { AllowedQueryParam, AllowedQueryParamsResolver, AllowedQueryParams } from './types';

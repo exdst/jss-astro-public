@@ -1,1 +1,1 @@
-﻿export { SiteResolver, SiteInfo } from '@sitecore-content-sdk/core/site';
+﻿export { SiteResolver, SiteInfo, SITE_PREFIX } from '@sitecore-content-sdk/content/site';

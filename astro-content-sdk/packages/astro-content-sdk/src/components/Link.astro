@@ -2,12 +2,16 @@
 import {
   FieldMetadata,
   isFieldValueEmpty,
-} from '@sitecore-content-sdk/core/layout';
+} from '@sitecore-content-sdk/content/layout';
 import { EditableFieldProps } from './sharedTypes';
 import WithFieldMetadata from '../enhancers/WithFieldMetadata.astro';
 import WithEmptyFieldEditingComponent from '../enhancers/WithEmptyFieldEditingComponent.astro';
 import DefaultEmptyFieldEditingComponentText from './DefaultEmptyFieldEditingComponentText.astro';
 
+/**
+ * The interface for the Link field value.
+ * @public
+ */
 export interface LinkFieldValue {
   [attributeName: string]: unknown;
   href?: string;
@@ -20,10 +24,18 @@ export interface LinkFieldValue {
   linktype?: string;
 }
 
+/**
+ * The interface for the Link field.
+ * @public
+ */
 export interface LinkField {
   value: LinkFieldValue;
 }
 
+/**
+ * The interface for the Link component props.
+ * @public
+ */
 export interface LinkProps extends EditableFieldProps {
   [htmlAttributes: string]: unknown;
   /** The link field data. */

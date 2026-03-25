@@ -1,12 +1,11 @@
 {
-  "extension": [
-    ".ts"
-  ],
+  "extension": [".ts"],
   "exclude": [
     "**/index.ts",
     "**/*.d.ts",
     "**/*.test.ts",
-    "src/test-data",
+    "**/*.astro.test.ts",
+    "src/tests",
     "src/tools/codegen/test-data",
     "dist",
     "src/test.ts",
@@ -15,12 +14,10 @@
     "./*.js",
     "./*.d.ts",
     "**/layout/models.ts",
-    "*.js"
+    "api",
+    "src/debug.ts"
   ],
   "all": true,
-  "reporter": [
-    "cobertura",
-    "text"
-  ],
+  "reporter": ["cobertura", "text"],
   "import": ["tsx"]
 }

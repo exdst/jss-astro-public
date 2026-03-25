@@ -1,4 +1,4 @@
-﻿---
+---
 /**
  * An Astro component to generate metadata blocks for a placeholder or rendering.
  * It utilizes dynamic attributes based on whether the component acts as a placeholder
@@ -9,11 +9,11 @@ import {
   ComponentRendering,
   getDynamicPlaceholderPattern,
   isDynamicPlaceholder,
-} from '@sitecore-content-sdk/core/layout';
+} from '@sitecore-content-sdk/content/layout';
 import {
   MetadataKind,
   DEFAULT_PLACEHOLDER_UID,
-} from '@sitecore-content-sdk/core/editing';
+} from '@sitecore-content-sdk/content/editing';
 
 /**
  *  Props containing the component data to render.
@@ -21,6 +21,10 @@ import {
 export interface PlaceholderMetadataProps {
   rendering: ComponentRendering;
   placeholderName?: string;
+  /**
+   * Component runtime type. Used to add data-csdk-component-runtime attribute to rendering chromes
+   */
+  componentRuntime?: 'server';
 }
 
 export type CodeBlockAttributes = {
@@ -29,15 +33,20 @@ export type CodeBlockAttributes = {
   className: string;
   kind: string;
   id?: string;
+  'data-csdk-component-runtime'?: 'server';
 };
 
 const props = Astro.props as PlaceholderMetadataProps;
 
-const getCodeBlockAttributes = (
-  kind: MetadataKind,
-  id?: string,
-  placeholderName?: string
-): CodeBlockAttributes => {
+const getCodeBlockAttributes = ({
+    kind,
+    id,
+    placeholderName,
+  }: {
+    kind: MetadataKind;
+    id?: string;
+    placeholderName?: string;
+  }): CodeBlockAttributes => {
   const chrometype = placeholderName ? 'placeholder' : 'rendering';
 
   const attributes: CodeBlockAttributes = {
@@ -79,6 +88,11 @@ const getCodeBlockAttributes = (
     } else {
       attributes.id = id;
     }
+
+    // Add component runtime attribute for rendering chromes
+    if (chrometype === 'rendering' && props.componentRuntime) {
+      attributes['data-csdk-component-runtime'] = 'server';
+    }
   }
 
   return attributes;
@@ -87,16 +101,8 @@ const getCodeBlockAttributes = (
 
 <>
   <code
-    {...getCodeBlockAttributes(
-      MetadataKind.Open,
-      props.rendering.uid,
-      props.placeholderName
-    )}></code>
+    {...getCodeBlockAttributes({ kind: MetadataKind.Open, id: props.rendering.uid, placeholderName: props.placeholderName })}></code>
   <slot />
   <code
-    {...getCodeBlockAttributes(
-      MetadataKind.Close,
-      props.rendering.uid,
-      props.placeholderName
-    )}></code>
+    {...getCodeBlockAttributes({ kind: MetadataKind.Close, placeholderName: props.placeholderName })}></code>
 </>

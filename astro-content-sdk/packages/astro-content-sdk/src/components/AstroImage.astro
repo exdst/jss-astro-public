@@ -8,9 +8,9 @@ import type {
 } from './Image.astro';
 import Image from './Image.astro';
 import { EditableFieldProps } from './sharedTypes';
-import { isFieldValueEmpty } from '@sitecore-content-sdk/core/layout';
+import { isFieldValueEmpty } from '@sitecore-content-sdk/content/layout';
 import { addClassName } from '../utils';
-import { mediaApi } from '@sitecore-content-sdk/core/media';
+import { mediaApi } from '@sitecore-content-sdk/content/media';
 
 const { page } = useSitecore();
 let fallback = false,

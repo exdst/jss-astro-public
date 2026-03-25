@@ -1,5 +1,5 @@
 ---
-import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
+import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import ErrorBoundary from '../ErrorBoundary.astro';
 import PlaceholderMetadata from './PlaceholderMetadata.astro';
 import { useSitecore } from '../../context';
@@ -7,26 +7,21 @@ import RenderWrapper from '../RenderWrapper.astro';
 import EmptyPlaceholder from './EmptyPlaceholder.astro';
 import { PlaceholderProps } from './models';
 import { getPlaceholderRenderings } from './placeholder-utils';
-import { getComponentsForRenderingData } from './PlaceholderUtils.astro';
+import { getPlaceholderComponents } from './PlaceholderUtils.astro';
 
 const props = Astro.props as PlaceholderProps;
 
 const { page } = useSitecore();
-const childProps: PlaceholderProps = { ...props, page };
 
-delete childProps.componentMap;
-
-const renderingData = childProps.rendering;
-
-const placeholderData = getPlaceholderRenderings(
-  renderingData,
-  childProps.name,
-  childProps.page.mode.isEditing
+const placeholderRenderings = getPlaceholderRenderings(
+  props.rendering,
+  props.name,
+  page.mode.isEditing
 );
 
-const isEmpty = !placeholderData.length;
+const isEmpty = !placeholderRenderings.length;
 
-const components = getComponentsForRenderingData(placeholderData, childProps);
+const components = getPlaceholderComponents(props, placeholderRenderings);
 ---
 
 {
@@ -34,30 +29,30 @@ const components = getComponentsForRenderingData(placeholderData, childProps);
     <RenderWrapper
       wrapper={
         isEmpty
-          ? childProps.page.mode.isEditing && EmptyPlaceholder
-          : childProps.render
+          ? page.mode.isEditing && EmptyPlaceholder
+          : props.render
       }
     >
       <ErrorBoundary>
-        <RenderWrapper wrapper={isEmpty && childProps.renderEmpty}>
+        <RenderWrapper wrapper={isEmpty && props.renderEmpty}>
           {
             // Conditional rendering based on editing mode
-            childProps.page.mode.isEditing ? (
+            page.mode.isEditing ? (
               <PlaceholderMetadata
-                placeholderName={childProps.name}
-                rendering={childProps.rendering as ComponentRendering}
+                placeholderName={props.name}
+                rendering={props.rendering as ComponentRendering}
               >
                 {components.map((component) => {
                   const Component = component.component.component;
 
                   return (
-                    <RenderWrapper wrapper={childProps.renderEach}>
+                    <RenderWrapper wrapper={props.renderEach}>
                       <PlaceholderMetadata
                         rendering={component.rendering as ComponentRendering}
                       >
                         {!component.component.isEmpty && (
                           <ErrorBoundary
-                            errorComponent={childProps.errorComponent}
+                            errorComponent={props.errorComponent}
                             {...component.props}
                           >
                             <Component {...component.props} />
@@ -78,11 +73,11 @@ const components = getComponentsForRenderingData(placeholderData, childProps);
                   return (
                     <RenderWrapper
                       wrapper={
-                        isEmpty ? childProps.renderEmpty : childProps.renderEach
+                        isEmpty ? props.renderEmpty : props.renderEach
                       }
                     >
                       <ErrorBoundary
-                        errorComponent={childProps.errorComponent}
+                        errorComponent={props.errorComponent}
                         {...component.props}
                       >
                         <Component {...component.props} />

@@ -1,0 +1,10 @@
+---
+import HiddenRendering from '../../components/HiddenRendering.astro';
+
+const props = Astro.props;
+---
+
+<div class="hidden-rendering">
+  <HiddenRendering />
+  <p>{props.rendering.componentName}</p>
+</div>

@@ -1,25 +1,28 @@
-﻿/* eslint-disable no-unused-expressions */
+/* eslint-disable no-unused-expressions */
 /* eslint-disable dot-notation */
 import * as chai from 'chai';
 import { use } from 'chai';
 import chaiString from 'chai-string';
 import sinonChai from 'sinon-chai';
 import sinon, { spy } from 'sinon';
-import { debug } from '@sitecore-content-sdk/core';
+import debug from '../debug';
 
 import { MultisiteMiddleware } from './multisite-middleware';
-import { SiteInfo, SiteResolver } from '@sitecore-content-sdk/core/site';
+import { SiteInfo, SiteResolver } from '@sitecore-content-sdk/content/site';
 import { APIContext, AstroCookieSetOptions } from 'astro';
 
 use(sinonChai);
 const expect = chai.use(chaiString).expect;
 
 describe('MultisiteMiddleware', () => {
-  let debugSpy;
-  const validateDebugLog = (message: string, ...params: any) =>
-    expect(debugSpy.args.find((log) => log[0] === message)).to.deep.equal([message, ...params]);
+  let debugSpy!: ReturnType<typeof spy>;
+  const validateDebugLog = (message: string, ...params: any[]) =>
+    expect(debugSpy.args.find((log: any[]) => log[0] === message)).to.deep.equal([
+      message,
+      ...params,
+    ]);
   const validateEndMessageDebugLog = (message: string, params: any) => {
-    const logParams = debugSpy.args.find((log) => log[0] === message) as Array<unknown>;
+    const logParams = debugSpy.args.find((log: any[]) => log[0] === message) as Array<unknown>;
 
     expect(logParams[2]).to.deep.include(params);
   };
@@ -47,7 +50,7 @@ describe('MultisiteMiddleware', () => {
             return headers[key];
           },
           append(key: string, value: string | Record<string, any>) {
-            context.request.headers[key] = value;
+            context.request.headers.set(key, value as string);
           },
           ...props.headers,
         },
@@ -62,7 +65,7 @@ describe('MultisiteMiddleware', () => {
           value: string | Record<string, any>,
           options?: AstroCookieSetOptions
         ) {
-          context.cookies[cookieName] = { value, ...options };
+          context.cookies.set(cookieName, value as string, options);
         },
         ...props?.cookies,
         ...props.cookieValues,
@@ -98,9 +101,9 @@ describe('MultisiteMiddleware', () => {
 
     Object.defineProperties(response.headers, {
       forEach: {
-        value: (cb) => {
+        value: (cb: any) => {
           Object.keys(response.headers).forEach((key) =>
-            cb(response.headers[key], key, response.headers)
+            cb(response.headers.get(key), key, response.headers)
           );
         },
         enumerable: false,
@@ -276,7 +279,7 @@ describe('MultisiteMiddleware', () => {
         rewritePath: '/_site_foobar/styleguide',
         siteName: 'foobar',
         headers: {
-          ...finalRes.headers,
+          ...(finalRes as Response).headers,
           'x-sc-rewrite': '/_site_foobar/styleguide',
         },
         cookies: 'sc_site=foobar; HttpOnly; Secure; SameSite=None',
@@ -315,7 +318,7 @@ describe('MultisiteMiddleware', () => {
         rewritePath: '/_site_foobar/styleguide',
         siteName: 'foobar',
         headers: {
-          ...finalRes.headers,
+          ...(finalRes as Response).headers,
           'x-sc-rewrite': '/_site_foobar/styleguide',
         },
         cookies: 'sc_site=foobar; HttpOnly; Secure; SameSite=None',
@@ -356,7 +359,7 @@ describe('MultisiteMiddleware', () => {
         rewritePath: '/_site_foo/styleguide',
         siteName: 'foo',
         headers: {
-          ...finalRes.headers,
+          ...(finalRes as Response).headers,
           'x-sc-rewrite': '/_site_foo/styleguide',
         },
         cookies: 'sc_site=foo; HttpOnly; Secure; SameSite=None',
@@ -392,7 +395,7 @@ describe('MultisiteMiddleware', () => {
         rewritePath: '/_site_foo/styleguide',
         siteName: 'foo',
         headers: {
-          ...finalRes.headers,
+          ...(finalRes as Response).headers,
           'x-sc-rewrite': '/_site_foo/styleguide',
         },
         cookies: 'sc_site=foo; HttpOnly; Secure; SameSite=None',
@@ -426,7 +429,7 @@ describe('MultisiteMiddleware', () => {
         rewritePath: '/_site_foo/styleguide',
         siteName: 'foo',
         headers: {
-          ...finalRes.headers,
+          ...(finalRes as Response).headers,
           'x-sc-rewrite': '/_site_foo/styleguide',
         },
         cookies: 'sc_site=foo; HttpOnly; Secure; SameSite=None',
@@ -460,7 +463,7 @@ describe('MultisiteMiddleware', () => {
         rewritePath: '/_site_foo/styleguide',
         siteName: 'foo',
         headers: {
-          ...finalRes.headers,
+          ...(finalRes as Response).headers,
           'x-sc-rewrite': '/_site_foo/styleguide',
         },
         cookies: 'sc_site=foo; HttpOnly; Secure; SameSite=None',
@@ -498,7 +501,7 @@ describe('MultisiteMiddleware', () => {
         rewritePath: '/_site_qsFoo/styleguide',
         siteName: 'qsFoo',
         headers: {
-          ...finalRes.headers,
+          ...(finalRes as Response).headers,
           'x-sc-rewrite': '/_site_qsFoo/styleguide',
         },
         cookies: 'sc_site=qsFoo; HttpOnly; Secure; SameSite=None',
@@ -537,7 +540,7 @@ describe('MultisiteMiddleware', () => {
         rewritePath: '/_site_qsFoo/styleguide',
         siteName: 'qsFoo',
         headers: {
-          ...finalRes.headers,
+          ...(finalRes as Response).headers,
           'x-sc-rewrite': '/_site_qsFoo/styleguide',
         },
         cookies: 'sc_site=qsFoo; HttpOnly; Secure; SameSite=None',
@@ -576,7 +579,7 @@ describe('MultisiteMiddleware', () => {
         rewritePath: '/_site_foobar/styleguide',
         siteName: 'foobar',
         headers: {
-          ...finalRes.headers,
+          ...(finalRes as Response).headers,
           'x-sc-rewrite': '/_site_foobar/styleguide',
         },
         cookies: 'sc_site=foobar; HttpOnly; Secure; SameSite=None',
@@ -613,7 +616,7 @@ describe('MultisiteMiddleware', () => {
         rewritePath: '/_site_foo/styleguide',
         siteName: 'foo',
         headers: {
-          ...finalRes.headers,
+          ...(finalRes as Response).headers,
           'x-sc-rewrite': '/_site_foo/styleguide',
         },
         cookies: 'sc_site=foo; HttpOnly; Secure; SameSite=None',
@@ -629,44 +632,36 @@ describe('MultisiteMiddleware', () => {
     const context = createContext();
     const res = createResponse();
 
-    let errorSpy: sinon.SinonSpy<[message?: any, ...optionalParams: any[]], void>;
-
-    before(() => {
-      errorSpy = spy(console, 'log');
-    });
-
-    beforeEach(() => {
-      errorSpy.resetHistory();
-    });
-
-    after(() => {
-      errorSpy.restore();
-    });
-
     it('should handle error', async () => {
-      const error = new Error('Custom error');
+      const errorSpy = sinon.stub(console, 'log');
 
-      class SampleSiteResolver extends SiteResolver {
-        constructor(sites: SiteInfo[]) {
-          super(sites);
+      try {
+        const error = new Error('Custom error');
+
+        class SampleSiteResolver extends SiteResolver {
+          constructor(sites: SiteInfo[]) {
+            super(sites);
+          }
+
+          getByHost = () => {
+            throw error;
+          };
         }
 
-        getByHost = () => {
-          throw error;
-        };
+        const middleware = new MultisiteMiddleware({ ...defaultConfig });
+        middleware['siteResolver'] = new SampleSiteResolver([]);
+
+        const mockNext = sinon.stub().returns(res);
+
+        const finalRes = await middleware.handle(context, mockNext);
+
+        expect(errorSpy.getCall(0).calledWith('Multisite middleware failed:')).to.be.true;
+        expect(errorSpy.getCall(1).calledWith(error)).to.be.true;
+
+        expect(finalRes).to.deep.equal(res);
+      } finally {
+        errorSpy.restore();
       }
-
-      const middleware = new MultisiteMiddleware({ ...defaultConfig });
-      middleware['siteResolver'] = new SampleSiteResolver([]);
-
-      const mockNext = sinon.stub().returns(res);
-
-      const finalRes = await middleware.handle(context, mockNext);
-
-      expect(errorSpy.getCall(0).calledWith('Multisite middleware failed:')).to.be.true;
-      expect(errorSpy.getCall(1).calledWith(error)).to.be.true;
-
-      expect(finalRes).to.deep.equal(res);
     });
   });
 });

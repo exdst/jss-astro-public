@@ -1,5 +1,5 @@
 import * as glob from 'glob';
-import { ComponentFile } from '@sitecore-content-sdk/core/tools';
+import { ComponentFile } from '@sitecore-content-sdk/content/tools';
 
 const componentNamePattern = /^[\/]*(.+[\/\\])*(.+)\.astro?$/;
 
@@ -16,6 +16,7 @@ const componentPathPattern = /^([\/]*.+[\/\\].+)\..+$/;
  * @param {string[]} paths paths to search
  * @param {string[]} [exclude] paths and glob patterns to exclude from final result
  * @param {boolean} [includeVariants] whether to include variant components
+ * @internal
  */
 export function getComponentList(
   paths: string[],

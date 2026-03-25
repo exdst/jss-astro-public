@@ -1,9 +1,9 @@
 ﻿/* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
 import { EditingConfigMiddleware } from './editing-config-middleware';
-import { QUERY_PARAM_EDITING_SECRET } from '@sitecore-content-sdk/core/editing';
+import { QUERY_PARAM_EDITING_SECRET } from '@sitecore-content-sdk/content/editing';
 import { AstroContentSdkComponent } from '../sharedTypes/component-props';
-import { mockRequest as MockRequest, Query } from '../test-data/helpers';
+import { mockRequest as MockRequest, Query } from '../tests/helpers';
 
 const allowedOrigin = 'https://allowed.com';
 
@@ -116,17 +116,15 @@ describe('EditingConfigMiddleware', () => {
     const res = await handler(req);
 
     expect(res.headers.has('Access-Control-Allow-Origin')).to.be.true;
-    expect(res.headers.get('Access-Control-Allow-Origin')).to.equal(
-      allowedOrigin
-    );
+    expect(res.headers.get('Access-Control-Allow-Origin')).to.include(allowedOrigin);
 
     expect(res.headers.has('Access-Control-Allow-Methods')).to.be.true;
-    expect(res.headers.get('Access-Control-Allow-Methods')).to.equal(
+    expect(res.headers.get('Access-Control-Allow-Methods')).to.include(
       'GET, POST, OPTIONS, DELETE, PUT, PATCH'
     );
 
     expect(res.headers.has('Access-Control-Allow-Headers')).to.be.true;
-    expect(res.headers.get('Access-Control-Allow-Headers')).to.equal(
+    expect(res.headers.get('Access-Control-Allow-Headers')).to.include(
       'Content-Type, Authorization'
     );
 

@@ -1,15 +1,12 @@
-import { Page } from '@sitecore-content-sdk/core/client';
+import { Page } from '@sitecore-content-sdk/content/client';
 import { AstroContentSdkComponent } from '../../sharedTypes/component-props';
-import { ComponentRendering, Field, Item, RouteData } from '@sitecore-content-sdk/core/layout';
+import { ComponentRendering, Field, Item, RouteData } from '@sitecore-content-sdk/content/layout';
 
-/** Provided for the component which represents rendering data */
-export type ComponentProps = {
-  [key: string]: unknown;
-  rendering: ComponentRendering;
-};
-
+/**
+ * Base Placeholder props
+ * @public
+ */
 export interface PlaceholderProps {
-  [key: string]: unknown;
   /** Name of the placeholder to render. */
   name: string;
   /** Rendering data to be used when rendering the placeholder. */
@@ -28,13 +25,7 @@ export interface PlaceholderProps {
   params?: {
     [name: string]: string;
   };
-  /**
-   * Modify final props of component (before render) provided by rendering data.
-   * Can be used in case when you need to insert additional data into the component.
-   * @param {ComponentProps} componentProps component props to be modified
-   * @returns {ComponentProps} modified or initial props
-   */
-  modifyComponentProps?: (componentProps: ComponentProps) => ComponentProps;
+
   /**
    * A component that is rendered in place of any components that are in this placeholder,
    * but do not have a definition in the componentMap (i.e. don't have an implementation)
@@ -55,7 +46,7 @@ export interface PlaceholderProps {
    * Page data.
    * This data is passed by the SitecoreProvider.
    */
-  page: Page;
+  page?: Page;
 
   /**
    * Render HTML or an Astro component when the placeholder contains no content components.
@@ -74,6 +65,24 @@ export interface PlaceholderProps {
    * Mutually exclusive with `render`.
    */
   renderEach?: string | AstroContentSdkComponent;
+
+  /**
+   * Modify final props of component (before render) provided by rendering data.
+   * Can be used in case when you need to insert additional data into the component.
+   * @param {ChildComponentProps} componentProps component props to be modified
+   * @returns {ChildComponentProps} modified or initial props
+   */
+  modifyComponentProps?: (componentProps: ChildComponentProps) => ChildComponentProps;
+}
+
+export interface ChildComponentProps {
+  fields: {
+    [name: string]: Field | Item | Item[];
+  };
+  params: {
+    [name: string]: string;
+  };
+  rendering: ComponentRendering;
 }
 
 export interface ComponentForRendering {

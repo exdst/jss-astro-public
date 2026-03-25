@@ -4,8 +4,11 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import { SitemapMiddleware } from './sitemap-middleware';
-import { SitecoreClient } from '@sitecore-content-sdk/core/client';
-import { mockRequest } from '../test-data/helpers';
+import { SitecoreClient } from '@sitecore-content-sdk/content/client';
+import { constants } from '@sitecore-content-sdk/core';
+import { mockRequest } from '../tests/helpers';
+
+const { ERROR_MESSAGES } = constants;
 
 chai.use(sinonChai);
 
@@ -123,6 +126,35 @@ describe('SitemapMiddleware', () => {
       });
     });
 
+    it('should use x-forwarded-host header when present', async () => {
+      req = mockRequest({
+        headers: {
+          'x-forwarded-host': 'example.com',
+          host: 'localhost:3000',
+        },
+      });
+
+      await middleware.getHandler()(req as Request);
+
+      expect(siteResolverStub.getByHost).to.have.been.calledWith('example.com');
+    });
+
+    it('should use empty string when both x-forwarded-host and host headers are missing', async () => {
+      req.headers?.delete('host');
+      const xmlContent = '<sitemapindex>...</sitemapindex>';
+
+      siteResolverStub.getByHost.withArgs('').returns(sites[1]);
+
+      sitecoreClientStub.getSiteMap.resolves(xmlContent);
+
+      await middleware.getHandler()(req as Request);
+
+      expect(sitecoreClientStub.getSiteMap.firstCall.args[0]).to.deep.include({
+        reqHost: '',
+        reqProtocol: 'https',
+      });
+    });
+
     it('should redirect to 404 when REDIRECT_404 error is thrown', async () => {
       const error = new Error('REDIRECT_404');
 
@@ -146,7 +178,7 @@ describe('SitemapMiddleware', () => {
 
       const body = await res.text();
       expect(res.status).to.equal(500);
-      expect(body).to.equal('Internal Server Error');
+      expect(body).to.equal(`Internal Server Error. ${ERROR_MESSAGES.CONTACT_SUPPORT}`);
     });
   });
 });

@@ -1,32 +1,34 @@
+import { StaticPath } from '@sitecore-content-sdk/content';
 import {
   FetchOptions,
   Page,
   PageOptions,
   SitecoreClient,
   SitecoreClientInit,
-} from '@sitecore-content-sdk/core/client';
-import {
-  AstroContentSdkComponent,
-  ComponentMap,
-  ComponentPropsCollection,
-  ComponentPropsError,
-  PreviewData,
-} from '../sharedTypes/component-props';
-import { LayoutServiceData } from '@sitecore-content-sdk/core/layout';
+} from '@sitecore-content-sdk/content/client';
+import { PreviewData } from '../sharedTypes/component-props';
 import { ComponentPropsService } from '../services/component-props-service';
-import { EditingPreviewData } from '@sitecore-content-sdk/core/editing';
-import {
-  getSiteRewriteData,
-  normalizeSiteRewrite,
-} from '@sitecore-content-sdk/core/site';
+import { EditingPreviewData } from '@sitecore-content-sdk/content/editing';
+import { getSiteRewriteData, normalizeSiteRewrite } from '@sitecore-content-sdk/content/site';
 import {
   getPersonalizedRewriteData,
   normalizePersonalizedRewrite,
-} from '@sitecore-content-sdk/core/personalize';
+} from '@sitecore-content-sdk/content/personalize';
+import { SitecoreConfig } from '../config';
 
+/**
+ * Init options for Sitecore Client that allows you to override services too
+ * @public
+ */
+export type SitecoreAstroClientInit = SitecoreClientInit & Pick<SitecoreConfig, 'multisite'>;
+
+/**
+ * The SitecoreAstroClient class extends the SitecoreClient class to provide additional functionality for Astro.
+ * @public
+ */
 export class SitecoreAstroClient extends SitecoreClient {
   protected componentPropsService: ComponentPropsService;
-  constructor(protected initOptions: SitecoreClientInit) {
+  constructor(protected initOptions: SitecoreAstroClientInit) {
     super(initOptions);
     this.componentPropsService = this.getComponentPropsService();
   }
@@ -38,11 +40,8 @@ export class SitecoreAstroClient extends SitecoreClient {
    */
   getSiteNameFromPath(path: string | string[]) {
     const resolvedPath = super.parsePath(path);
-    // Get site name (from path rewritten in middleware)
-    const siteData = getSiteRewriteData(
-      resolvedPath,
-      this.initOptions.defaultSite
-    );
+    // Get site name (from path rewritten in proxy)
+    const siteData = getSiteRewriteData(resolvedPath, this.initOptions.defaultSite);
 
     return siteData.siteName;
   }
@@ -65,8 +64,7 @@ export class SitecoreAstroClient extends SitecoreClient {
     const resolvedPath = this.parsePath(path);
     // Get variant(s) for personalization (from path), must ensure path is of type string
     const personalizeData =
-      pageOptions.personalize ||
-      getPersonalizedRewriteData(super.parsePath(path));
+      pageOptions.personalize || getPersonalizedRewriteData(super.parsePath(path));
     const site = pageOptions.site || this.getSiteNameFromPath(path);
     const page = await super.getPage(
       resolvedPath,
@@ -86,50 +84,69 @@ export class SitecoreAstroClient extends SitecoreClient {
    * @param {PreviewData} previewData - The editing preview data for metadata mode.
    * @param {FetchOptions} [fetchOptions] Additional fetch fetch options to override GraphQL requests (like retries and fetch)
    */
-  async getPreview(
-    previewData: PreviewData,
-    fetchOptions?: FetchOptions
-  ): Promise<Page | null> {
+  async getPreview(previewData: PreviewData, fetchOptions?: FetchOptions): Promise<Page | null> {
     return super.getPreview(previewData as EditingPreviewData, fetchOptions);
   }
 
   /**
-   * Parses components from nextjs component map and layoutData, executes getServerProps/getStaticProps methods
-   * and returns resulting props from components
-   * @param {LayoutServiceData} layoutData layout data to parse compnents from
-   * @param {ComponentMap<AstroContentSdkComponent>} components component map to get props for
-   * @returns {ComponentPropsCollection} component props
+   * Retrieves the static paths for pages based on the given languages.
+   * @param {string[]} sites - An array of site names to fetch routes for.
+   * @param {string[]} [languages] - An optional array of language codes to generate paths for.
+   * @param {FetchOptions} [fetchOptions] - Additional fetch options.
+   * @returns {Promise<StaticPath[]>} A promise that resolves to an array of static paths.
    */
-  async getComponentData(
-    layoutData: LayoutServiceData,
-    // context: GetServerSidePropsContext | GetStaticPropsContext,
-    components: ComponentMap<AstroContentSdkComponent>
-  ): Promise<ComponentPropsCollection> {
-    let componentProps: ComponentPropsCollection = {};
-    if (!layoutData.sitecore.route) return componentProps;
-    // Retrieve component props using side-effects defined on components level
-    componentProps = await this.componentPropsService.fetchComponentProps({
-      layoutData: layoutData,
-      // context,
-      components,
+  async getPagePaths(
+    sites: string[],
+    languages?: string[],
+    fetchOptions?: FetchOptions
+  ): Promise<StaticPath[]> {
+    const staticPaths = await super.getPagePaths(sites, languages, fetchOptions);
+
+    // remove _site_ segments (Astro doesn't support multisite in SSG yet)
+    staticPaths.map((path) => {
+      path.params.path = normalizeSiteRewrite(path.params.path.join('/')).split('/');
     });
 
-    const errors = Object.keys(componentProps)
-      .map((id) => {
-        const component = componentProps[id] as ComponentPropsError;
-
-        return component.error
-          ? `\nUnable to get component props for ${component.componentName} (${id}): ${component.error}`
-          : '';
-      })
-      .join('');
-
-    if (errors.length) {
-      throw new Error(errors);
-    }
-
-    return componentProps;
+    return staticPaths;
   }
+
+  // /**
+  //  * Parses components from component map and layoutData, executes getServerProps/getStaticProps methods
+  //  * and returns resulting props from components
+  //  * @param {LayoutServiceData} layoutData layout data to parse compnents from
+  //  * @param {ComponentMap<AstroContentSdkComponent>} components component map to get props for
+  //  * @returns {ComponentPropsCollection} component props
+  //  */
+  // async getComponentData(
+  //   layoutData: LayoutServiceData,
+  //   // context: GetServerSidePropsContext | GetStaticPropsContext,
+  //   components: ComponentMap<AstroContentSdkComponent>
+  // ): Promise<ComponentPropsCollection> {
+  //   let componentProps: ComponentPropsCollection = {};
+  //   if (!layoutData.sitecore.route) return componentProps;
+  //   // Retrieve component props using side-effects defined on components level
+  //   componentProps = await this.componentPropsService.fetchComponentProps({
+  //     layoutData: layoutData,
+  //     // context,
+  //     components,
+  //   });
+
+  //   const errors = Object.keys(componentProps)
+  //     .map((id) => {
+  //       const component = componentProps[id] as ComponentPropsError;
+
+  //       return component.error
+  //         ? `\nUnable to get component props for ${component.componentName} (${id}): ${component.error}`
+  //         : '';
+  //     })
+  //     .join('');
+
+  //   if (errors.length) {
+  //     throw new Error(errors);
+  //   }
+
+  //   return componentProps;
+  // }
 
   protected getComponentPropsService(): ComponentPropsService {
     return new ComponentPropsService();

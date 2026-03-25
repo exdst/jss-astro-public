@@ -3,9 +3,12 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import { RobotsMiddleware } from './robots-middleware';
-import { SitecoreClient } from '@sitecore-content-sdk/core/client';
-import { SiteInfo } from '@sitecore-content-sdk/core/site';
-import { mockRequest } from '../test-data/helpers';
+import { SitecoreClient } from '@sitecore-content-sdk/content/client';
+import { SiteInfo } from '@sitecore-content-sdk/content/site';
+import { mockRequest } from '../tests/helpers';
+import { constants } from '@sitecore-content-sdk/core';
+
+const { ERROR_MESSAGES } = constants;
 
 chai.use(sinonChai);
 
@@ -94,7 +97,7 @@ describe('RobotsMiddleware', () => {
 
     const body = await res.text();
     expect(res.status).to.equal(500);
-    expect(body).to.deep.equal('Internal Server Error');
+    expect(body).to.deep.equal(`Internal Server Error. ${ERROR_MESSAGES.CONTACT_SUPPORT}`);
   });
 
   it('should use "localhost" as fallback when host header is missing', async () => {
@@ -109,5 +112,18 @@ describe('RobotsMiddleware', () => {
     const body = await res.text();
     expect(res.status).to.equal(200);
     expect(body).to.deep.equal('User-agent: *\nDisallow: /');
+  });
+
+  it('should use x-forwarded-host header when present', async () => {
+    req = mockRequest({
+      headers: {
+        'x-forwarded-host': 'proxy.forwarded.com',
+        host: 'localhost:3000',
+      },
+    });
+
+    await middleware.getHandler()(req as Request);
+
+    expect(siteResolverStub.getByHost).to.have.been.calledWith('proxy.forwarded.com');
   });
 });

@@ -1,8 +1,5 @@
 import chalk from 'chalk';
-import {
-  ScaffoldTemplate,
-  ComponentTemplateType,
-} from '@sitecore-content-sdk/core/config';
+import { ScaffoldTemplate, ComponentTemplateType } from '@sitecore-content-sdk/content/config';
 import { COMPONENT_FILE_EXTENSION } from './constants';
 
 /**
@@ -13,7 +10,7 @@ import { COMPONENT_FILE_EXTENSION } from './constants';
 const generateTemplate = (componentName: string): string => {
   return `
   ---
-  import { Field } from "@astro-sitecore-jss/astro-content-sdk";
+  import { Field } from "@exdst-sitecore-content-sdk/astro";
   
   interface Fields {
     Title: Field<string>;
@@ -47,9 +44,7 @@ const getNextSteps = (componentOutputPath: string): string[] => {
   const nextSteps = [];
 
   if (componentOutputPath) {
-    nextSteps.push(
-      `* Implement the Astro component in ${chalk.green(componentOutputPath)}`
-    );
+    nextSteps.push(`* Implement the Astro component in ${chalk.green(componentOutputPath)}`);
   }
 
   return nextSteps;

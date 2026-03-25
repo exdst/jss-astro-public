@@ -4,16 +4,13 @@ import {
   SitecoreCliConfigInput,
   SitecoreCliConfig,
   ComponentTemplateType,
-} from '@sitecore-content-sdk/core/config';
+} from '@sitecore-content-sdk/content/config';
 import chalk from 'chalk';
 
 describe('defineCliConfig', () => {
   const validateDefaultTemplates = (result: SitecoreCliConfig) => {
-    expect(result.scaffold.templates[0].name).to.equal(
-      ComponentTemplateType.DEFAULT
-    );
-    const defaultTemplate =
-      result.scaffold.templates[0].generateTemplate('ComponentName');
+    expect(result.scaffold.templates[0].name).to.equal(ComponentTemplateType.DEFAULT);
+    const defaultTemplate = result.scaffold.templates[0].generateTemplate('ComponentName');
     // expect(defaultTemplate).to.contain(
     //   // eslint-disable-next-line quotes
     //   `import { ComponentParams, ComponentRendering } from '@sitecore-content-sdk/nextjs';`
@@ -21,9 +18,7 @@ describe('defineCliConfig', () => {
     expect(defaultTemplate).to.contain('ComponentName');
     if (result.scaffold.templates[0].getNextSteps) {
       const componentpath = 'src/components/ComponentName.astro';
-      expect(
-        result.scaffold.templates[0].getNextSteps(componentpath)[0]
-      ).to.contain(
+      expect(result.scaffold.templates[0].getNextSteps(componentpath)[0]).to.contain(
         `* Implement the Astro component in ${chalk.green(componentpath)}`
       );
     }
@@ -59,9 +54,7 @@ describe('defineCliConfig', () => {
         ],
       },
       scaffold: {
-        templates: [
-          { name: 'existing template', generateTemplate: () => 'test' },
-        ],
+        templates: [{ name: 'existing template', generateTemplate: () => 'test' }],
       },
     };
 

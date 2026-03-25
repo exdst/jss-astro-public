@@ -2,16 +2,24 @@
 import {
   FieldMetadata,
   isFieldValueEmpty,
-} from '@sitecore-content-sdk/core/layout';
+} from '@sitecore-content-sdk/content/layout';
 import { EditableFieldProps } from './sharedTypes';
 import WithFieldMetadata from '../enhancers/WithFieldMetadata.astro';
 import WithEmptyFieldEditingComponent from '../enhancers/WithEmptyFieldEditingComponent.astro';
 import DefaultEmptyFieldEditingComponentText from './DefaultEmptyFieldEditingComponentText.astro';
 
+/**
+ * The interface for the Text field.
+ * @public
+ */
 export interface TextField extends FieldMetadata {
   value?: string | number;
 }
 
+/**
+ * The interface for the Text component props.
+ * @public
+ */
 export interface TextProps extends EditableFieldProps {
   [htmlAttributes: string]: unknown;
   /** The text field data. */
@@ -87,8 +95,12 @@ const attrs: {
       >
         {!isEmptyField && (
           <>
-            {(tag || !encode) && <Tag {...attrs} set:html={output} />}
-            {(!tag || encode) && <Fragment {...attrs} set:html={output} />}
+            {(field?.metadata || tag || !encode) && (
+              <Tag {...attrs} set:html={output} />
+            )}
+            {!field?.metadata && (!tag || encode) && (
+              <Fragment {...attrs} set:html={output} />
+            )}
           </>
         )}
       </WithEmptyFieldEditingComponent>

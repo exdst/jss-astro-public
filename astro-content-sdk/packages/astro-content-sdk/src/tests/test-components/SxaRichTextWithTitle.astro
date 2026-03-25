@@ -1,0 +1,8 @@
+---
+const props = Astro.props;
+---
+
+<div class={`rendering-variant ${props.params.styles}`}>
+  <div class="title">{props.fields.Title.value}</div>
+  <span class="text">{props.fields.Text.value}</span>
+</div>

@@ -1,0 +1,23 @@
+---
+import { Field } from '@sitecore-content-sdk/content/layout';
+import SxaRichTextDefault from './SxaRichTextDefault.astro';
+import SxaRichTextWithTitle from './SxaRichTextWithTitle.astro';
+
+interface Fields {
+  Text: Field<string>;
+  Title: Field<string>;
+}
+
+type RichTextProps = {
+  params: { [key: string]: string };
+  fields: Fields;
+};
+
+const props = Astro.props as RichTextProps;
+const variantName = props.params.FieldNames ?? 'Default';
+---
+
+<>
+  {variantName === 'Default' && <SxaRichTextDefault {...props} />}
+  {variantName === 'WithTitle' && <SxaRichTextWithTitle {...props} />}
+</>

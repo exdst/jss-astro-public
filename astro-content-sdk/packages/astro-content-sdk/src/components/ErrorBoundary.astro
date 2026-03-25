@@ -1,8 +1,9 @@
 ﻿---
-import { Page } from '@sitecore-content-sdk/core/client';
-import { ComponentRendering } from '@sitecore-content-sdk/core/layout';
+import { Page } from '@sitecore-content-sdk/content/client';
+import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
 import { AstroContentSdkComponent } from '../sharedTypes/component-props';
 import { useSitecore } from '../context';
+import ErrorComponent from './ErrorComponent.astro';
 
 export type ErrorBoundaryProps = {
   page: Page;
@@ -29,14 +30,14 @@ const showErrorDetails = (): boolean => {
   );
 };
 
-let state: { error?: Error } = {};
+let state: { error: Error | null } = { error: null };
 
 let html;
 
 try {
   html = await Astro.slots.render('default');
 } catch (e) {
-  state = { error: e };
+  state = { error: e as Error };
   if (showErrorDetails()) {
     console.error(
       `An error occurred in component ${props.rendering?.componentName} (${props.rendering?.uid}): `
@@ -56,21 +57,19 @@ try {
   {
     state.error && !props.errorComponent && showErrorDetails() && (
       <div>
-        <div class="sc-content-sdk-placeholder-error">
+        <ErrorComponent>
           A rendering error occurred in component{' '}
           <em>{props.rendering?.componentName}</em>
           <br />
           Error: <em>{state.error.message || JSON.stringify(state.error)}</em>
-        </div>
+        </ErrorComponent>
       </div>
     )
   }
   {
     state.error && !props.errorComponent && !showErrorDetails() && (
       <div>
-        <div class="sc-content-sdk-placeholder-error">
-          {defaultErrorMessage}
-        </div>
+        <ErrorComponent message={defaultErrorMessage} />
       </div>
     )
   }

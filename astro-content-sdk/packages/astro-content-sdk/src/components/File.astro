@@ -1,5 +1,5 @@
 ---
-import { isFieldValueEmpty } from '@sitecore-content-sdk/core/layout';
+import { isFieldValueEmpty } from '@sitecore-content-sdk/content/layout';
 
 export interface FileFieldValue {
   [propName: string]: unknown;
@@ -8,6 +8,10 @@ export interface FileFieldValue {
   displayName?: string;
 }
 
+/**
+ * The interface for the File field.
+ * @public
+ */
 export interface FileField {
   value: FileFieldValue;
 }

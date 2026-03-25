@@ -3,10 +3,11 @@ import {
   RouteData,
   isDynamicPlaceholder,
   getDynamicPlaceholderPattern,
-} from '@sitecore-content-sdk/core/layout';
+} from '@sitecore-content-sdk/content/layout';
+import { ChildComponentProps, PlaceholderProps } from './models';
 
 /**
- * Get the renderings for the specified placeholder from the rendering data.
+ * Get the renderings for the specified placeholder from the rendering layout data.
  * @param {ComponentRendering | RouteData } rendering rendering data
  * @param {string} name placeholder name
  * @param {boolean} isEditing whether components should be rendered in editing mode
@@ -26,19 +27,17 @@ export const getPlaceholderRenderings = (
    * For Metadata EditMode, we need to keep the raw placeholder name in place.
    */
   if (rendering?.placeholders) {
-    Object.keys(rendering.placeholders).forEach((placeholder) => {
-      const patternPlaceholder = isDynamicPlaceholder(placeholder)
-        ? getDynamicPlaceholderPattern(placeholder)
+    Object.entries(rendering.placeholders).forEach(([key, value]) => {
+      const patternPlaceholder = isDynamicPlaceholder(key)
+        ? getDynamicPlaceholderPattern(key)
         : null;
 
       if (patternPlaceholder && patternPlaceholder.test(phName)) {
         if (isEditing) {
-          phName = placeholder;
+          phName = key;
         } else {
-          // @ts-ignore
-          rendering.placeholders[phName] = rendering.placeholders[placeholder];
-          // @ts-ignore
-          delete rendering.placeholders[placeholder];
+          rendering.placeholders![phName] = value;
+          delete rendering.placeholders![key];
         }
       }
     });
@@ -68,7 +67,7 @@ export const getPlaceholderRenderings = (
  * @returns {object} converted SXA params
  */
 export const getSXAParams = (rendering: ComponentRendering) => {
-  if (!rendering.params) return {};
+  if (!rendering.params) return { styles: '' };
 
   const { GridParameters, Styles } = rendering.params;
 
@@ -78,3 +77,26 @@ export const getSXAParams = (rendering: ComponentRendering) => {
     }
   );
 };
+
+/**
+ * Merge specific placeholder props with component field and params content props.
+ * @param {PlaceholderProps} placeholderProps placeholder props
+ * @param {ComponentRendering} componentRendering component rendering
+ * @returns {ComponentProps} merged props
+ */
+export function getChildComponentProps<T extends PlaceholderProps>(
+  placeholderProps: T,
+  componentRendering: ComponentRendering
+): ChildComponentProps {
+  const fields = { ...(placeholderProps.fields || {}), ...(componentRendering.fields || {}) };
+  const params = { ...(placeholderProps.params || {}), ...(componentRendering.params || {}) };
+  return {
+    fields,
+    params: {
+      ...params,
+      // Provide SXA styles
+      ...getSXAParams(componentRendering),
+    },
+    rendering: componentRendering,
+  };
+}

@@ -1,8 +1,12 @@
-import { SitecoreClient } from '@sitecore-content-sdk/core/client';
+import { SitecoreClient } from '@sitecore-content-sdk/content/client';
+import { constants } from '@sitecore-content-sdk/core';
 import { SiteInfo, SiteResolver } from '../site';
+
+const { ERROR_MESSAGES } = constants;
 
 /**
  * Middleware for handling robots.txt requests.
+ * @public
  */
 export class RobotsMiddleware {
   private client: SitecoreClient;
@@ -21,7 +25,10 @@ export class RobotsMiddleware {
     const _res = new Response();
     _res.headers.append('content-type', 'text/plain');
 
-    const hostName = _req.headers.get('host')?.split(':')[0] || 'localhost';
+    const hostName =
+      _req.headers.get('x-forwarded-host') ||
+      _req.headers.get('host')?.split(':')[0] ||
+      'localhost';
     const site = this.siteResolver.getByHost(hostName);
 
     try {
@@ -38,7 +45,7 @@ export class RobotsMiddleware {
         headers: _res.headers,
       });
     } catch {
-      return new Response('Internal Server Error', {
+      return new Response(`Internal Server Error. ${ERROR_MESSAGES.CONTACT_SUPPORT}`, {
         status: 500,
         headers: _res.headers,
       });
