@@ -2,21 +2,6 @@
   "name": "@exdst-sitecore-content-sdk/astro",
   "version": "0.0.17",
   "type": "module",
-  "exports": {
-    ".": "./src/index.ts",
-    "./*": "./src/*",
-    "./context": "./src/context.ts",
-    "./editing": "./src/editing/index.ts",
-    "./utils": "./src/utils/index.ts",
-    "./client": "./src/client/index.ts",
-    "./config": "./src/config/index.ts",
-    "./components/Placeholder": "./src/components/Placeholder/index.ts"
-  },
-  "files": [
-    "src",
-    "index.ts",
-    "readme.md"
-  ],
   "sideEffects": false,
   "publishConfig": {
     "access": "public",
@@ -24,7 +9,6 @@
   },
   "scripts": {
     "typecheck": "tsc -p tsconfig.json",
-    "copy:astro": "ts-node ./src/scripts/copy-astro-components.ts",
     "lint": "eslint \"./src/**/*.ts\"",
     "test": "npm run test:unit & npm run test:components",
     "test:unit": "mocha \"./src/**/*.test.ts\" --ignore \"src/**/*.astro.test.ts\"",
@@ -99,5 +83,24 @@
     "glob": "^11.0.2",
     "nanostores": "^0.10.3"
   },
-  "description": ""
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*",
+    "./client": "./src/client/index.ts",
+    "./config": "./src/config/index.ts",
+    "./config-cli": "./src/config-cli/index.ts",
+    "./context": "./src/context.ts",
+    "./editing": "./src/editing/index.ts",
+    "./middleware": "./src/middleware/index.ts",
+    "./site": "./src/site/index.ts",
+    "./tools": "./src/tools/index.ts",
+    "./utils": "./src/utils/index.ts",
+    "./components/Placeholder": "./src/components/Placeholder/index.ts"
+  },
+  "description": "",
+  "files": [
+    "src",
+    "index.ts",
+    "readme.md"
+  ]
 }
