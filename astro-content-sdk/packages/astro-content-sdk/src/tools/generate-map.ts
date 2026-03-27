@@ -65,7 +65,7 @@ const buildAstroMapContent: ComponentMapTemplate = (components, componentImports
   });
 
   return `//@ts-nocheck
-import { AstroContentSdkComponent } from '@exdst-sitecore-content-sdk/astro';
+import type { AstroContentSdkComponent } from '@exdst-sitecore-content-sdk/astro';
 
 // Components imported from the app itself
 ${wildcardImports.join('\n')}

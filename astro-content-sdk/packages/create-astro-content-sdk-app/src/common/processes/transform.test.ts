@@ -57,6 +57,13 @@ describe('transform', () => {
 
       await transformModule.transform(templatePath, args);
 
+      expect(globSyncStub).to.have.been.calledOnceWith('**/*', {
+        cwd: templatePath,
+        dot: true,
+        nodir: true,
+        ignore: ['**/node_modules/**', '**/.astro/**', '**/dist/**'],
+      });
+
       expect(ejsRenderFileStub).to.have.been.calledOnceWith(path.join(templatePath, file), {
         ...args,
         version: pkgVersion,

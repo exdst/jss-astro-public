@@ -74,6 +74,7 @@ export const transform = async (
     cwd: templatePath,
     dot: true,
     nodir: true,
+    ignore: ['**/node_modules/**', '**/.astro/**', '**/dist/**'],
   });
 
   for (const file of files) {

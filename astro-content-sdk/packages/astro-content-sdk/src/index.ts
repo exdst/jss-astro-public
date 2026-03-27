@@ -16,4 +16,4 @@ export {
 
 export { CdpHelper } from '@sitecore-content-sdk/content/personalize';
 
-export { AstroContentSdkComponent, ComponentMap } from './sharedTypes/component-props';
+export type { AstroContentSdkComponent, ComponentMap } from './sharedTypes/component-props';
