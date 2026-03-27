@@ -2,13 +2,12 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "target": "ES2017",
-    "module": "CommonJS",
+    "module": "ESNext",
     "jsx": "react",
     "skipLibCheck": true,
-    "outDir": "dist/cjs",
     "types": ["node"],
-    "typeRoots": ["node_modules/@types"],
-    "declarationDir": "./types"
+    "typeRoots": ["node_modules/@types", "../../node_modules/@types"],
+    "noEmit": true
   },
   "exclude": [
     "node_modules",

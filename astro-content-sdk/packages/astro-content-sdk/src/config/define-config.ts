@@ -25,7 +25,7 @@ export const getAstroFallbackConfig = (config?: SitecoreConfigInput): SitecoreCo
         clientContextId:
           config?.api?.edge?.clientContextId || process.env.PUBLIC_SITECORE_EDGE_CONTEXT_ID,
         edgeUrl: resolveEdgeUrl(
-          config?.api?.edge?.edgeUrl ?? process.env[PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME_ENV]
+          config?.api?.edge?.edgeUrl ?? process.env.PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME_ENV
         ),
       },
       local: {
