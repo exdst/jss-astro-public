@@ -1,0 +1,118 @@
+---
+<% if (prerender === 'SSG') { -%>
+export const prerender = true;
+
+import type { GetStaticPaths } from "astro";
+<% } -%>
+<% if (prerender === 'SSG') { -%>
+import { type StaticPath } from "@exdst-sitecore-content-sdk/astro";
+import { SITE_PREFIX } from "@exdst-sitecore-content-sdk/astro/site";
+<% } -%>
+import {
+  updateSitecoreContext,
+  updateSitecoreDictionary,
+} from "@exdst-sitecore-content-sdk/astro/context";
+import {
+  isDesignLibraryPreviewData,
+  <% if (prerender === 'SSR') { -%>
+  PreviewCookies
+  <% } -%>
+} from "@exdst-sitecore-content-sdk/astro/editing";
+import { extractPath, removeLanguageFromPath } from "@exdst-sitecore-content-sdk/astro/utils";
+import client from "@/lib/sitecore-client";
+import Layout from "@/Layout.astro";
+import components from ".sitecore/component-map";
+import config from "sitecore.config";
+<% if (prerender === 'SSG') { -%>
+import sites from ".sitecore/sites.json";
+<% } -%>
+import languages from "lib/languages";
+import NotFound from "@/NotFound.astro";
+
+let path = extractPath(Astro.params);
+
+// Remove language segment from path
+path = removeLanguageFromPath(path, languages);
+
+<% if (prerender === 'SSG') { -%>
+  const site = import.meta.env.SITE_NAME;
+  path = `${SITE_PREFIX}${site}/${path}`;
+<% } -%>
+let page;
+
+
+<% if (prerender === 'SSR') { -%>
+  const previewDataCookies = Astro.cookies.get(PreviewCookies.PREVIEW_DATA);
+  const previewData = previewDataCookies ? JSON.parse(previewDataCookies.value) : "";
+
+  const context = {
+    preview: !!previewData,
+    previewData: previewData,
+  };
+
+<% } else if (prerender === 'SSG') { -%>
+  const context = {
+    preview: false,
+    previewData: undefined
+  };
+<% } -%>
+
+if (context.preview && isDesignLibraryPreviewData(context.previewData)) {
+  page = await client.getDesignLibraryData(context.previewData);
+} else {
+  page = context.preview
+    ? await client.getPreview(context.previewData)
+    : await client.getPage(path, {
+        locale: Astro.props.locale || Astro.currentLocale,
+      });
+}
+
+if (page) {
+  const dictionary = await client.getDictionary({
+    site: page.siteName,
+    locale: page.locale,
+  });
+
+  updateSitecoreContext({
+    page,
+    api: config.api,
+    componentMap: components,
+  });
+
+  updateSitecoreDictionary({
+    dictionary,
+  });
+}
+
+<% if (prerender === 'SSG') { -%>
+// This function gets called at build and export time to determine
+// pages for SSG ("paths", as tokenized array).
+export const getStaticPaths = (async () => {
+  let paths: StaticPath[] = [];
+
+  if (process.env.NODE_ENV !== "development" && config.generateStaticPaths) {
+    try {
+      const siteName = import.meta.env.SITE_NAME;
+      const site = sites.find((s) => s.name === siteName) || sites[0];
+      paths = await client.getPagePaths([site.name], languages);
+    } catch (error) {
+      console.log("Error occurred while fetching static paths");
+      console.log(error);
+    }
+  }
+
+  return paths.map((p) => {
+    const path = p.params.path.join("/");
+    return {
+      params: { path: `${p.locale}/${path}` },
+      props: { locale: p.locale },
+    };
+  });
+}) satisfies GetStaticPaths;
+<% } -%>
+---
+
+<>
+  {page && <Layout page={page} />}
+  {!page && <NotFound />}
+</>

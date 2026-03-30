@@ -1,0 +1,77 @@
+---
+/**
+ * The Bootstrap component is the entry point for performing any initialization logic
+ * that needs to happen early in the application's lifecycle.
+ */
+
+import { type Page } from '@exdst-sitecore-content-sdk/astro';
+import config from 'sitecore.config';
+
+const page = Astro.props.page as Page;
+
+if (!page) {
+  return;
+}
+
+const mode = page.mode;
+
+if (process.env.NODE_ENV === 'development') {
+  console.debug('Browser Events SDK is not initialized in development environment');
+  return;
+} else if (!mode.isNormal) {
+  console.debug('Browser Events SDK is not initialized in edit and preview modes');
+  return;
+}
+
+if (!config.api.edge?.clientContextId) {
+  console.error('Client Edge API settings missing from configuration');
+  return;
+}
+---
+
+<astro-bootstrap
+  data-sitecore-edge-url={config.api.edge.edgeUrl}
+  data-sitecore-edge-context-id={config.api.edge.clientContextId}
+  data-site-name={page.siteName || config.defaultSite}
+>
+</astro-bootstrap>
+
+<script>
+  //******************************************************//
+  //***************Cloud SDK initialization***************//
+  //******************************************************//
+  import { initContentSdk } from '@exdst-sitecore-content-sdk/astro';
+  import { eventsPlugin } from '@sitecore-content-sdk/events';
+  import { analyticsBrowserAdapter, analyticsPlugin } from '@sitecore-content-sdk/analytics-core';
+
+  class Bootstrap extends HTMLElement {
+    connectedCallback() {
+      const sitecoreEdgeContextId = this.dataset.sitecoreEdgeContextId || '';
+
+      if (!sitecoreEdgeContextId || sitecoreEdgeContextId == 'undefined') return;
+
+      const sitecoreEdgeUrl = this.dataset.sitecoreEdgeUrl || '';
+      const siteName = this.dataset.siteName || '';
+
+      initContentSdk({
+        config: {
+          contextId: sitecoreEdgeContextId,
+          edgeUrl: sitecoreEdgeUrl,
+          siteName: siteName,
+        },
+        plugins: [
+          analyticsPlugin({
+            options: {
+              enableCookie: true,
+              cookieDomain: window.location.hostname.replace(/^www\./, ''),
+            },
+            adapter: analyticsBrowserAdapter(),
+          }),
+          eventsPlugin(),
+        ],
+      });
+    }
+  }
+
+  customElements.define('astro-bootstrap', Bootstrap);
+</script>

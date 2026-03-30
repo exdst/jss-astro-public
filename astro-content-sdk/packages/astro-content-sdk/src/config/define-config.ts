@@ -6,9 +6,6 @@ import {
 } from '@sitecore-content-sdk/content/config';
 import { resolveEdgeUrl } from '@sitecore-content-sdk/core/tools';
 
-/** Env var for Edge hostname; exposed to the browser so client code can use it. */
-const PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME_ENV = 'PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME';
-
 /**
  * Provides default Astro initial values from env variables for SitecoreConfig
  * @param {SitecoreConfigInput} config optional override values to be written over default config settings
@@ -25,7 +22,7 @@ export const getAstroFallbackConfig = (config?: SitecoreConfigInput): SitecoreCo
         clientContextId:
           config?.api?.edge?.clientContextId || process.env.PUBLIC_SITECORE_EDGE_CONTEXT_ID,
         edgeUrl: resolveEdgeUrl(
-          config?.api?.edge?.edgeUrl ?? process.env.PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME_ENV
+          config?.api?.edge?.edgeUrl ?? process.env.PUBLIC_SITECORE_EDGE_PLATFORM_HOSTNAME
         ),
       },
       local: {

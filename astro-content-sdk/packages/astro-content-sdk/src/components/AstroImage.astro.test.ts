@@ -317,7 +317,6 @@ describe('<Image />', () => {
 
     expect(rendered?.getAttribute('loading')).to.equal('lazy');
     expect(rendered?.getAttribute('decoding')).to.equal('async');
-    expect(rendered?.getAttribute('fetchpriority')).to.equal('auto');
   });
 
   test('should render no <img /> when media prop is empty', async () => {

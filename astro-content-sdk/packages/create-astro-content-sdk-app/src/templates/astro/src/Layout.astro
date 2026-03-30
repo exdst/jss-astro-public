@@ -1,0 +1,57 @@
+---
+import { type Field, type Page } from '@exdst-sitecore-content-sdk/astro';
+import Placeholder from '@exdst-sitecore-content-sdk/astro/components/Placeholder/Placeholder.astro';
+import Bootstrap from '@/Bootstrap.astro';
+import Scripts from '@/Scripts.astro';
+import SitecoreStyles from '@/components/content-sdk/SitecoreStyles.astro';
+
+interface LayoutProps {
+  page: Page;
+}
+
+interface RouteFields {
+  [key: string]: unknown;
+  Title?: Field;
+}
+
+const { page } = Astro.props as LayoutProps;
+const { layout, mode } = page;
+const { route, context } = layout.sitecore;
+const fields = route?.fields as RouteFields;
+const mainClassPageEditing = mode.isEditing ? 'editing-mode' : 'prod-mode';
+
+const theme = context.theme as string;
+const language = context.language || 'en';
+---
+
+<!doctype html>
+<html lang=`${language}`>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{fields?.Title?.value?.toString() || 'Page'}</title>
+    <link rel="icon" href={`${Astro.url.origin}/favicon.ico`} />
+    <SitecoreStyles slot="head" layoutData={layout} />
+  </head>
+  <body>
+    <Bootstrap page={page} />
+    <Scripts />
+    <div class={`${mainClassPageEditing} site-${theme?.toLowerCase()} body`}>
+      <header>
+        <div id="header">
+          {route && <Placeholder name="headless-header" rendering={route} />}
+        </div>
+      </header>
+      <main>
+        <div id="content">
+          {route && <Placeholder name="headless-main" rendering={route} />}
+        </div>
+      </main>
+      <footer>
+        <div id="footer">
+          {route && <Placeholder name="headless-footer" rendering={route} />}
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
