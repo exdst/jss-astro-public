@@ -1,6 +1,6 @@
 {
   "name": "@exdst-sitecore-content-sdk/create-astro",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "Astro Content SDK initializer",
   "bin": "./dist/index.js",
   "scripts": {

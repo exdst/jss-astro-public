@@ -1,7 +1,5 @@
 ---
 <% if (prerender === 'SSG') { -%>
-export const prerender = true;
-
 import type { GetStaticPaths } from "astro";
 <% } -%>
 <% if (prerender === 'SSG') { -%>
@@ -14,9 +12,7 @@ import {
 } from "@exdst-sitecore-content-sdk/astro/context";
 import {
   isDesignLibraryPreviewData,
-  <% if (prerender === 'SSR') { -%>
   PreviewCookies
-  <% } -%>
 } from "@exdst-sitecore-content-sdk/astro/editing";
 import { extractPath, removeLanguageFromPath } from "@exdst-sitecore-content-sdk/astro/utils";
 import client from "@/lib/sitecore-client";
@@ -38,24 +34,23 @@ path = removeLanguageFromPath(path, languages);
   const site = import.meta.env.SITE_NAME;
   path = `${SITE_PREFIX}${site}/${path}`;
 <% } -%>
+
 let page;
+let previewData;
 
-
-<% if (prerender === 'SSR') { -%>
-  const previewDataCookies = Astro.cookies.get(PreviewCookies.PREVIEW_DATA);
-  const previewData = previewDataCookies ? JSON.parse(previewDataCookies.value) : "";
-
-  const context = {
-    preview: !!previewData,
-    previewData: previewData,
-  };
-
-<% } else if (prerender === 'SSG') { -%>
-  const context = {
-    preview: false,
-    previewData: undefined
-  };
+<% if (prerender === 'SSG') { -%>
+if (!Astro.isPrerendered) {
 <% } -%>
+  const previewDataCookies = Astro.cookies.get(PreviewCookies.PREVIEW_DATA);
+  previewData = previewDataCookies ? JSON.parse(previewDataCookies.value) : "";
+<% if (prerender === 'SSG') { -%>
+}
+<% } -%>
+
+const context = {
+  preview: !!previewData,
+  previewData: previewData,
+};
 
 if (context.preview && isDesignLibraryPreviewData(context.previewData)) {
   page = await client.getDesignLibraryData(context.previewData);

@@ -1,12 +1,32 @@
 import { defineConfig } from 'astro/config';
 import node from '@astrojs/node';
 import dotenvFlow from 'dotenv-flow';
+import { loadEnv } from 'vite';
 
 // Load enviroment variables from .env.* files
 dotenvFlow.config();
 
 // https://astro.build/config
 export default defineConfig({
+  integrations: [
+    {
+      name: 'set-prerender',
+      hooks: {
+        'astro:route:setup': ({ route }) => {
+          // Load environment variables from .env files
+          const { PRERENDER } = loadEnv(process.env.NODE_ENV, process.cwd(), '');
+          if (route.component.endsWith('/[...path].astro')) {
+            // Set the prerender value on routes
+            if (process.env.NODE_ENV === 'development') {
+              route.prerender = false;
+            } else {
+              route.prerender = PRERENDER === 'true';
+            }
+          }
+        },
+      },
+    },
+  ],
   security: {
     checkOrigin: false,
     allowedDomains: [{ hostname: '*.sitecorecloud.io' }, { hostname: '*.sitecore.cloud' }],

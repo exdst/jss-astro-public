@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@astrojs/node": "^10.0.2",
-    "@exdst-sitecore-content-sdk/astro": "^0.0.21",
+    "@exdst-sitecore-content-sdk/astro": "^0.0.23",
     "@sitecore-content-sdk/analytics-core": "^2.0.1",
     "@sitecore-content-sdk/events": "^2.0.1",
     "astro": "^6.1.1",

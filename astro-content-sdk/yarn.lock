@@ -606,7 +606,7 @@ __metadata:
     "@types/sinon-chai": "npm:^4.0.0"
     "@typescript-eslint/eslint-plugin": "npm:8.39.0"
     "@typescript-eslint/parser": "npm:8.39.0"
-    astro: "npm:^6.1.1"
+    astro: "npm:^6.1.2"
     chai: "npm:^4.4.1"
     chai-spies: "npm:^1.1.0"
     chai-string: "npm:^1.6.0"
@@ -4243,9 +4243,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"astro@npm:^6.1.1":
-  version: 6.1.1
-  resolution: "astro@npm:6.1.1"
+"astro@npm:^6.1.2":
+  version: 6.1.2
+  resolution: "astro@npm:6.1.2"
   dependencies:
     "@astrojs/compiler": "npm:^3.0.1"
     "@astrojs/internal-helpers": "npm:0.8.0"
@@ -4308,7 +4308,7 @@ __metadata:
       optional: true
   bin:
     astro: bin/astro.mjs
-  checksum: 10/37575766ff9b96f2dd24f4bde6b572fb0f09740dc53936e1f88f0a88f497bfa482399b072f29060bb9fe4a0f559f8c6469724733e52824b7be4babe8e3aea7eb
+  checksum: 10/2d78ce5e9084cda2e2014ea8c77a305fcc6f87f7ecfa66b59a4eb10c26907945fcfc44763df720147ffcf2b5a541bc0cfae41071967766c1e1ed24f31c945337
   languageName: node
   linkType: hard
 
