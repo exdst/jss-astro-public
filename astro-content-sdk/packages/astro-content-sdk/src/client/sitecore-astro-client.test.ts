@@ -34,9 +34,14 @@ describe('SitecoreClient', () => {
     },
     defaultSite: 'default-site',
     defaultLanguage: 'en',
+    multisite: {
+      enabled: true,
+      useCookieResolution: () => true,
+    },
     layout: { formatLayoutQuery: sandbox.stub() },
     dictionary: { caching: { enabled: true, timeout: 60000 } },
     disableCodeGeneration: false,
+    rewriteMediaUrls: false,
   };
 
   let sitecoreClient = new SitecoreAstroClient(defaultInitOptions);
@@ -97,12 +102,6 @@ describe('SitecoreClient', () => {
       const path = `${VARIANT_PREFIX}variant1/${VARIANT_PREFIX}mountain_bike_audience/test/path`;
       const locale = 'en-US';
       const testLayoutData = structuredClone(layoutData);
-
-      const siteInfo = {
-        name: 'default-site',
-        hostName: 'example.com',
-        language: 'en',
-      };
       layoutServiceStub.fetchLayoutData.returns(testLayoutData);
       sandbox.stub(sitecoreClient, 'getHeadLinks').returns([]);
 
@@ -117,12 +116,6 @@ describe('SitecoreClient', () => {
       const path = `${VARIANT_PREFIX}variant1/${VARIANT_PREFIX}sand_bike_audience/test/path`;
       const locale = 'en-US';
       const testLayoutData = structuredClone(layoutData);
-
-      const siteInfo = {
-        name: 'default-site',
-        hostName: 'example.com',
-        language: 'en',
-      };
       layoutServiceStub.fetchLayoutData.returns(testLayoutData);
       sandbox.stub(sitecoreClient, 'getHeadLinks').returns([]);
 
@@ -245,6 +238,30 @@ describe('SitecoreClient', () => {
       const result = await sitecoreClient.getPagePaths(['site-one'], ['en'], undefined);
 
       expect(result).to.deep.equal(expectedPaths);
+    });
+  });
+
+  describe('getPreview', () => {
+    it('should call base getPreview with preview data and fetch options', async () => {
+      const previewData = {
+        variantId: 'variant-a',
+        route: '/test/path',
+        language: 'en',
+      } as any;
+      const fetchOptions = {
+        retries: 2,
+      } as any;
+
+      const basePrototype = Object.getPrototypeOf(SitecoreAstroClient.prototype);
+      const superGetPreviewStub = sandbox.stub(basePrototype, 'getPreview').resolves(null);
+
+      try {
+        await sitecoreClient.getPreview(previewData, fetchOptions);
+
+        expect(superGetPreviewStub).to.have.been.calledOnceWithExactly(previewData, fetchOptions);
+      } finally {
+        superGetPreviewStub.restore();
+      }
     });
   });
 

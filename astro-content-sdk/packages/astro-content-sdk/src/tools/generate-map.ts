@@ -36,40 +36,28 @@ export const generateMap: GenerateMapFunction = ({
 };
 
 const buildAstroMapContent: ComponentMapTemplate = (components, componentImports): string => {
-  const wildcardImports: string[] = [];
-  const namedImports: string[] = [];
-
+  const componentImportsList: string[] = [];
   const componentMapEntries: string[] = [];
 
   components.forEach((component) => {
-    wildcardImports.push(`import ${component.moduleName} from '${component.importPath}.astro';`);
+    componentImportsList.push(
+      `import ${component.moduleName} from '${component.importPath}.astro';`
+    );
     componentMapEntries.push(`['${component.moduleName}', ${component.moduleName}]`);
   });
 
   componentImports?.forEach((packageEntry) => {
-    if (packageEntry.importInfo.namedImports) {
-      namedImports.push(
-        `import { ${packageEntry.importInfo.namedImports.join(', ')} } from '${
-          packageEntry.importInfo.importFrom
-        }.astro';`
-      );
-      packageEntry.importInfo.namedImports.forEach((importName) => {
-        componentMapEntries.push(`['${importName}', ${importName}]`);
-      });
-    } else {
-      wildcardImports.push(
-        `import ${packageEntry.importName} from '${packageEntry.importInfo.importFrom}';`
-      );
-      componentMapEntries.push(`['${packageEntry.importName}', ${packageEntry.importName}]`);
-    }
+    componentImportsList.push(
+      `import ${packageEntry.importName} from '${packageEntry.importInfo.importFrom}';`
+    );
+    componentMapEntries.push(`['${packageEntry.importName}', ${packageEntry.importName}]`);
   });
 
   return `
 import type { AstroContentSdkComponent } from '@exdst-sitecore-content-sdk/astro';
 
 // Components imported from the app itself
-${wildcardImports.join('\n')}
-${namedImports.join('\n')}
+${componentImportsList.join('\n')}
 
 // Components must be registered within the map to match the string key with component name in Sitecore
 export const componentMap = new Map<string, AstroContentSdkComponent>([

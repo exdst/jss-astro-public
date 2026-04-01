@@ -5,6 +5,7 @@
 ```ts
 
 import { APIContext } from 'astro';
+import { CdpHelper } from '@sitecore-content-sdk/content/personalize';
 import { ComponentFields } from '@sitecore-content-sdk/content/layout';
 import { ComponentFile } from '@sitecore-content-sdk/content/tools';
 import { ComponentParams } from '@sitecore-content-sdk/content/layout';
@@ -29,6 +30,7 @@ import { GraphQLRequestClientFactory as GraphQLRequestClientFactory_2 } from '@s
 import { GraphQLRequestClientFactoryConfig } from '@sitecore-content-sdk/content/client';
 import { HTMLLink } from '@sitecore-content-sdk/content';
 import { IncomingHttpHeaders } from 'http';
+import { initContentSdk } from '@sitecore-content-sdk/core';
 import { LayoutServiceData } from '@sitecore-content-sdk/content/layout';
 import { Metadata } from '@sitecore-content-sdk/core/node-tools';
 import { MiddlewareHandler } from 'astro';
@@ -46,6 +48,7 @@ import { RedirectInfo } from '@sitecore-content-sdk/content/site';
 import { RedirectsService } from '@sitecore-content-sdk/content/site';
 import { RedirectsServiceConfig } from '@sitecore-content-sdk/content/site';
 import { RetryStrategy } from '@sitecore-content-sdk/content/client';
+import { SITE_PREFIX } from '@sitecore-content-sdk/content/site';
 import { SitecoreCliConfig } from '@sitecore-content-sdk/content/config';
 import { SitecoreCliConfigInput } from '@sitecore-content-sdk/content/config';
 import { SitecoreClient as SitecoreClient_2 } from '@sitecore-content-sdk/content/client';
@@ -75,6 +78,8 @@ export type AllowedQueryParamsResolver = (queryParams: string[]) => Array<Allowe
 
 // @public
 export type AstroContentSdkComponent = (_props: Record<string, any>) => any;
+
+export { CdpHelper }
 
 export { ComponentFields }
 
@@ -174,6 +179,8 @@ export { GraphQLRequestClientFactoryConfig }
 
 export { HTMLLink }
 
+export { initContentSdk }
+
 // @public
 export const isDesignLibraryPreviewData: (data: unknown) => data is DesignLibraryRenderPreviewData;
 
@@ -272,6 +279,8 @@ export class RobotsMiddleware {
     getHandler(): (_req: Request) => Promise<Response>;
 }
 
+export { SITE_PREFIX }
+
 // @public
 export class SitecoreClient extends SitecoreClient_2 {
     constructor(initOptions: SitecoreAstroClientInit);
@@ -331,6 +340,8 @@ export class SitemapMiddleware {
 }
 
 export { SiteResolver }
+
+export { StaticPath }
 
 // @internal
 export const updateSitecoreContext = (input: SitecoreContextProps) => {
