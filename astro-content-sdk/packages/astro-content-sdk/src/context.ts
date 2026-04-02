@@ -12,7 +12,7 @@ export const SitecoreContext: any = map({});
 
 /**
  * Shape of values passed when updating {@link SitecoreContext} (page, API, and optional component map).
- * @internal
+ * @public
  */
 export interface SitecoreContextProps {
   /**
@@ -31,9 +31,9 @@ export interface SitecoreContextProps {
 
 /**
  * Shape of values passed when updating dictionary phrases on {@link SitecoreContext}.
- * @internal
+ * @public
  */
-export interface SitecoreDictionarytProps {
+export interface SitecoreDictionaryProps {
   /**
    * The dictionary data.
    */
@@ -42,10 +42,8 @@ export interface SitecoreDictionarytProps {
 
 /**
  * Writes page data, API config, and optional component map into {@link SitecoreContext}.
- * @param {Page} props.page - The page data.
- * @param {SitecoreConfig['api']} props.api - The API configuration.
- * @param {ComponentMap} [props.componentMap] - Component map.
- * @internal
+ * @param {SitecoreContextProps} props - Page, API, and optional component map.
+ * @public
  */
 export const updateSitecoreContext = ({ page, api, componentMap }: SitecoreContextProps) => {
   SitecoreContext.setKey('page', page);
@@ -55,11 +53,10 @@ export const updateSitecoreContext = ({ page, api, componentMap }: SitecoreConte
 
 /**
  * Writes dictionary phrases into {@link SitecoreContext} for {@link useDictionary}.
- * @param {SitecoreDictionarytProps} props
- * @param {DictionaryPhrases} props.dictionary
- * @internal
+ * @param {DictionaryPhrases} dictionary - The dictionary data.
+ * @public
  */
-export const updateSitecoreDictionary = ({ dictionary }: SitecoreDictionarytProps) => {
+export const updateSitecoreDictionary = ({ dictionary }: SitecoreDictionaryProps) => {
   SitecoreContext.setKey('dictionary', dictionary);
 };
 
@@ -68,9 +65,10 @@ export const updateSitecoreDictionary = ({ dictionary }: SitecoreDictionarytProp
  * @public
  */
 export const useSitecore = (): SitecoreContextProps => {
+  const context = SitecoreContext.get();
   return {
-    page: SitecoreContext.get()['page'],
-    api: SitecoreContext.get()['api'],
+    page: context.page,
+    api: context.api,
   };
 };
 
@@ -79,7 +77,7 @@ export const useSitecore = (): SitecoreContextProps => {
  * @public
  */
 export const useComponentMap = (): ComponentMap => {
-  return SitecoreContext.get()['componentMap'];
+  return SitecoreContext.get().componentMap;
 };
 
 /**
@@ -88,7 +86,7 @@ export const useComponentMap = (): ComponentMap => {
  */
 export const useDictionary = () => {
   const t = (key: string): string => {
-    const dictionary = SitecoreContext.get()['dictionary'];
+    const dictionary = SitecoreContext.get().dictionary;
     if (!dictionary) {
       return key;
     }

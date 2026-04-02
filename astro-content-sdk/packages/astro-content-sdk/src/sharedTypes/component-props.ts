@@ -1,13 +1,3 @@
-export type ComponentPropsError = { error: string; componentName: string };
-
-/**
- * Shape of component props storage
- * @public
- */
-export type ComponentPropsCollection = {
-  [componentUid: string]: unknown | ComponentPropsError;
-};
-
 /**
  * Represents an Astro component import
  * @public

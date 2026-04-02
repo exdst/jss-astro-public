@@ -1,5 +1,5 @@
 /* eslint-disable spaced-comment */
-/* eslint-disable @typescript-eslint/triple-slash-reference */
+/* eslint-disable no-unused-vars */
 /// <reference types="astro/client" />
 declare global {
   namespace App {

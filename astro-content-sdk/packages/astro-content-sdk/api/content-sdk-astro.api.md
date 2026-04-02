@@ -317,7 +317,7 @@ export type SitecoreConfigInput = SitecoreConfigInput_2 & {
 // @internal
 export const SitecoreContext: any = map({});
 
-// @internal
+// @public
 export interface SitecoreContextProps {
     api: SitecoreConfig_2['api'];
     // Warning: (ae-forgotten-export) The symbol "ComponentMap_2" needs to be exported by the entry point api-surface.d.ts
@@ -325,8 +325,8 @@ export interface SitecoreContextProps {
     page: Page;
 }
 
-// @internal
-export interface SitecoreDictionarytProps {
+// @public
+export interface SitecoreDictionaryProps {
     dictionary: DictionaryPhrases;
 }
 
@@ -343,21 +343,21 @@ export { SiteResolver }
 
 export { StaticPath }
 
-// @internal
+// @public
 export const updateSitecoreContext = (input: SitecoreContextProps) => {
     SitecoreContext.setKey('page', page);
     SitecoreContext.setKey('api', api);
     SitecoreContext.setKey('componentMap', componentMap);
 };
 
-// @internal
-export const updateSitecoreDictionary = (input: SitecoreDictionarytProps) => {
+// @public
+export const updateSitecoreDictionary = (input: SitecoreDictionaryProps) => {
     SitecoreContext.setKey('dictionary', dictionary);
 };
 
 // @public
 export const useComponentMap = (): ComponentMap_2 => {
-    return SitecoreContext.get()['componentMap'];
+    return SitecoreContext.get().componentMap;
 };
 
 // @public
@@ -365,7 +365,7 @@ export const useDictionary = () => {
     const // (undocumented)
     t = (key: string): string => {
         const // (undocumented)
-        dictionary = SitecoreContext.get()['dictionary'];
+        dictionary = SitecoreContext.get().dictionary;
         if (!dictionary) {
             return key;
         }
@@ -375,13 +375,13 @@ export const useDictionary = () => {
     return t;
 };
 
-// Warning: (ae-incompatible-release-tags) The symbol "useSitecore" is marked as @public, but its signature references "SitecoreContextProps" which is marked as @internal
-//
 // @public
 export const useSitecore = (): SitecoreContextProps => {
+    const // (undocumented)
+    context = SitecoreContext.get();
     return {
-        page: SitecoreContext.get()['page'],
-        api: SitecoreContext.get()['api'],
+        page: context.page,
+        api: context.api,
     };
 };
 

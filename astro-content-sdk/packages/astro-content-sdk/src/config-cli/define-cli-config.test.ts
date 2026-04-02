@@ -11,10 +11,7 @@ describe('defineCliConfig', () => {
   const validateDefaultTemplates = (result: SitecoreCliConfig) => {
     expect(result.scaffold.templates[0].name).to.equal(ComponentTemplateType.DEFAULT);
     const defaultTemplate = result.scaffold.templates[0].generateTemplate('ComponentName');
-    // expect(defaultTemplate).to.contain(
-    //   // eslint-disable-next-line quotes
-    //   `import { ComponentParams, ComponentRendering } from '@sitecore-content-sdk/nextjs';`
-    // );
+
     expect(defaultTemplate).to.contain('ComponentName');
     if (result.scaffold.templates[0].getNextSteps) {
       const componentpath = 'src/components/ComponentName.astro';
@@ -22,24 +19,6 @@ describe('defineCliConfig', () => {
         `* Implement the Astro component in ${chalk.green(componentpath)}`
       );
     }
-
-    // expect(result.scaffold.templates[1].name).to.equal(ComponentTemplateType.BYOC);
-    // const byocTemplate = result.scaffold.templates[1].generateTemplate('ByocComponentName');
-    // expect(byocTemplate).to.contain(
-    //   // eslint-disable-next-line quotes
-    //   `import * as FEAAS from '@sitecore-feaas/clientside/react';`
-    // );
-    // expect(byocTemplate).to.contain('ByocComponentName');
-
-    // expect(result.scaffold.templates[1].generateTemplate('comp name')).to.contain(
-    //   // eslint-disable-next-line quotes
-    //   `import * as FEAAS from '@sitecore-feaas/clientside/react';`
-    // );
-    // if (result.scaffold.templates[1].getNextSteps) {
-    //   expect(result.scaffold.templates[1].getNextSteps('componentpath')[0]).to.contain(
-    //     '* Modify component registration through FEAAS.External.registerComponent if needed'
-    //   );
-    // }
   };
 
   it('should add default and byoc scaffold templates', () => {

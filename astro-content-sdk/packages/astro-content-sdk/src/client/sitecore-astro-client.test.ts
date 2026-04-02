@@ -264,46 +264,4 @@ describe('SitecoreClient', () => {
       }
     });
   });
-
-  /*
-  describe('getComponentData', () => {
-    it('should return componentData when component has getComponentsProps method', async () => {
-      const context = {
-        params: { path: ['test', 'path'] },
-        query: {},
-        req: {},
-        res: {},
-        resolvedUrl: '/test/path',
-      } as unknown as GetServerSidePropsContext;
-      const layoutData = {
-        sitecore: {
-          context,
-          route: {
-            name: 'test',
-            placeholders: {
-              main: [
-                {
-                  componentName: 'TestComponent',
-                  uid: 'test-uid',
-                },
-              ],
-            },
-          },
-        },
-      };
-
-      const mockComponent = {
-        getComponentServerProps: sandbox.stub().resolves({ props: { data: 'test-data' } }),
-      };
-
-      const componentMap = new Map([['TestComponent', mockComponent]]);
-
-      const result = await sitecoreClient.getComponentData(layoutData, context, componentMap);
-
-      expect(result).to.deep.equal({
-        'test-uid': { props: { data: 'test-data' } },
-      });
-      expect(mockComponent.getComponentServerProps.calledOnce).to.be.true;
-    });
-  });*/
 });

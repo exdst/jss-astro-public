@@ -202,6 +202,33 @@ describe('MultisiteMiddleware', () => {
       });
     });
 
+    describe('multisite disabled globally', () => {
+      it('should skip when enabled is false and request is not Sitecore preview', async () => {
+        const { middleware, siteResolver } = createMiddleware({
+          config: { ...defaultConfig, enabled: false },
+        });
+        const res = createResponse();
+
+        const context = createContext({
+          url: new URL(hostname),
+        });
+
+        const mockNext = async () => res;
+
+        const finalRes = await middleware.handle(context, mockNext);
+
+        validateDebugLog('multisite middleware start: %o', {
+          pathname: '/styleguide',
+          language: 'en',
+          hostname: 'foo.net',
+        });
+        validateDebugLog('skipped (multisite middleware is disabled globally)');
+
+        expect(finalRes).to.deep.equal(res);
+        expect(siteResolver.getByHost.called).to.be.false;
+      });
+    });
+
     describe('disabled in chain', () => {
       it('should skip if skipMiddleware local variable is true', async () => {
         const { middleware } = createMiddleware();
@@ -226,30 +253,33 @@ describe('MultisiteMiddleware', () => {
     });
   });
 
-  // describe('preview', () => {
-  //   it('preview data cookie is present', async () => {
-  //     const { middleware } = createMiddleware();
-  //     const res = createResponse();
+  describe('Vercel/Next preview (_preview_data cookie)', () => {
+    it('should skip multisite when preview data cookie is present', async () => {
+      const { middleware, siteResolver } = createMiddleware();
+      const res = createResponse();
 
-  //     const context = createContext({
-  //       url: new URL(hostname),
-  //       cookieValues: {
-  //         _preview_data: true,
-  //       },
-  //     });
+      const context = createContext({
+        url: new URL(hostname),
+        cookieValues: {
+          _preview_data: '1',
+        },
+      });
 
-  //     const mockNext = async () => {
-  //       return res;
-  //     };
+      const mockNext = async () => res;
 
-  //     const finalRes = await middleware.handle(context, mockNext);
+      const finalRes = await middleware.handle(context, mockNext);
 
-  //     validateDebugLog('skipped (preview)');
+      validateDebugLog('multisite middleware start: %o', {
+        pathname: '/styleguide',
+        language: 'en',
+        hostname: 'foo.net',
+      });
+      validateDebugLog('skipped (preview)');
 
-  //     const resCookies = (finalRes as Response).headers.getSetCookie();
-  //     expect(resCookies).to.contain('_preview_data=true');
-  //   });
-  // });
+      expect(finalRes).to.deep.equal(res);
+      expect(siteResolver.getByHost.called).to.be.false;
+    });
+  });
 
   describe('Sitecore Preview', () => {
     it('request is passed', async () => {
@@ -436,6 +466,45 @@ describe('MultisiteMiddleware', () => {
       });
 
       expect(siteResolver.getByHost).to.be.calledWith('foo.net');
+
+      expect(mockNext).calledWith(sinon.match({ pathname: '/_site_foo/styleguide' }));
+    });
+
+    it('x-forwarded-host takes precedence over host for site resolution', async () => {
+      const context = createContext({
+        headerValues: {
+          'x-forwarded-host': 'forwarded.example.com',
+          host: 'foo.net',
+        },
+      });
+
+      const mockNext = sinon.stub().returns(
+        createResponse({
+          headers: [],
+        })
+      );
+
+      const { middleware, siteResolver } = createMiddleware();
+
+      const finalRes = await middleware.handle(context, mockNext);
+
+      validateDebugLog('multisite middleware start: %o', {
+        pathname: '/styleguide',
+        language: 'en',
+        hostname: 'forwarded.example.com',
+      });
+
+      validateEndMessageDebugLog('multisite middleware end in %dms: %o', {
+        rewritePath: '/_site_foo/styleguide',
+        siteName: 'foo',
+        headers: {
+          ...(finalRes as Response).headers,
+          'x-sc-rewrite': '/_site_foo/styleguide',
+        },
+        cookies: 'sc_site=foo; HttpOnly; Secure; SameSite=None',
+      });
+
+      expect(siteResolver.getByHost).to.be.calledWith('forwarded.example.com');
 
       expect(mockNext).calledWith(sinon.match({ pathname: '/_site_foo/styleguide' }));
     });

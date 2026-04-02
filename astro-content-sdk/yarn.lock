@@ -606,7 +606,7 @@ __metadata:
     "@types/sinon-chai": "npm:^4.0.0"
     "@typescript-eslint/eslint-plugin": "npm:8.39.0"
     "@typescript-eslint/parser": "npm:8.39.0"
-    astro: "npm:^6.1.2"
+    astro: "npm:^6.1.3"
     chai: "npm:^4.4.1"
     chai-spies: "npm:^1.1.0"
     chai-string: "npm:^1.6.0"
@@ -1981,38 +1981,38 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@microsoft/api-extractor-model@npm:7.33.4":
-  version: 7.33.4
-  resolution: "@microsoft/api-extractor-model@npm:7.33.4"
+"@microsoft/api-extractor-model@npm:7.33.5":
+  version: 7.33.5
+  resolution: "@microsoft/api-extractor-model@npm:7.33.5"
   dependencies:
     "@microsoft/tsdoc": "npm:~0.16.0"
     "@microsoft/tsdoc-config": "npm:~0.18.1"
-    "@rushstack/node-core-library": "npm:5.20.3"
-  checksum: 10/60888f94ee2b121aac3a1e443c6922080b130226d956c98eb44de5deba80c887d0382cd9ade8ccd46d8a55af27182fb937f7ef0a17dccac286253eb35cc8111d
+    "@rushstack/node-core-library": "npm:5.21.0"
+  checksum: 10/2631330170707eda14902b51c6dabb3e0e91e7b510169da6b4bf56d8bda47b349d614b34d92b66530cfed45617f6a94f42acdc98c903f781b9b9c14a6481e29d
   languageName: node
   linkType: hard
 
-"@microsoft/api-extractor@npm:^7.55.0":
-  version: 7.57.7
-  resolution: "@microsoft/api-extractor@npm:7.57.7"
+"@microsoft/api-extractor@npm:^7.58.0":
+  version: 7.58.0
+  resolution: "@microsoft/api-extractor@npm:7.58.0"
   dependencies:
-    "@microsoft/api-extractor-model": "npm:7.33.4"
+    "@microsoft/api-extractor-model": "npm:7.33.5"
     "@microsoft/tsdoc": "npm:~0.16.0"
     "@microsoft/tsdoc-config": "npm:~0.18.1"
-    "@rushstack/node-core-library": "npm:5.20.3"
+    "@rushstack/node-core-library": "npm:5.21.0"
     "@rushstack/rig-package": "npm:0.7.2"
-    "@rushstack/terminal": "npm:0.22.3"
-    "@rushstack/ts-command-line": "npm:5.3.3"
+    "@rushstack/terminal": "npm:0.22.4"
+    "@rushstack/ts-command-line": "npm:5.3.4"
     diff: "npm:~8.0.2"
     lodash: "npm:~4.17.23"
     minimatch: "npm:10.2.3"
     resolve: "npm:~1.22.1"
     semver: "npm:~7.5.4"
     source-map: "npm:~0.6.1"
-    typescript: "npm:5.8.2"
+    typescript: "npm:5.9.3"
   bin:
     api-extractor: bin/api-extractor
-  checksum: 10/052a137ad8b9b81034b14c9225429c517783112a550a4bff3d8588f4626d269790df163eb7dd55573a44de607051571e2bf03eb6384bf2dc505a41e98de94153
+  checksum: 10/3f057040844194466ed082e1f4c3747207b345ff184f0de04131525e386c1d7c0a2d345da509005392622978192cda68d5f3ced9f130b799a305b8744da17bfc
   languageName: node
   linkType: hard
 
@@ -2733,9 +2733,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rushstack/node-core-library@npm:5.20.3":
-  version: 5.20.3
-  resolution: "@rushstack/node-core-library@npm:5.20.3"
+"@rushstack/node-core-library@npm:5.21.0":
+  version: 5.21.0
+  resolution: "@rushstack/node-core-library@npm:5.21.0"
   dependencies:
     ajv: "npm:~8.18.0"
     ajv-draft-04: "npm:~1.0.0"
@@ -2750,7 +2750,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/node":
       optional: true
-  checksum: 10/16479e853e3c15fca644a05b50734e1356f0180a88a0d164fe7a7c75b90da9e7da44befe455361ed8ef786ad1b00b6c3662f40e08cb06dc081bf5fb574c74642
+  checksum: 10/affa0cbfb582cee656daa97f1e2941d2b07df29df2b5ac153bba3a289fe512ee50633aa46612ac870990cca502eb4408f422d0755b6db4e625594a7e862416ba
   languageName: node
   linkType: hard
 
@@ -2776,11 +2776,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rushstack/terminal@npm:0.22.3":
-  version: 0.22.3
-  resolution: "@rushstack/terminal@npm:0.22.3"
+"@rushstack/terminal@npm:0.22.4":
+  version: 0.22.4
+  resolution: "@rushstack/terminal@npm:0.22.4"
   dependencies:
-    "@rushstack/node-core-library": "npm:5.20.3"
+    "@rushstack/node-core-library": "npm:5.21.0"
     "@rushstack/problem-matcher": "npm:0.2.1"
     supports-color: "npm:~8.1.1"
   peerDependencies:
@@ -2788,19 +2788,19 @@ __metadata:
   peerDependenciesMeta:
     "@types/node":
       optional: true
-  checksum: 10/d4a8a2b1743d5e8a45f318be4665bf1fcb4bfbe9013a0d48f6c9f89960142da1bcad3544bbcd38fc29a1d061ff4664cb0b4ab87c8e9cb0d0f7479b6be70fa47b
+  checksum: 10/068ac020e8284804fcd17ee943a7092031cc36456b6e7a867a31e34984c2515cf1ea520a5eaf0239e612231b2698a456c5f2d007fb4959e8ce3554827801eedf
   languageName: node
   linkType: hard
 
-"@rushstack/ts-command-line@npm:5.3.3":
-  version: 5.3.3
-  resolution: "@rushstack/ts-command-line@npm:5.3.3"
+"@rushstack/ts-command-line@npm:5.3.4":
+  version: 5.3.4
+  resolution: "@rushstack/ts-command-line@npm:5.3.4"
   dependencies:
-    "@rushstack/terminal": "npm:0.22.3"
+    "@rushstack/terminal": "npm:0.22.4"
     "@types/argparse": "npm:1.0.38"
     argparse: "npm:~1.0.9"
     string-argv: "npm:~0.3.1"
-  checksum: 10/a0266554ef6abc710f3dfbcb91006be1c3593760b4142bd6357349c79f096b3a7f7a5ec723c4f60293dc4357c54d820cf90e6f351c269d0a0591c6654432a0a4
+  checksum: 10/86e5ae2ccb62130ea46a0fa541db4b51f02f3da7857d448e715b740e73096a88bae64310b1c703cbd4c76d0a43bc1a8130c5c3e98e79bfa33718d8008f24ce48
   languageName: node
   linkType: hard
 
@@ -4243,9 +4243,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"astro@npm:^6.1.2":
-  version: 6.1.2
-  resolution: "astro@npm:6.1.2"
+"astro@npm:^6.1.3":
+  version: 6.1.3
+  resolution: "astro@npm:6.1.3"
   dependencies:
     "@astrojs/compiler": "npm:^3.0.1"
     "@astrojs/internal-helpers": "npm:0.8.0"
@@ -4308,7 +4308,7 @@ __metadata:
       optional: true
   bin:
     astro: bin/astro.mjs
-  checksum: 10/2d78ce5e9084cda2e2014ea8c77a305fcc6f87f7ecfa66b59a4eb10c26907945fcfc44763df720147ffcf2b5a541bc0cfae41071967766c1e1ed24f31c945337
+  checksum: 10/dfe6b86bfaafef79aac1c9acfdd52f26a2bbda63430f2c76636260076669d645c75e9fbcb08ebdc8f46d93a7369828d129bd2fda3498335523f618f93d80260f
   languageName: node
   linkType: hard
 
@@ -11968,7 +11968,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "root-workspace-0b6124@workspace:."
   dependencies:
-    "@microsoft/api-extractor": "npm:^7.55.0"
+    "@microsoft/api-extractor": "npm:^7.58.0"
     "@rushstack/eslint-patch": "npm:^1.10.3"
     "@stylistic/eslint-plugin": "npm:^5.2.2"
     "@types/jest": "npm:^30.0.0"
@@ -13304,13 +13304,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:5.8.2":
-  version: 5.8.2
-  resolution: "typescript@npm:5.8.2"
+"typescript@npm:5.9.3":
+  version: 5.9.3
+  resolution: "typescript@npm:5.9.3"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10/dbc2168a55d56771f4d581997be52bab5cbc09734fec976cfbaabd787e61fb4c6cf9125fd48c6f98054ce549c77ecedefc7f64252a830dd8e9c3381f61fbeb78
+  checksum: 10/c089d9d3da2729fd4ac517f9b0e0485914c4b3c26f80dc0cffcb5de1719a17951e92425d55db59515c1a7ddab65808466debb864d0d56dcf43f27007d0709594
   languageName: node
   linkType: hard
 
@@ -13334,13 +13334,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A5.8.2#optional!builtin<compat/typescript>":
-  version: 5.8.2
-  resolution: "typescript@patch:typescript@npm%3A5.8.2#optional!builtin<compat/typescript>::version=5.8.2&hash=5786d5"
+"typescript@patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>":
+  version: 5.9.3
+  resolution: "typescript@patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10/97920a082ffc57583b1cb6bc4faa502acc156358e03f54c7fc7fdf0b61c439a717f4c9070c449ee9ee683d4cfc3bb203127c2b9794b2950f66d9d307a4ff262c
+  checksum: 10/696e1b017bc2635f4e0c94eb4435357701008e2f272f553d06e35b494b8ddc60aa221145e286c28ace0c89ee32827a28c2040e3a69bdc108b1a5dc8fb40b72e3
   languageName: node
   linkType: hard
 

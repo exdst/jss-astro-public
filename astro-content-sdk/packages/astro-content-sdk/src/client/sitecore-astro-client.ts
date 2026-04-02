@@ -7,7 +7,6 @@ import {
   SitecoreClientInit,
 } from '@sitecore-content-sdk/content/client';
 import { PreviewData } from '../sharedTypes/component-props';
-import { ComponentPropsService } from '../services/component-props-service';
 import { EditingPreviewData } from '@sitecore-content-sdk/content/editing';
 import { getSiteRewriteData, normalizeSiteRewrite } from '@sitecore-content-sdk/content/site';
 import {
@@ -27,10 +26,8 @@ export type SitecoreAstroClientInit = SitecoreClientInit & Pick<SitecoreConfig, 
  * @public
  */
 export class SitecoreAstroClient extends SitecoreClient {
-  protected componentPropsService: ComponentPropsService;
   constructor(protected initOptions: SitecoreAstroClientInit) {
     super(initOptions);
-    this.componentPropsService = this.getComponentPropsService();
   }
 
   /**
@@ -108,47 +105,5 @@ export class SitecoreAstroClient extends SitecoreClient {
     });
 
     return staticPaths;
-  }
-
-  // /**
-  //  * Parses components from component map and layoutData, executes getServerProps/getStaticProps methods
-  //  * and returns resulting props from components
-  //  * @param {LayoutServiceData} layoutData layout data to parse compnents from
-  //  * @param {ComponentMap<AstroContentSdkComponent>} components component map to get props for
-  //  * @returns {ComponentPropsCollection} component props
-  //  */
-  // async getComponentData(
-  //   layoutData: LayoutServiceData,
-  //   // context: GetServerSidePropsContext | GetStaticPropsContext,
-  //   components: ComponentMap<AstroContentSdkComponent>
-  // ): Promise<ComponentPropsCollection> {
-  //   let componentProps: ComponentPropsCollection = {};
-  //   if (!layoutData.sitecore.route) return componentProps;
-  //   // Retrieve component props using side-effects defined on components level
-  //   componentProps = await this.componentPropsService.fetchComponentProps({
-  //     layoutData: layoutData,
-  //     // context,
-  //     components,
-  //   });
-
-  //   const errors = Object.keys(componentProps)
-  //     .map((id) => {
-  //       const component = componentProps[id] as ComponentPropsError;
-
-  //       return component.error
-  //         ? `\nUnable to get component props for ${component.componentName} (${id}): ${component.error}`
-  //         : '';
-  //     })
-  //     .join('');
-
-  //   if (errors.length) {
-  //     throw new Error(errors);
-  //   }
-
-  //   return componentProps;
-  // }
-
-  protected getComponentPropsService(): ComponentPropsService {
-    return new ComponentPropsService();
   }
 }
