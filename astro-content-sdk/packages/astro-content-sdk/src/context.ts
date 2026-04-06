@@ -2,7 +2,7 @@ import { map } from 'nanostores';
 import { ComponentMap } from './sharedTypes/component-props';
 import { Page } from '@sitecore-content-sdk/content/client';
 import { SitecoreConfig } from '@sitecore-content-sdk/content/config';
-import { DictionaryPhrases } from '@sitecore-content-sdk/content/types/i18n';
+import { DictionaryPhrases } from '@sitecore-content-sdk/content/i18n';
 
 /**
  * Nanostore map holding Sitecore page, API config, component map, and dictionary for the current request or app scope.

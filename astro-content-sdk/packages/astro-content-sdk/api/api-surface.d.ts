@@ -16,4 +16,4 @@ export * from '../middleware';
 export * from '../site';
 export * from '../tools';
 export * from '../utils';
-export * from '../src/context';
+export * from '../types/context';

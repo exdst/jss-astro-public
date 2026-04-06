@@ -14,7 +14,7 @@ import { createGraphQLClientFactory } from '@sitecore-content-sdk/content/client
 import { DeepRequired } from '@sitecore-content-sdk/content/config';
 import { DefaultRetryStrategy } from '@sitecore-content-sdk/content/client';
 import { DesignLibraryRenderPreviewData } from '@sitecore-content-sdk/content/editing';
-import { DictionaryPhrases } from '@sitecore-content-sdk/content/types/i18n';
+import { DictionaryPhrases } from '@sitecore-content-sdk/content/i18n';
 import { ErrorPage } from '@sitecore-content-sdk/content/client';
 import { FetchOptions } from '@sitecore-content-sdk/content/client';
 import { Field } from '@sitecore-content-sdk/content/layout';
@@ -40,7 +40,6 @@ import { PageMode } from '@sitecore-content-sdk/content/client';
 import { PageOptions } from '@sitecore-content-sdk/content/client';
 import { PersonalizeService } from '@sitecore-content-sdk/content/personalize';
 import { PersonalizeServiceConfig } from '@sitecore-content-sdk/content/personalize';
-import { PlaceholdersData } from '@sitecore-content-sdk/content/layout';
 import { REDIRECT_TYPE_301 } from '@sitecore-content-sdk/content/site';
 import { REDIRECT_TYPE_302 } from '@sitecore-content-sdk/content/site';
 import { REDIRECT_TYPE_SERVER_TRANSFER } from '@sitecore-content-sdk/content/site';
@@ -284,12 +283,6 @@ export { SITE_PREFIX }
 // @public
 export class SitecoreClient extends SitecoreClient_2 {
     constructor(initOptions: SitecoreAstroClientInit);
-    // Warning: (ae-forgotten-export) The symbol "ComponentPropsService" needs to be exported by the entry point api-surface.d.ts
-    //
-    // (undocumented)
-    protected componentPropsService: ComponentPropsService;
-    // (undocumented)
-    protected getComponentPropsService(): ComponentPropsService;
     // (undocumented)
     getPage(path: string | string[], pageOptions: PageOptions, options?: FetchOptions): Promise<Page | null>;
     getPagePaths(sites: string[], languages?: string[], fetchOptions?: FetchOptions): Promise<StaticPath[]>;
@@ -315,13 +308,12 @@ export type SitecoreConfigInput = SitecoreConfigInput_2 & {
 };
 
 // @internal
-export const SitecoreContext: any = map({});
+export const SitecoreContext: any;
 
 // @public
 export interface SitecoreContextProps {
     api: SitecoreConfig_2['api'];
-    // Warning: (ae-forgotten-export) The symbol "ComponentMap_2" needs to be exported by the entry point api-surface.d.ts
-    componentMap?: ComponentMap_2;
+    componentMap?: ComponentMap;
     page: Page;
 }
 
@@ -344,46 +336,19 @@ export { SiteResolver }
 export { StaticPath }
 
 // @public
-export const updateSitecoreContext = (input: SitecoreContextProps) => {
-    SitecoreContext.setKey('page', page);
-    SitecoreContext.setKey('api', api);
-    SitecoreContext.setKey('componentMap', componentMap);
-};
+export const updateSitecoreContext: (input: SitecoreContextProps) => void;
 
 // @public
-export const updateSitecoreDictionary = (input: SitecoreDictionaryProps) => {
-    SitecoreContext.setKey('dictionary', dictionary);
-};
+export const updateSitecoreDictionary: (input: SitecoreDictionaryProps) => void;
 
 // @public
-export const useComponentMap = (): ComponentMap_2 => {
-    return SitecoreContext.get().componentMap;
-};
+export const useComponentMap: () => ComponentMap;
 
 // @public
-export const useDictionary = () => {
-    const // (undocumented)
-    t = (key: string): string => {
-        const // (undocumented)
-        dictionary = SitecoreContext.get().dictionary;
-        if (!dictionary) {
-            return key;
-        }
-        return dictionary[key];
-    };
-
-    return t;
-};
+export const useDictionary: () => (key: string) => string;
 
 // @public
-export const useSitecore = (): SitecoreContextProps => {
-    const // (undocumented)
-    context = SitecoreContext.get();
-    return {
-        page: context.page,
-        api: context.api,
-    };
-};
+export const useSitecore: () => SitecoreContextProps;
 
 // (No @packageDocumentation comment for this package)
 
