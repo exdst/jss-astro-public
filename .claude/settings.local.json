@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -r \"from ''debug''\" \"C:/source/jss-astro-public/astro-content-sdk/packages/astro-content-sdk/src\")",
+      "Bash(/tmp/packages_to_check.txt:*)",
+      "Read(//tmp/**)",
+      "Bash(grep -rh \"^import.*from ''''\\\\|^import.*from \" C:/source/jss-astro-public/astro-content-sdk/packages/astro-content-sdk/src)",
+      "Bash(npm install:*)",
+      "Bash(git merge:*)",
+      "Bash(git fetch:*)",
+      "Bash(git pull:*)",
+      "Bash(git push:*)"
+    ]
+  }
+}
