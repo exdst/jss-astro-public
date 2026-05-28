@@ -1,0 +1,109 @@
+---
+import {
+  FieldMetadata,
+  isFieldValueEmpty,
+} from '@sitecore-content-sdk/content/layout';
+import { EditableFieldProps } from './sharedTypes';
+import WithFieldMetadata from '../enhancers/WithFieldMetadata.astro';
+import WithEmptyFieldEditingComponent from '../enhancers/WithEmptyFieldEditingComponent.astro';
+import DefaultEmptyFieldEditingComponentText from './DefaultEmptyFieldEditingComponentText.astro';
+
+/**
+ * The interface for the Text field.
+ * @public
+ */
+export interface TextField extends FieldMetadata {
+  value?: string | number;
+}
+
+/**
+ * The interface for the Text component props.
+ * @public
+ */
+export interface TextProps extends EditableFieldProps {
+  [htmlAttributes: string]: unknown;
+  /** The text field data. */
+  field: TextField;
+  /**
+   * The HTML element that will wrap the contents of the field.
+   */
+  tag?: string;
+  /**
+   * If false, HTML-encoding of the field value is disabled and the value is rendered as-is.
+   */
+  encode?: boolean;
+}
+
+const {
+  field,
+  tag,
+  editable = true,
+  encode = true,
+  emptyFieldEditingComponent,
+  ...otherProps
+} = Astro.props as TextProps;
+
+const isEmptyField = isFieldValueEmpty(field);
+
+// can't use editable value if we want to output unencoded
+const isEditable = !encode ? false : editable;
+
+let output: string | number | string[] = '';
+if (!isEmptyField) {
+  output = field.value === undefined ? '' : field.value;
+
+  // when string value isn't formatted, we should format line breaks
+  const splitted = String(output).split('\n');
+
+  if (splitted.length) {
+    const formatted: string[] = [];
+
+    splitted.forEach((str, i) => {
+      const isLast = i === splitted.length - 1;
+
+      formatted.push(str);
+
+      if (!isLast) {
+        formatted.push('<br />');
+      }
+    });
+
+    output = formatted;
+  }
+}
+
+const Tag = tag || 'span';
+
+const attrs: {
+  [htmlAttributes: string]: unknown;
+} = {
+  ...otherProps,
+};
+---
+
+{
+  (
+    <WithFieldMetadata field={field} editable={isEditable}>
+      <WithEmptyFieldEditingComponent
+        field={field}
+        editable={isEditable}
+        defaultEmptyFieldEditingComponent={
+          DefaultEmptyFieldEditingComponentText
+        }
+        emptyFieldEditingComponent={emptyFieldEditingComponent}
+        {...attrs}
+      >
+        {!isEmptyField && (
+          <>
+            {(field?.metadata || tag || !encode) && (
+              <Tag {...attrs} set:html={output} />
+            )}
+            {!field?.metadata && (!tag || encode) && (
+              <Fragment {...attrs} set:html={output} />
+            )}
+          </>
+        )}
+      </WithEmptyFieldEditingComponent>
+    </WithFieldMetadata>
+  )
+}

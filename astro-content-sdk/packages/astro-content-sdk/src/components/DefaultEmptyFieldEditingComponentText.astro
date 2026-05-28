@@ -1,0 +1,16 @@
+---
+/**
+ * The props for DefaultEmptyFieldEditingComponentText component.
+ * @public
+ */
+export interface EmptyFieldEditingComponentTextProps {
+  [key: string]: unknown;
+  tag?: string;
+}
+
+const props = Astro.props as EmptyFieldEditingComponentTextProps;
+
+const Tag = props.tag || 'span';
+---
+
+<Tag {...props} set:html="[No text in field]" />

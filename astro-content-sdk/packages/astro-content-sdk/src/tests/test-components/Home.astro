@@ -1,0 +1,12 @@
+---
+import Placeholder from '../../components/Placeholder/Placeholder.astro';
+
+const { rendering, render, renderEach, renderEmpty, ...otherProps } =
+  Astro.props;
+---
+
+<div class="home-mock">
+  <Placeholder name="main" rendering={rendering} />
+  <Placeholder name="page-header" rendering={rendering} />
+  <Placeholder name="page-content" rendering={rendering} {...otherProps} />
+</div>

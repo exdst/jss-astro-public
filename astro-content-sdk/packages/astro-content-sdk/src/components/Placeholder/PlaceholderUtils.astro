@@ -1,0 +1,134 @@
+---
+import { ComponentRendering } from "@sitecore-content-sdk/content/layout";
+import EmptyRendering from "../EmptyRendering.astro";
+import HiddenRendering from "../HiddenRendering.astro";
+import MissingComponent from "../MissingComponent.astro";
+import { getChildComponentProps } from "./placeholder-utils";
+import { ComponentForRendering, PlaceholderProps } from "./models";
+import { AstroContentSdkComponent, ComponentMap } from "../../sharedTypes/component-props";
+import { HIDDEN_RENDERING_NAME } from "@sitecore-content-sdk/content";
+import { useComponentMap } from "../../context";
+
+export const getPlaceholderComponents = (
+  placeholderProps: PlaceholderProps,
+  placeholderRenderings: ComponentRendering[],
+) => {
+
+  const {
+    name,
+    rendering,
+    missingComponentComponent,
+    hiddenRenderingComponent,
+    modifyComponentProps,
+  } = placeholderProps;
+
+  const componentMap = useComponentMap();
+
+  const transformedComponents = placeholderRenderings
+    .map((componentRendering: ComponentRendering) => {
+      const component = getComponentForRendering(
+        componentRendering,
+        name,
+        componentMap,
+        hiddenRenderingComponent,
+        missingComponentComponent
+      );
+      
+      const renderedProps = modifyComponentProps
+        ? modifyComponentProps(getChildComponentProps(placeholderProps, componentRendering))
+        : getChildComponentProps(placeholderProps, componentRendering);
+
+      let components = {
+        component: component,
+        props: renderedProps,
+        rendering: componentRendering,
+        placeholderName: name
+      };
+
+      return components;
+    })
+    .filter((element) => element); // remove nulls
+
+  return transformedComponents;
+};
+
+export const getComponentForRendering = (
+  renderingDefinition: ComponentRendering,
+  placeholderName: string,
+  componentMap?: ComponentMap,
+  hiddenRenderingComponent?: AstroContentSdkComponent,
+  missingComponentComponent?: AstroContentSdkComponent
+): ComponentForRendering => {
+  const logUnknownComponentError = (variant?: string) => {
+    console.error(
+      `Placeholder ${placeholderName} contains unknown component ${
+        renderingDefinition.componentName
+      }${
+        variant ? ` (${variant})` : ''
+      }. Ensure that a React component exists for it, and that it is registered in your component-map file.`
+    );
+  };
+
+  let component;
+ 
+  if (renderingDefinition.componentName === HIDDEN_RENDERING_NAME) {
+    return { 
+      component: hiddenRenderingComponent ?? HiddenRendering,
+      isEmpty: true
+    };
+  } else if (!renderingDefinition.componentName) {
+    return {
+      component: EmptyRendering,
+      isEmpty: true
+    };
+  }
+
+  if (!componentMap || componentMap.size === 0) {
+    console.warn(
+      `No components were available in component map to service request for component ${renderingDefinition}`
+    );
+  } else {
+    component = componentMap.get(renderingDefinition.componentName);
+  }
+
+  if (!component) {
+    // Fallback/defaults for Sitecore Component renderings (in case not defined in component map)
+    // if (renderingDefinition.componentName === FEAAS_COMPONENT_RENDERING_NAME) {
+    //   return {
+    //     component: FEaaSComponent,
+    //     isEmpty: false,
+    //   };
+    // } else if (renderingDefinition.componentName === FEAAS_WRAPPER_RENDERING_NAME) {
+    //   return {
+    //     component: FEaaSWrapper,
+    //     isEmpty: false,
+    //   };
+    // } else if (renderingDefinition.componentName === BYOC_COMPONENT_RENDERING_NAME) {
+    //   return {
+    //     component: BYOCComponent,
+    //     isEmpty: false,
+    //   };
+    // } else if (renderingDefinition.componentName === BYOC_WRAPPER_RENDERING_NAME) {
+    //   // wrapping with error boundary could cause problems in case where parent component uses withPlaceholder HOCs and tries to access its children props
+    //   // that's why we need to mark BYOC wrapper dynamic
+    //   return {
+    //     component: BYOCWrapper,
+    //     isEmpty: false,
+    //   };
+    // }
+
+    logUnknownComponentError();
+    
+    return {
+      component: missingComponentComponent ?? MissingComponent,
+      isEmpty: true,
+    };
+  }
+
+  return {
+    component,
+    isEmpty: false
+  }
+};
+
+---

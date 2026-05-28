@@ -1,0 +1,31 @@
+---
+/**
+ *  Wraps the field component with metadata markup intended to be used for chromes hydration in Pages
+ */
+
+import FieldMetadata from '../components/FieldMetadata.astro';
+
+interface WithMetadataProps {
+  field?: {
+    metadata?: { [key: string]: unknown };
+  };
+  editable?: boolean;
+}
+
+const componentProps = Astro.props as WithMetadataProps;
+
+const { editable = true } = componentProps;
+const metadata = componentProps.field?.metadata;
+const isEditable = metadata && editable;
+---
+
+<>
+  {!isEditable && <slot />}
+  {
+    isEditable && (
+      <FieldMetadata metadata={metadata}>
+        <slot />
+      </FieldMetadata>
+    )
+  }
+</>

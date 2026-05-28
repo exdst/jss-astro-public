@@ -1,0 +1,67 @@
+---
+import { EditableFieldProps } from './sharedTypes';
+import {
+  FieldMetadata,
+  isFieldValueEmpty,
+} from '@sitecore-content-sdk/content/layout';
+import WithEmptyFieldEditingComponent from '../enhancers/WithEmptyFieldEditingComponent.astro';
+import WithFieldMetadata from '../enhancers/WithFieldMetadata.astro';
+import DefaultEmptyFieldEditingComponentText from './DefaultEmptyFieldEditingComponentText.astro';
+
+/**
+ * The interface for the RichText field.
+ * @public
+ */
+export interface RichTextField extends FieldMetadata {
+  value?: string;
+}
+
+/**
+ * The interface for the RichText component props.
+ * @public
+ */
+export interface RichTextProps extends EditableFieldProps {
+  [htmlAttributes: string]: unknown;
+  /** The text field data. */
+  field: RichTextField;
+  /**
+   * The HTML element that will wrap the contents of the field.
+   */
+  tag?: string;
+}
+
+const {
+  field,
+  tag = 'div',
+  editable = true,
+  emptyFieldEditingComponent,
+} = Astro.props as RichTextProps;
+
+const isEmptyField = isFieldValueEmpty(field);
+
+const Tag = tag;
+
+const attrs = (function () {
+  const { field, ...attrs } = Astro.props;
+  const { tag, ...finalAttrs } = attrs;
+  return finalAttrs;
+})();
+---
+
+{
+  (
+    <WithFieldMetadata field={field} editable={editable}>
+      <WithEmptyFieldEditingComponent
+        field={field}
+        editable={editable}
+        defaultEmptyFieldEditingComponent={
+          DefaultEmptyFieldEditingComponentText
+        }
+        emptyFieldEditingComponent={emptyFieldEditingComponent}
+        {...attrs}
+      >
+        {!isEmptyField && <Tag {...attrs} set:html={field.value} />}
+      </WithEmptyFieldEditingComponent>
+    </WithFieldMetadata>
+  )
+}

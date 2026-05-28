@@ -1,0 +1,17 @@
+---
+type TestComponentProps = {
+  field?: {
+    value?: string;
+    metadata?: { [key: string]: unknown };
+  };
+  editable?: boolean;
+};
+
+const props = Astro.props as TestComponentProps;
+---
+
+<div>
+  <h1>{props.field?.value}</h1>
+  <h2>foo</h2>
+  <p>bar</p>
+</div>

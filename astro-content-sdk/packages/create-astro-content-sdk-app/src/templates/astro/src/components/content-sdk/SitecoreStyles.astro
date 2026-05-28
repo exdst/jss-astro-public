@@ -1,0 +1,20 @@
+---
+import client from '@/lib/sitecore-client';
+import type { LayoutServiceData, HTMLLink } from '@exdst-sitecore-content-sdk/astro';
+
+/**
+ * Component to render `<link>` elements for Sitecore styles
+ */
+
+const layoutData = Astro.props.layoutData as LayoutServiceData;
+const { enableStyles, enableThemes } = Astro.props;
+
+const headLinks = client.getHeadLinks(layoutData, {
+  enableStyles,
+  enableThemes,
+});
+---
+
+<>
+  {headLinks.map(({ rel, href }: HTMLLink) => <link rel={rel} href={href} />)}
+</>

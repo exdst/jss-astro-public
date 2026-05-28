@@ -1,4 +1,4 @@
-name: Publish create-astro-sitecore-jss to NPM
+name: Publish @exdst-sitecore-content-sdk/astro to NPM
 on:
   release:
     types: [created]
@@ -14,9 +14,9 @@ jobs:
         with:
           node-version: '24'
           registry-url: 'https://registry.npmjs.org'
-      - run: npm ci
-        working-directory: ./astro-sitecore-jss/packages/create-astro-sitecore-jss
+      - run: npm i
+        working-directory: ./astro-content-sdk/packages/astro-content-sdk
       - run: npm run build --if-present
-        working-directory: ./astro-sitecore-jss/packages/create-astro-sitecore-jss
+        working-directory: ./astro-content-sdk/packages/astro-content-sdk
       - run: npm publish
-        working-directory: ./astro-sitecore-jss/packages/create-astro-sitecore-jss
+        working-directory: ./astro-content-sdk/packages/astro-content-sdk

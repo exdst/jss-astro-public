@@ -1,0 +1,32 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "target": "ES2017",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react",
+    "skipLibCheck": true,
+    "types": ["node"],
+    "typeRoots": ["node_modules/@types", "../../node_modules/@types"],
+    "noEmit": true
+  },
+  "exclude": [
+    "node_modules",
+    "types",
+    "typings",
+    "dist",
+    "config.d.ts",
+    "middleware.d.ts",
+    "editing.d.ts",
+    "site.d.ts",
+    "client.d.ts",
+    "utils.d.ts",
+    "tools.d.ts",
+    "config-cli.d.ts",
+    "src/tests/*",
+    "**/*.test.ts",
+    "**/*.astro.test.ts",
+    "tests",
+    "api"
+  ]
+}

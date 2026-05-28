@@ -1,0 +1,80 @@
+---
+import {
+  FieldMetadata,
+  isFieldValueEmpty,
+} from '@sitecore-content-sdk/content/layout';
+import { EditableFieldProps } from './sharedTypes';
+import WithFieldMetadata from '../enhancers/WithFieldMetadata.astro';
+import WithEmptyFieldEditingComponent from '../enhancers/WithEmptyFieldEditingComponent.astro';
+import DefaultEmptyFieldEditingComponentText from './DefaultEmptyFieldEditingComponentText.astro';
+
+/**
+ * The props for the DateField component.
+ * @public
+ */
+export interface DateFieldProps extends EditableFieldProps {
+  /** The date field data. */
+  [htmlAttributes: string]: unknown;
+  field: FieldMetadata & {
+    value?: string;
+  };
+  /**
+   * The HTML element that will wrap the contents of the field.
+   */
+  tag?: string;
+
+  render?: (date: Date | null) => string | null;
+}
+
+const {
+  field,
+  tag,
+  editable = true,
+  render,
+  emptyFieldEditingComponent,
+  ...otherProps
+} = Astro.props as DateFieldProps;
+
+const isEmptyField = isFieldValueEmpty(field);
+
+const htmlProps: {
+  [htmlAttr: string]: unknown;
+} = {
+  ...otherProps,
+};
+
+let children;
+if (!isEmptyField) {
+  if (render) {
+    // @ts-ignore
+    children = render(field.value ? new Date(field.value) : null);
+  } else {
+    children = field.value;
+  }
+}
+
+const Tag = tag || 'span';
+---
+
+{
+  (
+    <WithFieldMetadata field={field} editable={editable}>
+      <WithEmptyFieldEditingComponent
+        field={field}
+        editable={editable}
+        defaultEmptyFieldEditingComponent={
+          DefaultEmptyFieldEditingComponentText
+        }
+        emptyFieldEditingComponent={emptyFieldEditingComponent}
+        {...otherProps}
+      >
+        {!isEmptyField && (
+          <>
+            {tag && <Tag {...htmlProps} set:html={children} />}
+            {!tag && <Fragment {...htmlProps} set:html={children} />}
+          </>
+        )}
+      </WithEmptyFieldEditingComponent>
+    </WithFieldMetadata>
+  )
+}

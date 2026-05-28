@@ -1,0 +1,24 @@
+# Local / generated
+dist/
+coverage/
+coverage-unit/
+.nyc_output/
+temp/
+api/
+.vscode/
+types/
+
+# Root-level typings and scripts
+/*.d.ts
+
+# Dev-only config at package root
+vitest.config.ts
+.mocharc.json
+.nycrc
+api-extractor.json
+tsconfig.json
+tsconfig.build.json
+
+# Tests
+**/*.test.ts
+src/tests/

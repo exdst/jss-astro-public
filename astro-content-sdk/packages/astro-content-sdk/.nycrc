@@ -1,0 +1,23 @@
+{
+  "extension": [".ts"],
+  "exclude": [
+    "**/index.ts",
+    "**/*.d.ts",
+    "**/*.test.ts",
+    "**/*.astro.test.ts",
+    "src/tests",
+    "src/tools/codegen/test-data",
+    "dist",
+    "src/test.ts",
+    "src/index.ts",
+    "src/dataModels.ts",
+    "./*.js",
+    "./*.d.ts",
+    "**/layout/models.ts",
+    "api",
+    "src/debug.ts"
+  ],
+  "all": true,
+  "reporter": ["cobertura", "text"],
+  "import": ["tsx"]
+}

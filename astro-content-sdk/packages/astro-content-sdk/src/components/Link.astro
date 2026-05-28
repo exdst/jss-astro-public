@@ -1,0 +1,117 @@
+---
+import {
+  FieldMetadata,
+  isFieldValueEmpty,
+} from '@sitecore-content-sdk/content/layout';
+import { EditableFieldProps } from './sharedTypes';
+import WithFieldMetadata from '../enhancers/WithFieldMetadata.astro';
+import WithEmptyFieldEditingComponent from '../enhancers/WithEmptyFieldEditingComponent.astro';
+import DefaultEmptyFieldEditingComponentText from './DefaultEmptyFieldEditingComponentText.astro';
+
+/**
+ * The interface for the Link field value.
+ * @public
+ */
+export interface LinkFieldValue {
+  [attributeName: string]: unknown;
+  href?: string;
+  class?: string;
+  title?: string;
+  target?: string;
+  text?: string;
+  anchor?: string;
+  querystring?: string;
+  linktype?: string;
+}
+
+/**
+ * The interface for the Link field.
+ * @public
+ */
+export interface LinkField {
+  value: LinkFieldValue;
+}
+
+/**
+ * The interface for the Link component props.
+ * @public
+ */
+export interface LinkProps extends EditableFieldProps {
+  [htmlAttributes: string]: unknown;
+  /** The link field data. */
+  field: (LinkField | LinkFieldValue) & FieldMetadata;
+  /**
+   * Displays a link text ('description' in Sitecore) even when children exist
+   */
+  showLinkTextWithChildrenPresent?: boolean;
+}
+
+const {
+  field,
+  editable = true,
+  showLinkTextWithChildrenPresent,
+  emptyFieldEditingComponent,
+  ...otherProps
+} = Astro.props as LinkProps;
+
+const children = await Astro.slots.render('default');
+const dynamicField: LinkField | LinkFieldValue = field;
+
+const isEmptyField = isFieldValueEmpty(dynamicField);
+
+let link,
+  finalChildren,
+  anchorAttrs: { [attr: string]: unknown } = {};
+
+if (!isEmptyField) {
+  // handle link directly on field for forgetful devs
+  link = (dynamicField as LinkFieldValue).href
+    ? (field as LinkFieldValue)
+    : (dynamicField as LinkField).value;
+
+  if (link) {
+    const anchor =
+      link.linktype !== 'anchor' && link.anchor ? `#${link.anchor}` : '';
+    const querystring = link.querystring ? `?${link.querystring}` : '';
+
+    anchorAttrs = {
+      href: `${link.href}${querystring}${anchor}`,
+      class: link.class,
+      title: link.title,
+      target: link.target,
+    };
+
+    if (anchorAttrs.target === '_blank' && !anchorAttrs.rel) {
+      // information disclosure attack prevention keeps target blank site from getting ref to window.opener
+      anchorAttrs.rel = 'noopener noreferrer';
+    }
+
+    const linkText =
+      showLinkTextWithChildrenPresent || !children
+        ? link.text || link.href
+        : null;
+
+    finalChildren = children ? [linkText, ...children] : linkText;
+  }
+}
+
+const attrs = { ...anchorAttrs, ...otherProps };
+---
+
+{
+  (
+    <WithFieldMetadata field={field} editable={editable}>
+      <WithEmptyFieldEditingComponent
+        field={field}
+        editable={editable}
+        defaultEmptyFieldEditingComponent={
+          DefaultEmptyFieldEditingComponentText
+        }
+        emptyFieldEditingComponent={emptyFieldEditingComponent}
+        {...otherProps}
+      >
+        {!isEmptyField && link && <a {...attrs} set:html={finalChildren} />}
+      </WithEmptyFieldEditingComponent>
+    </WithFieldMetadata>
+  )
+}

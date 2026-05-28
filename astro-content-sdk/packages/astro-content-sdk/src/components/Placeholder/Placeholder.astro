@@ -1,0 +1,95 @@
+---
+import { ComponentRendering } from '@sitecore-content-sdk/content/layout';
+import ErrorBoundary from '../ErrorBoundary.astro';
+import PlaceholderMetadata from './PlaceholderMetadata.astro';
+import { useSitecore } from '../../context';
+import RenderWrapper from '../RenderWrapper.astro';
+import EmptyPlaceholder from './EmptyPlaceholder.astro';
+import { PlaceholderProps } from './models';
+import { getPlaceholderRenderings } from './placeholder-utils';
+import { getPlaceholderComponents } from './PlaceholderUtils.astro';
+
+const props = Astro.props as PlaceholderProps;
+
+const { page } = useSitecore();
+
+const placeholderRenderings = getPlaceholderRenderings(
+  props.rendering,
+  props.name,
+  page.mode.isEditing
+);
+
+const isEmpty = !placeholderRenderings.length;
+
+const components = getPlaceholderComponents(props, placeholderRenderings);
+---
+
+{
+  (
+    <RenderWrapper
+      wrapper={
+        isEmpty
+          ? page.mode.isEditing && EmptyPlaceholder
+          : props.render
+      }
+    >
+      <ErrorBoundary>
+        <RenderWrapper wrapper={isEmpty && props.renderEmpty}>
+          {
+            // Conditional rendering based on editing mode
+            page.mode.isEditing ? (
+              <PlaceholderMetadata
+                placeholderName={props.name}
+                rendering={props.rendering as ComponentRendering}
+              >
+                {components.map((component) => {
+                  const Component = component.component.component;
+
+                  return (
+                    <RenderWrapper wrapper={props.renderEach}>
+                      <PlaceholderMetadata
+                        rendering={component.rendering as ComponentRendering}
+                      >
+                        {!component.component.isEmpty && (
+                          <ErrorBoundary
+                            errorComponent={props.errorComponent}
+                            {...component.props}
+                          >
+                            <Component {...component.props} />
+                          </ErrorBoundary>
+                        )}
+                        {component.component.isEmpty && (
+                          <Component {...component.props} />
+                        )}
+                      </PlaceholderMetadata>
+                    </RenderWrapper>
+                  );
+                })}
+              </PlaceholderMetadata>
+            ) : (
+              <>
+                {components.map((component) => {
+                  const Component = component.component.component;
+                  return (
+                    <RenderWrapper
+                      wrapper={
+                        isEmpty ? props.renderEmpty : props.renderEach
+                      }
+                    >
+                      <ErrorBoundary
+                        errorComponent={props.errorComponent}
+                        {...component.props}
+                      >
+                        <Component {...component.props} />
+                      </ErrorBoundary>
+                    </RenderWrapper>
+                  );
+                })}
+              </>
+            )
+          }
+        </RenderWrapper>
+      </ErrorBoundary>
+    </RenderWrapper>
+  )
+}

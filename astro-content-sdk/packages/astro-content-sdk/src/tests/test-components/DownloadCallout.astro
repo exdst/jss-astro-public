@@ -1,0 +1,12 @@
+---
+const props = Astro.props as {
+  [prop: string]: unknown;
+  fields?: { message?: { value?: string } };
+  extraDiv?: boolean;
+};
+---
+
+<div class="download-callout-mock">
+  {props.fields?.message ? props.fields.message.value : ''}
+  {props.extraDiv ? <div class="extra">extra!</div> : null}
+</div>

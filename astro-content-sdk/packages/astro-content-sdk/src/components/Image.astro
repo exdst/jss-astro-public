@@ -1,0 +1,169 @@
+---
+import { mediaApi } from '@sitecore-content-sdk/content/media';
+import { EditableFieldProps } from './sharedTypes';
+import {
+  FieldMetadata,
+  isFieldValueEmpty,
+} from '@sitecore-content-sdk/content/layout';
+import { addClassName } from '../utils';
+import WithFieldMetadata from '../enhancers/WithFieldMetadata.astro';
+import WithEmptyFieldEditingComponent from '../enhancers/WithEmptyFieldEditingComponent.astro';
+import DefaultEmptyFieldEditingComponentImage from './DefaultEmptyFieldEditingComponentImage.astro';
+
+/**
+ * The interface for the Image field value.
+ * @public
+ */
+export interface ImageFieldValue {
+  [attributeName: string]: unknown;
+  src?: string;
+}
+
+/**
+ * The interface for the Image field.
+ * @public
+ */
+export interface ImageField {
+  value?: ImageFieldValue;
+}
+
+/**
+ * The interface for the Image size parameters.
+ * @public
+ */
+export interface ImageSizeParameters {
+  [attr: string]: string | number | undefined;
+  /** Fixed width of the image */
+  w?: number;
+  /** Fixed height of the image */
+  h?: number;
+  /** Max width of the image */
+  mw?: number;
+  /** Max height of the image */
+  mh?: number;
+  /** Ignore aspect ratio */
+  iar?: 1 | 0;
+  /** Allow stretch */
+  as?: 1 | 0;
+  /** Image scale. Defaults to 1.0 */
+  sc?: number;
+}
+
+export interface BaseImageProps {
+  [attributeName: string]: unknown;
+  /** Image field data (consistent with other field types) */
+  field?: (ImageField | ImageFieldValue) & FieldMetadata;
+  /**
+   * Parameters that will be attached to Sitecore media URLs
+   */
+  imageParams?: {
+    [paramName: string]: string | number;
+  };
+    /**
+   * Custom regexp that finds media URL prefix that will be replaced by `/-/jssmedia` or `/~/jssmedia`.
+   * @example
+   * /\/([-~]{1})assets\//i
+   * /-assets/website -> /-/jssmedia/website
+   * /~assets/website -> /~/jssmedia/website
+   */
+  mediaUrlPrefix?: RegExp;
+}
+
+/**
+ * The interface for the Image component props.
+ * @public
+ */
+export interface ImageProps extends BaseImageProps, EditableFieldProps {
+  srcSet?: ImageSizeParameters[];
+}
+
+const getImageAttrs = (
+  {
+    src,
+    srcSet,
+    ...otherAttrs
+  }: {
+    [key: string]: unknown;
+    src?: string;
+    srcSet?: ImageSizeParameters[];
+  },
+  imageParams?: { [paramName: string]: string | number },
+  mediaUrlPrefix?: RegExp
+) => {
+  if (!src) {
+    return null;
+  }
+  addClassName(otherAttrs);
+
+  const newAttrs: { [attr: string]: unknown } = {
+    ...otherAttrs,
+  };
+
+  // update image URL for content sdk handler and image rendering params
+  const resolvedSrc = mediaApi.updateImageUrl(src, imageParams, mediaUrlPrefix);
+  if (srcSet) {
+    // replace with HTML-formatted srcset, including updated image URLs
+    newAttrs.srcSet = mediaApi.getSrcSet(
+      resolvedSrc,
+      srcSet,
+      imageParams,
+      mediaUrlPrefix
+    );
+  }
+  // always output original src as fallback for older browsers
+  newAttrs.src = resolvedSrc;
+  return newAttrs;
+};
+
+const {
+  editable = true,
+  imageParams,
+  field,
+  mediaUrlPrefix,
+  emptyFieldEditingComponent,
+  ...otherProps
+} = Astro.props as ImageProps;
+
+const dynamicMedia = field as ImageField | ImageFieldValue;
+
+const isEmptyField = isFieldValueEmpty(dynamicMedia);
+
+let img;
+if (!isEmptyField) {
+  // handle image directly on field for forgetful devs
+  img = (dynamicMedia as ImageFieldValue).src
+    ? { ...field }
+    : (dynamicMedia.value as ImageFieldValue);
+
+  if (img) {
+    // prevent metadata from being passed to the img tag
+    if (img.metadata) {
+      delete img.metadata;
+    }
+  }
+}
+
+const attrs = getImageAttrs(
+  { ...img, ...otherProps },
+  imageParams,
+  mediaUrlPrefix
+);
+---
+
+{
+  (
+    <WithFieldMetadata field={field} editable={editable}>
+      <WithEmptyFieldEditingComponent
+        field={field}
+        editable={editable}
+        defaultEmptyFieldEditingComponent={
+          DefaultEmptyFieldEditingComponentImage
+        }
+        emptyFieldEditingComponent={emptyFieldEditingComponent}
+        {...otherProps}
+      >
+        {!isEmptyField && img && attrs && <img {...attrs} />}
+      </WithEmptyFieldEditingComponent>
+    </WithFieldMetadata>
+  )
+}
