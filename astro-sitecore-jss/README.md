@@ -25,4 +25,4 @@ Astro renders to HTML by default and only hydrates the islands that actually nee
 
 * Repository root (development & production usage): [jss-astro-public](../README.md)
 
-Sponsored by [EXDST](https://exdst.com/)
+Made by [EXDST](https://exdst.com/)

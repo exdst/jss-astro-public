@@ -16,9 +16,9 @@ Sitecore's default headless implementation runs on Next.js, which ships React to
 
 Measured against the same Sitecore demo on Next.js with the Content SDK, the Astro build delivers ([full case study](https://exdst.com/case-studies/sitecore-astro-sdk)):
 
-* **+30 Lighthouse Performance points** (mobile average across 17 pages)
-* **3.2s faster** Largest Contentful Paint (LCP)
-* **858 ms less** main-thread blocking (Total Blocking Time)
+* **Higher Lighthouse Performance** on mobile
+* **Faster** Largest Contentful Paint (LCP)
+* **Less** main-thread blocking (Total Blocking Time)
 
 …with full feature parity: the same field types, SXA toolkit, multisite/multilingual support, and in-place editing for Pages and the Experience Editor.
 
@@ -48,12 +48,7 @@ npx @exdst-sitecore-content-sdk/create-astro@latest
 
 ### Build results
 
-Same SitecoreAI(XM Cloud) site — built once with Next.js and once with Astro. Lighthouse mobile performance score:
-
-| Stack | Lighthouse mobile |
-| --- | --- |
-| **Astro Content SDK** | **91** |
-| Next.js Content SDK | 68 |
+Built once with Next.js and once with Astro from the same SitecoreAI(XM Cloud) site, the Astro Content SDK delivers a higher Lighthouse mobile performance score.
 
 Source: [Sitecore Astro Content SDK release](https://exdst.com/posts/20260531-astro-content-sdk-release).
 
@@ -194,4 +189,4 @@ To see the demo or discuss a project, get in touch:
 * Vadym Shcherban, [GitHub](https://github.com/Lawliet1701)
 * Navaneethakrishnan Sundarrajan, [GitHub](https://github.com/navancommits)
 
-Sponsored by [EXDST](https://exdst.com/)
+Made by [EXDST](https://exdst.com/)

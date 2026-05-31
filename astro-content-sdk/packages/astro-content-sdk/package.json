@@ -1,6 +1,6 @@
 {
   "name": "@exdst-sitecore-content-sdk/astro",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Astro Content SDK for SitecoreAI(XM Cloud)",
   "keywords": [
     "sitecore",

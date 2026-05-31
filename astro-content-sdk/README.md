@@ -15,11 +15,11 @@ npx @exdst-sitecore-content-sdk/create-astro@latest
 
 ## Why Astro
 
-Astro renders to HTML by default and only hydrates the islands that actually need JavaScript — a much better fit for content-driven Sitecore sites than shipping React to every page. Against the same demo on Next.js with the Content SDK, the Astro build delivers **+30 Lighthouse points (mobile)**, **3.2s faster LCP**, and **858 ms less main-thread blocking**. See the [case study](https://exdst.com/case-studies/sitecore-astro-sdk) and [Astro services](https://exdst.com/services/astro).
+Astro renders to HTML by default and only hydrates the islands that actually need JavaScript — a much better fit for content-driven Sitecore sites than shipping React to every page. Against the same demo on Next.js with the Content SDK, the Astro build delivers higher Lighthouse scores on mobile, faster LCP, and less main-thread blocking. See the [case study](https://exdst.com/case-studies/sitecore-astro-sdk) and [Astro services](https://exdst.com/services/astro).
 
 ## Learn more
 
 * Release notes: [Sitecore Astro Content SDK release](https://exdst.com/posts/20260531-astro-content-sdk-release)
 * Repository root: [jss-astro-public](../README.md)
 
-Sponsored by [EXDST](https://exdst.com/)
+Made by [EXDST](https://exdst.com/)

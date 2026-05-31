@@ -12,7 +12,7 @@ Follow the prompts and choose a starter template — for example **Alaris**, **S
 
 ## Why Astro
 
-Astro renders to HTML by default and only hydrates the islands that need JavaScript, delivering **+30 Lighthouse points (mobile)**, **3.2s faster LCP**, and **858 ms less main-thread blocking** versus Next.js with the Content SDK. See the [case study](https://exdst.com/case-studies/sitecore-astro-sdk).
+Astro renders to HTML by default and only hydrates the islands that need JavaScript, delivering higher Lighthouse scores on mobile, faster LCP, and less main-thread blocking versus Next.js with the Content SDK. See the [case study](https://exdst.com/case-studies/sitecore-astro-sdk).
 
 ## Learn more
 
@@ -20,4 +20,4 @@ Astro renders to HTML by default and only hydrates the islands that need JavaScr
 * SDK package: [`@exdst-sitecore-content-sdk/astro`](../astro-content-sdk/)
 * Repository root: [jss-astro-public](../../../README.md)
 
-Sponsored by [EXDST](https://exdst.com/)
+Made by [EXDST](https://exdst.com/)

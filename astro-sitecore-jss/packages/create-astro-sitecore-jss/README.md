@@ -11,15 +11,11 @@ It is based on the official [Sitecore JSS initializers](https://github.com/Sitec
 
 ## Why Astro
 
-Astro renders to HTML by default and only hydrates the islands that need JavaScript, delivering **+30 Lighthouse points (mobile)**, **3.2s faster LCP**, and **858 ms less main-thread blocking** versus Next.js. See the [case study](https://exdst.com/case-studies/sitecore-astro-sdk).
+Astro renders to HTML by default and only hydrates the islands that need JavaScript, delivering higher Lighthouse scores on mobile, faster LCP, and less main-thread blocking versus Next.js. See the [case study](https://exdst.com/case-studies/sitecore-astro-sdk).
 
 ## Learn more
 
 * SDK package: [`@astro-sitecore-jss/astro-sitecore-jss`](../astro-sitecore-jss/)
 * Repository root: [jss-astro-public](../../../README.md)
 
-## To Sitecore
-
-If someone from Sitecore is reading this, please make the official JSS initializer able to accept custom templates from GitHub-based URLs, and require fewer parameters to be passed to the initializer. For example, you may want to implement a new template but not have the time or desire to implement the code-first part.
-
-Sponsored by [EXDST](https://exdst.com/)
+Made by [EXDST](https://exdst.com/)
