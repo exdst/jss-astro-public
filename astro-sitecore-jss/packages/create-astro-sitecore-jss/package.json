@@ -1,7 +1,25 @@
 {
   "name": "@astro-sitecore-jss/create-astro-sitecore-jss",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Astro Sitecore JSS initializer",
+  "keywords": [
+    "sitecore",
+    "astro",
+    "headless",
+    "ssg",
+    "islands",
+    "jamstack",
+    "jss",
+    "sitecore-jss",
+    "xm",
+    "xp",
+    "experience-editor",
+    "cli",
+    "create",
+    "scaffold",
+    "template"
+  ],
+  "homepage": "https://github.com/exdst/jss-astro-public#create-astro-sitecore-jss",
   "bin": "./dist/index.js",
   "scripts": {
     "build": "npm run clean && tsc && ts-node ./scripts/build-templates.ts",

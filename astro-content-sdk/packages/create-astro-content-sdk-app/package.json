@@ -1,7 +1,23 @@
 {
   "name": "@exdst-sitecore-content-sdk/create-astro",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Astro Content SDK initializer",
+  "keywords": [
+    "sitecore",
+    "astro",
+    "headless",
+    "ssg",
+    "islands",
+    "jamstack",
+    "content-sdk",
+    "xm-cloud",
+    "sitecoreai",
+    "cli",
+    "create",
+    "scaffold",
+    "template"
+  ],
+  "homepage": "https://github.com/exdst/jss-astro-public#create-astro-content-sdk",
   "bin": "./dist/index.js",
   "scripts": {
     "build": "npm run clean && tsc && ts-node ./scripts/build-templates.ts",
@@ -20,7 +36,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/exdst/jss-astro-public"
+    "url": "https://github.com/exdst/jss-astro-public",
+    "directory": "astro-content-sdk/packages/create-astro-content-sdk-app"
   },
   "license": "Apache-2.0",
   "bugs": {
