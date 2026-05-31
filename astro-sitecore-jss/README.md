@@ -15,7 +15,7 @@ This folder contains:
 npx @astro-sitecore-jss/create-astro-sitecore-jss@latest
 ```
 
-> **Sitecore JSS 22 maintenance reaches end of life in June 2026.** For new SitecoreAI / XM Cloud projects, use the [Astro Content SDK](../astro-content-sdk/) instead. This JSS SDK remains available for existing XM / XP (Experience Editor) implementations.
+> **Sitecore JSS 22 maintenance reaches end of life in June 2026.** For new SitecoreAI(XM Cloud) projects, use the [Astro Content SDK](../astro-content-sdk/) instead. This JSS SDK remains available for existing XM / XP (Experience Editor) implementations.
 
 ## Why Astro
 

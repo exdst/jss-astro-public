@@ -1,6 +1,6 @@
 # Sitecore Content SDK for Astro
 
-Build [SitecoreAI / XM Cloud](https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html) websites with the [Astro](https://astro.build/) web framework on top of the [Sitecore Content SDK](https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html) — no Sitecore JSS dependency.
+Build [SitecoreAI(XM Cloud)](https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html) websites with the [Astro](https://astro.build/) web framework on top of the [Sitecore Content SDK](https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html) — no Sitecore JSS dependency.
 
 This is a Yarn workspaces + Lerna monorepo containing:
 

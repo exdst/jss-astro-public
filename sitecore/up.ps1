@@ -77,7 +77,7 @@ Push-Location $workingDirectoryPath
 
 try {
     if ($Xmcloud) {
-        Write-Host "Keeping XM Cloud base image up to date" -ForegroundColor Green
+        Write-Host "Keeping SitecoreAI(XM Cloud) base image up to date" -ForegroundColor Green
         docker pull "$($sitecoreDockerRegistry)sitecore-xmcloud-cm:$($sitecoreVersion)"
     }
     # Build all containers in the Sitecore instance, forcing a pull of latest base containers

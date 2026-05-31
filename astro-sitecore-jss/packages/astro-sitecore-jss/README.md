@@ -16,7 +16,7 @@ npx @astro-sitecore-jss/create-astro-sitecore-jss@latest
 
 See the [repository root](../../../README.md) for full development and production usage instructions.
 
-> **Sitecore JSS 22 maintenance reaches end of life in June 2026.** For new SitecoreAI / XM Cloud projects, use the [Astro Content SDK](../../../astro-content-sdk/) instead.
+> **Sitecore JSS 22 maintenance reaches end of life in June 2026.** For new SitecoreAI(XM Cloud) projects, use the [Astro Content SDK](../../../astro-content-sdk/) instead.
 
 ## Why Astro
 

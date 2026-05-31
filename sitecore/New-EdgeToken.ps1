@@ -1,4 +1,4 @@
-# parse the sitecore.json file for the XM Cloud plugin version
+# parse the sitecore.json file for the SitecoreAI(XM Cloud) plugin version
 [CmdletBinding(DefaultParameterSetName = 'FromArgs')]
 param (
     [Parameter(Mandatory)]

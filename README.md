@@ -1,10 +1,12 @@
 # Sitecore Software Development Kits for Astro
 
-![Library](https://github.com/exdst/jss-astro-public/actions/workflows/publish-astro-sitecore-jss.yml/badge.svg)
-![Astro project initializer](https://github.com/exdst/jss-astro-public/actions/workflows/publish-create-astro-sitecore-jss.yml/badge.svg)
+![Content SDK](https://github.com/exdst/jss-astro-public/actions/workflows/publish-exdst-sitecore-content-sdk-astro.yml/badge.svg)
+![Content SDK initializer](https://github.com/exdst/jss-astro-public/actions/workflows/publish-exdst-sitecore-content-sdk-create-astro.yml/badge.svg)
+![JSS library](https://github.com/exdst/jss-astro-public/actions/workflows/publish-astro-sitecore-jss.yml/badge.svg)
+![JSS initializer](https://github.com/exdst/jss-astro-public/actions/workflows/publish-create-astro-sitecore-jss.yml/badge.svg)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-Build [Sitecore](https://www.sitecore.com/) websites with the [Astro](https://astro.build/) web framework. This repository ships two fully featured, production-ready SDKs — one for the modern **Sitecore Content SDK** (SitecoreAI / XM Cloud) and one for classic **Sitecore JSS** (XM / XP) — together with project initializers and a Docker-based local Sitecore environment.
+Build [Sitecore](https://www.sitecore.com/) websites with the [Astro](https://astro.build/) web framework. This repository ships two fully featured, production-ready SDKs — one for the modern **Sitecore Content SDK** (SitecoreAI(XM Cloud)) and one for classic **Sitecore JSS** (XM / XP) — together with project initializers and a Docker-based local Sitecore environment.
 
 Maintained and sponsored by [EXDST](https://exdst.com/), an [Astro Agency Partner](https://exdst.com/case-studies/sitecore-astro-sdk).
 
@@ -26,14 +28,14 @@ Learn more: [Why Astro for Sitecore — case study](https://exdst.com/case-studi
 
 | SDK | Sitecore product | npm package | Initializer |
 | --- | --- | --- | --- |
-| **Content SDK** _(recommended)_ | SitecoreAI / XM Cloud | [`@exdst-sitecore-content-sdk/astro`](https://www.npmjs.com/package/@exdst-sitecore-content-sdk/astro) | [`@exdst-sitecore-content-sdk/create-astro`](https://www.npmjs.com/package/@exdst-sitecore-content-sdk/create-astro) |
+| **Content SDK** _(recommended)_ | SitecoreAI(XM Cloud) | [`@exdst-sitecore-content-sdk/astro`](https://www.npmjs.com/package/@exdst-sitecore-content-sdk/astro) | [`@exdst-sitecore-content-sdk/create-astro`](https://www.npmjs.com/package/@exdst-sitecore-content-sdk/create-astro) |
 | **JSS SDK** | XM / XP (Experience Editor) | [`@astro-sitecore-jss/astro-sitecore-jss`](https://www.npmjs.com/package/@astro-sitecore-jss/astro-sitecore-jss) | [`@astro-sitecore-jss/create-astro-sitecore-jss`](https://www.npmjs.com/package/@astro-sitecore-jss/create-astro-sitecore-jss) |
 
-> **Sitecore JSS 22 maintenance reaches end of life in June 2026.** For new SitecoreAI / XM Cloud projects, use the **Content SDK**. The JSS SDK remains available for existing XM / XP (Experience Editor) implementations.
+> **Sitecore JSS 22 maintenance reaches end of life in June 2026.** For new SitecoreAI(XM Cloud) projects, use the **Content SDK**. The JSS SDK remains available for existing XM / XP (Experience Editor) implementations.
 
 ## Astro Content SDK
 
-The Astro Content SDK builds SitecoreAI / XM Cloud websites with Astro on top of the [Sitecore Content SDK](https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html) — no Sitecore JSS dependency. It follows the same patterns as the official Next.js Content SDK, so developers can move between frameworks easily, and supports running Astro locally as a rendering host with metadata editing mode for the SitecoreAI Pages editor.
+The Astro Content SDK builds SitecoreAI(XM Cloud) websites with Astro on top of the [Sitecore Content SDK](https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html) — no Sitecore JSS dependency. It follows the same patterns as the official Next.js Content SDK, so developers can move between frameworks easily, and supports running Astro locally as a rendering host with metadata editing mode for the SitecoreAI Pages editor.
 
 Quick start:
 
@@ -46,7 +48,7 @@ npx @exdst-sitecore-content-sdk/create-astro@latest
 
 ### Build results
 
-Same SitecoreAI / XM Cloud site, same Content SDK — built once with Next.js and once with Astro. Lighthouse mobile performance score:
+Same SitecoreAI(XM Cloud) site — built once with Next.js and once with Astro. Lighthouse mobile performance score:
 
 | Stack | Lighthouse mobile |
 | --- | --- |
@@ -54,16 +56,6 @@ Same SitecoreAI / XM Cloud site, same Content SDK — built once with Next.js an
 | Next.js Content SDK | 68 |
 
 Source: [Sitecore Astro Content SDK release](https://exdst.com/posts/20260531-astro-content-sdk-release).
-
-## Create Astro Content SDK
-
-The Content SDK initializer scaffolds a ready-to-run Astro + SitecoreAI sample app from a choice of starter templates (Alaris, Solterra & Co., Skate Park, and more).
-
-```bash
-npx @exdst-sitecore-content-sdk/create-astro@latest
-```
-
-See [`astro-content-sdk/packages/create-astro-content-sdk-app/`](./astro-content-sdk/packages/create-astro-content-sdk-app/).
 
 ## Astro Sitecore JSS
 
@@ -121,7 +113,7 @@ See [`astro-sitecore-jss/packages/create-astro-sitecore-jss/`](./astro-sitecore-
   * [Astro JSS SDK](./astro-sitecore-jss/packages/astro-sitecore-jss/)
   * [Astro JSS sample project](./astro-sitecore-jss/packages/astro-sitecore-jss-sample/)
   * [Astro JSS initializer](./astro-sitecore-jss/packages/create-astro-sitecore-jss/)
-* **Sitecore** — [`sitecore/`](./sitecore/) — Docker-based local Sitecore environment (XM1, XP0, XP1, XM Cloud topologies)
+* **Sitecore** — [`sitecore/`](./sitecore/) — Docker-based local Sitecore environment (XM1, XP0, XP1, SitecoreAI(XM Cloud) topologies)
 
 ## Installation for development and contribution
 
@@ -139,6 +131,24 @@ Currently, the project supports only the Sitecore-first approach — you cannot 
 ## Demo website
 
 See Astro and Sitecore in action in the [Sitecore.Demo.XMCloud.Verticals](https://github.com/exdst/Sitecore.Demo.XMCloud.Verticals) repository — a fork of the Sitecore Next.js demo website, reimplemented on Astro, which proves Astro's capabilities and better performance compared to Next.js. Live demo: [exdst.com/astro-demo](https://exdst.com/astro-demo).
+
+## Starter kits
+
+For SitecoreAI(XM Cloud) projects, the [astro-xmcloud-starter-js](https://github.com/exdst/astro-xmcloud-starter-js) repository — a fork of Sitecore's [xmcloud-starter-js](https://github.com/Sitecore/xmcloud-starter-js) — provides Astro front-end starter kits alongside their Next.js counterparts, so you can compare the two stacks on the same templates:
+
+* `basic-astro`
+* `kit-astro-article-starter`
+* `kit-astro-location-finder`
+* `kit-astro-product-listing`
+* `kit-astro-skate-park`
+
+To run a starter, set up its `.env.local` from the SitecoreAI(XM Cloud) Deploy Portal (Developer Settings), then:
+
+```bash
+cd examples/<starter-name>
+npm install
+npm run dev
+```
 
 ## Contacts
 

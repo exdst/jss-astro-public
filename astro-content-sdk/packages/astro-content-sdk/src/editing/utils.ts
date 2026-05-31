@@ -291,7 +291,7 @@ export const isDesignLibraryPreviewData = (
  * 1. `config.sitecoreInternalEditingHostUrl` (explicitly set in config)
  * 2. Environment variable `SITECORE_INTERNAL_EDITING_HOST_URL`
  * 3. Fallbacks:
- *    - For XM Cloud deployments → `'http://localhost:3000'`
+ *    - For SitecoreAI(XM Cloud) deployments → `'http://localhost:3000'`
  *    - For all other cases → use the request `Host` header
  * Note we use https protocol on Vercel due to serverless function architecture.
  * In all other scenarios, including localhost (with or without a proxy e.g. ngrok)

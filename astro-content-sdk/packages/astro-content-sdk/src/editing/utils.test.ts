@@ -1064,7 +1064,7 @@ describe('editing/utils', () => {
       expect(result).to.equal('https://custom-host.com');
     });
 
-    it('should return localhost:3000 for XM Cloud deployments', () => {
+    it('should return localhost:3000 for SitecoreAI(XM Cloud) deployments', () => {
       process.env.SITECORE = 'true';
       const req = mockRequest({
         headers: { host: 'example.com' },

@@ -7,7 +7,7 @@ import sites from '.sitecore/sites.json';
  * API route for generating sitemap-{id}.xml
  *
  * This API route dynamically generates and serves the sitemap XML for your site.
- * The sitemap configuration can be managed within XM Cloud.
+ * The sitemap configuration can be managed within SitecoreAI(XM Cloud).
  */
 
 export const GET: APIRoute = async ({ request }: APIContext) => {

@@ -1,6 +1,6 @@
 # Astro Content SDK Initializer
 
-`@exdst-sitecore-content-sdk/create-astro` scaffolds a ready-to-run [Astro](https://astro.build/) + SitecoreAI / XM Cloud sample application built on [`@exdst-sitecore-content-sdk/astro`](../astro-content-sdk/). It is provided as part of the EXDST Astro Content SDK.
+`@exdst-sitecore-content-sdk/create-astro` scaffolds a ready-to-run [Astro](https://astro.build/) + SitecoreAI(XM Cloud) sample application built on [`@exdst-sitecore-content-sdk/astro`](../astro-content-sdk/). It is provided as part of the EXDST Astro Content SDK.
 
 ## How to use it
 

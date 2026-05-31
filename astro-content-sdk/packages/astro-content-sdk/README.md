@@ -1,6 +1,6 @@
 # Sitecore Content SDK for Astro
 
-`@exdst-sitecore-content-sdk/astro` provides Astro components and integration for the [Sitecore Content SDK](https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html), letting you build SitecoreAI / XM Cloud websites with [Astro](https://astro.build/). It follows the same patterns as the official Next.js Content SDK and supports running Astro locally as a rendering host with metadata editing mode for the SitecoreAI Pages editor.
+`@exdst-sitecore-content-sdk/astro` provides Astro components and integration for the [Sitecore Content SDK](https://doc.sitecore.com/xmc/en/developers/content-sdk/index.html), letting you build SitecoreAI(XM Cloud) websites with [Astro](https://astro.build/). It follows the same patterns as the official Next.js Content SDK and supports running Astro locally as a rendering host with metadata editing mode for the SitecoreAI Pages editor.
 
 ## Installation
 
