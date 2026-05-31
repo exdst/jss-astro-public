@@ -182,5 +182,6 @@ To see the demo or discuss a project, get in touch:
 * Stanislav Chernetsky, [GitHub](https://github.com/stanislavSV)
 * Vasyl Gavrylyuk, [GitHub](https://github.com/vsegrad)
 * Vadym Shcherban, [GitHub](https://github.com/Lawliet1701)
+* Navaneethakrishnan Sundarrajan, [GitHub](https://github.com/navancommits)
 
 Sponsored by [EXDST](https://exdst.com/)
